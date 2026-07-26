@@ -51,11 +51,11 @@
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.ability.featureAbility.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\ability\\startAbilityParameter.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.bundle.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader\\declarations\\embedded_component.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\triggerInfo.d.ts"
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\triggerInfo.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader\\declarations\\embedded_component.d.ts"
       ],
       "error": false
     },
@@ -94,8 +94,40 @@
       ],
       "error": false
     },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\NotificationCommonDef.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationTemplate.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationUserInput.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\application\\UIAbilityContext.d.ts"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\entryability\\EntryAbility.ets",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\VerificationRequestService.ets"
+      ],
+      "error": false
+    },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\ImmersiveEffect.ets": {
-      "mtimeMs": 1783684238315.7686,
+      "mtimeMs": 1785074300783.186,
       "children": [
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.window.d.ts",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
@@ -105,8 +137,20 @@
       ],
       "error": false
     },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\VerificationRequestService.ets": {
+      "mtimeMs": 1785074300788.1958,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.common.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\entryability\\EntryAbility.ets"
+      ],
+      "error": false
+    },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\entryability\\EntryAbility.ets": {
-      "mtimeMs": 1783784203134.1936,
+      "mtimeMs": 1785074300785.1821,
       "children": [
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.UIAbility.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.AbilityConstant.d.ts",
@@ -236,6 +280,10 @@
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.bundle.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.data.rdb.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.multimodalInput.pointer.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\graphics3d\\SceneResources.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader\\declarations\\embedded_component.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader\\declarations\\image.d.ts",
@@ -247,11 +295,7 @@
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.web.webview.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.security.cert.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.security.cryptoFramework.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.print.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts"
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.print.d.ts"
       ],
       "error": false
     },
@@ -447,8 +491,8 @@
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.resourceManager.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.graphics.drawing.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\arkui\\Graphics.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader\\declarations\\units.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts"
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader\\declarations\\units.d.ts"
       ],
       "error": false
     },
@@ -496,10 +540,10 @@
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\application\\PhotoEditorExtensionContext.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.bundle.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.multimodalInput.pointer.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader\\declarations\\common.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.web.webview.d.ts",
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader\\declarations\\common.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.web.webview.d.ts"
       ],
       "error": false
     },
@@ -683,10 +727,7 @@
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts"
       ],
       "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.arkui.UIContext.d.ts",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets"
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.arkui.UIContext.d.ts"
       ],
       "error": false
     },
@@ -1514,24 +1555,184 @@
       ],
       "error": false
     },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\NotificationCommonDef.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationUserInput.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.multimedia.image.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\global\\resource.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.multimedia.image.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationTemplate.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationFlags.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationTemplate.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationUserInput.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.Want.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\triggerInfo.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.Want.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\triggerInfo.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.Want.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.Want.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\triggerInfo.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\VerificationRequestService.ets"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts"
+      ],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts"
+      ],
+      "error": false
+    },
+    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationFlags.d.ts": {
+      "mtimeMs": 1778468331000,
+      "children": [],
+      "parent": [
+        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
+      ],
+      "error": false
+    },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets": {
-      "mtimeMs": 1783683720332.211,
+      "mtimeMs": 1785085625981.1362,
       "children": [],
       "parent": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\ImmersiveEffect.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\BottomNavBar.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ProfilePage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\LanguagePage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\MockSettingsPage.ets"
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ProfilePage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\LanguagePage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\MockSettingsPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets"
       ],
       "error": false
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\BottomNavBar.ets": {
-      "mtimeMs": 1783754432526.1104,
+      "mtimeMs": 1785074300784.1824,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
       ],
@@ -1541,10 +1742,11 @@
       "error": false
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets": {
-      "mtimeMs": 1783783922665.0276,
+      "mtimeMs": 1785086669213.4954,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets"
       ],
       "parent": [
@@ -1552,8 +1754,23 @@
       ],
       "error": false
     },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets": {
+      "mtimeMs": 1785087032998.4082,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
+      ],
+      "error": false
+    },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ProfilePage.ets": {
-      "mtimeMs": 1783754928797.1606,
+      "mtimeMs": 1785086524085.1055,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
       ],
@@ -1562,30 +1779,324 @@
       ],
       "error": false
     },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\LanguagePage.ets": {
+      "mtimeMs": 1785074300786.1826,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\MockSettingsPage.ets": {
+      "mtimeMs": 1785074300787.1833,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets": {
+      "mtimeMs": 1785081508075.4868,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets": {
+      "mtimeMs": 1785085643710.9902,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets": {
+      "mtimeMs": 1785078792764.0857,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Invitation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\DigitalCardService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets": {
+      "mtimeMs": 1785078791511.3535,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Authorization.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\CredentialService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Authorization.ets": {
+      "mtimeMs": 1785078789008.736,
+      "children": [],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Invitation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\AuthorizationService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\CredentialService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Invitation.ets": {
+      "mtimeMs": 1785078794013.728,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Authorization.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\InvitationService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets": {
+      "mtimeMs": 1785081547814.5303,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Authorization.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Invitation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\DigitalCardService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\AuthorizationService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\InvitationService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\PhysicalCardService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\CredentialService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets"
+      ],
+      "error": false
+    },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets": {
-      "mtimeMs": 1783784204952.7861,
+      "mtimeMs": 1785086862670.9,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\BottomNavBar.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ProfilePage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\LanguagePage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\MockSettingsPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Authorization.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Invitation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
       ],
       "parent": [],
       "error": false
     },
-    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets": {
-      "mtimeMs": 1783781970799.2505,
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCard.ets": {
+      "mtimeMs": 1785078830538.0298,
+      "children": [],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\PhysicalCardService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets": {
+      "mtimeMs": 1785081168896.536,
       "children": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets"
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets"
       ],
       "parent": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\PhysicalCardService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\DigitalCardService.ets": {
+      "mtimeMs": 1785075214277.383,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\AuthorizationService.ets": {
+      "mtimeMs": 1785076761105.4824,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Authorization.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\InvitationService.ets": {
+      "mtimeMs": 1785076762310.2725,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Invitation.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\PhysicalCardService.ets": {
+      "mtimeMs": 1785081170660.8298,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\CredentialService.ets": {
+      "mtimeMs": 1785078797728.9949,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Authorization.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets": {
+      "mtimeMs": 1785081546177.3784,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Authorization.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\PhysicalCardOperation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\ConfirmationRequest.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Invitation.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\DigitalCardService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\AuthorizationService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\PhysicalCardService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\CredentialService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\ConfirmationService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\InvitationService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\MockPersistenceService.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockAppStoragePersistence.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\stores\\CardStore.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\ConfirmationRequest.ets": {
+      "mtimeMs": 1785075125855.7224,
+      "children": [],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\ConfirmationService.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\ConfirmationService.ets": {
+      "mtimeMs": 1785075218951.5083,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\ConfirmationRequest.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\MockPersistenceService.ets": {
+      "mtimeMs": 1785078798970.2703,
+      "children": [],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockAppStoragePersistence.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockAppStoragePersistence.ets": {
+      "mtimeMs": 1785078800258.4475,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\MockPersistenceService.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\mock\\MockDataSource.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets": {
+      "mtimeMs": 1785075254048.184,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets"
       ],
       "error": false
     },
@@ -2069,247 +2580,13 @@
       ],
       "error": false
     },
-    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\LanguagePage.ets": {
-      "mtimeMs": 1783754430941.6414,
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets": {
+      "mtimeMs": 1785086525436.2014,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
       ],
       "parent": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
-      ],
-      "error": false
-    },
-    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets": {
-      "mtimeMs": 1783782218336.2366,
-      "children": [],
-      "parent": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\NotificationCommonDef.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationTemplate.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationUserInput.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\application\\UIAbilityContext.d.ts"
-      ],
-      "parent": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\entryability\\EntryAbility.ets",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\VerificationRequestService.ets"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\NotificationCommonDef.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationUserInput.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.multimedia.image.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\global\\resource.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.multimedia.image.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationTemplate.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationFlags.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationTemplate.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationUserInput.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.Want.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\triggerInfo.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationActionButton.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.Want.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\triggerInfo.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.Want.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.wantAgent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.Want.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\triggerInfo.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\wantAgent\\wantAgentInfo.d.ts",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\VerificationRequestService.ets"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notification.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.base.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts"
-      ],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationContent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationSlot.d.ts"
-      ],
-      "error": false
-    },
-    "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationFlags.d.ts": {
-      "mtimeMs": 1778468331000,
-      "children": [],
-      "parent": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\notification\\notificationRequest.d.ts"
-      ],
-      "error": false
-    },
-    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\MockSettingsPage.ets": {
-      "mtimeMs": 1783784054088.9983,
-      "children": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
-      ],
-      "parent": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
-      ],
-      "error": false
-    },
-    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets": {
-      "mtimeMs": 1783783920964.0781,
-      "children": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets"
-      ],
-      "parent": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets"
-      ],
-      "error": false
-    },
-    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\services\\VerificationRequestService.ets": {
-      "mtimeMs": 1783784247366.7627,
-      "children": [
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.common.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.app.ability.wantAgent.d.ts",
-        "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.notificationManager.d.ts"
-      ],
-      "parent": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\entryability\\EntryAbility.ets"
       ],
       "error": false
     }

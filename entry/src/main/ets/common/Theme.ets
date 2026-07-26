@@ -157,3 +157,13 @@ export const NAV_BAR_SIDE_MARGIN = 20
 
 // Status bar
 export const STATUS_BAR_PADDING = 44
+
+// Breakpoints
+export const BREAKPOINT_TABLET = 600
+export const BREAKPOINT_WIDE_TABLET = 1000
+
+// Tablet layout
+export const TABLET_SIDE_NAV_WIDTH = 208
+export const TABLET_CONTAINER_MARGIN = 24
+export const TABLET_CARD_GAP = 16
+export const TABLET_CARD_MIN_HEIGHT = 224

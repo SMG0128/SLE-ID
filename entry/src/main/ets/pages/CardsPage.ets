@@ -1,20 +1,25 @@
 import * as Theme from '../common/Theme'
-import { CardModel } from '../common/CardModel'
+import { DigitalCard } from '../models/DigitalCard'
+import { CardStore } from '../stores/CardStore'
 import { CardPreview } from '../components/CardPreview'
 
 @Component
 export struct CardsPage {
   @Link showAddCardModal: boolean
   @Link language: string
-  @Link cards: CardModel[]
+  @ObjectLink cardStore: CardStore
   @Link showCardDetailPage: boolean
   @Link selectedCardId: string
   @Link showMockSettingsPage: boolean
+  @Link showPhysicalCardManagerPage: boolean
+  @Prop isTablet: boolean = false
 
   build() {
     Column() {
-      // Top App Bar
-      this.TopAppBar()
+      // Phone keeps the top app bar; tablet actions live in the side navigation.
+      if (!this.isTablet) {
+        this.TopAppBar()
+      }
 
       // Scrollable content
       Scroll() {
@@ -29,7 +34,7 @@ export struct CardsPage {
                 .margin({ bottom: Theme.SPACING_XS })
 
               Text(this.language === 'zh' ? '我的卡片' : 'My Cards')
-                .fontSize(Theme.HEADLINE_LG_MOBILE_FONT_SIZE)
+                .fontSize(this.isTablet ? Theme.HEADLINE_LG_FONT_SIZE : Theme.HEADLINE_LG_MOBILE_FONT_SIZE)
                 .fontWeight(Theme.FONT_WEIGHT_BOLD)
                 .fontColor(Theme.ON_SURFACE)
             }
@@ -51,39 +56,78 @@ export struct CardsPage {
           .margin({ bottom: Theme.SPACING_LG })
 
           // Cards list
-          ForEach(this.cards, (card: CardModel) => {
-            this.CardItem(card)
-          }, (card: CardModel) => card.id)
+          if (this.isTablet) {
+            // Tablet: multi-column grid
+            GridRow({ columns: { sm: 2, md: 2, lg: 3 }, gutter: Theme.TABLET_CARD_GAP }) {
+              ForEach(this.cardStore.cards, (card: DigitalCard) => {
+                GridCol() {
+                  this.CardItem(card)
+                }
+              }, (card: DigitalCard) => card.id)
+            }
+            .width('100%')
+          } else {
+            // Phone: single column
+            ForEach(this.cardStore.cards, (card: DigitalCard) => {
+              this.CardItem(card)
+            }, (card: DigitalCard) => card.id)
+          }
 
           // Security banner
           this.SecurityBanner()
         }
         .width('100%')
-        .padding({ left: Theme.CONTAINER_MARGIN, right: Theme.CONTAINER_MARGIN, bottom: 120 })
+        .justifyContent(FlexAlign.Start)
+        .alignItems(HorizontalAlign.Start)
+        .padding({
+          left: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+          right: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+          bottom: this.isTablet ? Theme.SPACING_XL : 120
+        })
       }
       .layoutWeight(1)
+      .width('100%')
+      .align(Alignment.TopStart)
+      .alignSelf(ItemAlign.Start)
       .scrollBar(BarState.Off)
       .edgeEffect(EdgeEffect.Spring)
     }
     .width('100%')
     .height('100%')
+    .justifyContent(FlexAlign.Start)
+    .alignItems(HorizontalAlign.Start)
     .padding({ top: Theme.STATUS_BAR_PADDING })
   }
 
   @Builder
   TopAppBar() {
     Row() {
-      SymbolGlyph($r('sys.symbol.paintpalette'))
-        .fontSize(Theme.ICON_XL)
-        .fontColor([Theme.PRIMARY])
+      if (!this.isTablet) {
+        SymbolGlyph($r('sys.symbol.paintpalette'))
+          .fontSize(Theme.ICON_XL)
+          .fontColor([Theme.PRIMARY])
 
-      Text(this.language === 'zh' ? '卡包' : 'Wallet')
-        .fontSize(Theme.HEADLINE_MD_FONT_SIZE)
-        .fontWeight(Theme.FONT_WEIGHT_BOLD)
-        .fontColor(Theme.PRIMARY)
-        .margin({ left: Theme.SPACING_SM })
+        Text(this.language === 'zh' ? '卡包' : 'Wallet')
+          .fontSize(Theme.HEADLINE_MD_FONT_SIZE)
+          .fontWeight(Theme.FONT_WEIGHT_BOLD)
+          .fontColor(Theme.PRIMARY)
+          .margin({ left: Theme.SPACING_SM })
+      } else {
+        Text(this.language === 'zh' ? '我的卡片' : 'My Cards')
+          .fontSize(Theme.HEADLINE_MD_FONT_SIZE)
+          .fontWeight(Theme.FONT_WEIGHT_BOLD)
+          .fontColor(Theme.ON_SURFACE)
+      }
 
       Blank()
+
+      SymbolGlyph($r('sys.symbol.creditcard'))
+        .fontSize(Theme.ICON_XL)
+        .fontColor([Theme.PRIMARY])
+        .margin({ right: Theme.SPACING_LG })
+        .onClick(() => {
+          this.showPhysicalCardManagerPage = true
+        })
 
       SymbolGlyph($r('sys.symbol.plus'))
         .fontSize(Theme.ICON_XL)
@@ -94,18 +138,21 @@ export struct CardsPage {
     }
     .width('100%')
     .height(56)
-    .padding({ left: Theme.CONTAINER_MARGIN, right: Theme.CONTAINER_MARGIN })
-    .backgroundColor('rgba(255, 255, 255, 0.7)')
-    .backdropBlur(40)
+    .padding({
+      left: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+      right: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN
+    })
+    .backgroundColor(this.isTablet ? 'rgba(255, 255, 255, 0.58)' : 'rgba(255, 255, 255, 0.7)')
+    .backdropBlur(this.isTablet ? 24 : 40)
     .borderWidth({ bottom: 1 })
     .borderColor('rgba(199, 196, 215, 0.1)')
   }
 
   @Builder
-  CardItem(card: CardModel) {
-    CardPreview({ card: card, language: this.language })
+  CardItem(card: DigitalCard) {
+    CardPreview({ card: card, language: this.language, isTablet: this.isTablet })
     .width('100%')
-    .margin({ bottom: Theme.CARD_GAP })
+    .margin({ bottom: this.isTablet ? 0 : Theme.CARD_GAP })
     .onClick(() => {
       this.selectedCardId = card.id
       this.showCardDetailPage = true
@@ -149,7 +196,7 @@ export struct CardsPage {
       .alignSelf(ItemAlign.Start)
     }
     .width('100%')
-    .height(160)
+    .height(this.isTablet ? 140 : 160)
     .borderRadius(Theme.RADIUS_DEFAULT)
     .shadow({
       radius: 40,
@@ -168,8 +215,8 @@ export struct CardsPage {
 
   private activeCountText(): string {
     let count: number = 0
-    this.cards.forEach((card: CardModel) => {
-      if (card.enabled) {
+    this.cardStore.cards.forEach((card: DigitalCard) => {
+      if (this.cardStore.isCardEnabled(card)) {
         count++
       }
     })

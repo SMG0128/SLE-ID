@@ -18,20 +18,32 @@ export struct ProfilePage {
   @State isBiometricEnabled: boolean = true
   @Link language: string
   @Link showLanguagePage: boolean
+  @Prop isTablet: boolean = false
+  @Prop windowWidth: number = 0
 
   build() {
     Column() {
-      // Top App Bar
-      this.TopAppBar()
+      // Phone keeps a compact title bar; tablet uses the shared content heading.
+      if (!this.isTablet) {
+        this.TopAppBar()
+      }
 
       // Scrollable content
       Scroll() {
         Column() {
+          if (this.isTablet) {
+            this.TabletPageHeader()
+          }
+
           // User account section
           this.UserAccountSection()
 
           // Settings groups
-          Column() {
+          Flex({
+            direction: this.isWideTablet() ? FlexDirection.Row : FlexDirection.Column,
+            wrap: this.isWideTablet() ? FlexWrap.Wrap : FlexWrap.NoWrap,
+            justifyContent: FlexAlign.SpaceBetween
+          }) {
             // Security & Identity
             this.SettingsGroup(this.language === 'zh' ? '安全与身份' : 'Security & Identity', [
               {
@@ -113,6 +125,7 @@ export struct ProfilePage {
               }
             ])
           }
+          .width('100%')
           .margin({ top: Theme.SPACING_XL })
 
           // Version info
@@ -125,7 +138,13 @@ export struct ProfilePage {
             .margin({ top: Theme.SPACING_XL })
         }
         .width('100%')
-        .padding({ left: Theme.CONTAINER_MARGIN, right: Theme.CONTAINER_MARGIN, bottom: 120 })
+        .constraintSize({ maxWidth: this.isTablet ? 1100 : 10000 })
+        .alignSelf(ItemAlign.Center)
+        .padding({
+          left: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+          right: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+          bottom: this.isTablet ? Theme.SPACING_XL : 120
+        })
       }
       .layoutWeight(1)
       .scrollBar(BarState.Off)
@@ -148,18 +167,38 @@ export struct ProfilePage {
         .fontColor(Theme.PRIMARY)
 
       Blank()
-
-      SymbolGlyph($r('sys.symbol.questionmark_circle'))
-        .fontSize(Theme.ICON_LG)
-        .fontColor([Theme.ON_SURFACE_VARIANT])
     }
     .width('100%')
     .height(56)
-    .padding({ left: Theme.CONTAINER_MARGIN, right: Theme.CONTAINER_MARGIN })
-    .backgroundColor('rgba(248, 249, 250, 0.8)')
-    .backdropBlur(40)
+    .padding({
+      left: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+      right: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN
+    })
+    .backgroundColor(this.isTablet ? 'rgba(255, 255, 255, 0.58)' : 'rgba(248, 249, 250, 0.8)')
+    .backdropBlur(this.isTablet ? 24 : 40)
     .borderWidth({ bottom: 1 })
     .borderColor('rgba(199, 196, 215, 0.3)')
+  }
+
+  @Builder
+  TabletPageHeader() {
+    Row() {
+      Column() {
+        Text(this.language === 'zh' ? '账户管理' : 'Account Management')
+          .fontSize(Theme.LABEL_MD_FONT_SIZE)
+          .fontWeight(Theme.FONT_WEIGHT_MEDIUM)
+          .fontColor(Theme.ON_SURFACE_VARIANT)
+          .margin({ bottom: Theme.SPACING_XS })
+
+        Text(this.language === 'zh' ? '个人中心' : 'Profile')
+          .fontSize(Theme.HEADLINE_LG_FONT_SIZE)
+          .fontWeight(Theme.FONT_WEIGHT_BOLD)
+          .fontColor(Theme.ON_SURFACE)
+      }
+      .alignItems(HorizontalAlign.Start)
+    }
+    .width('100%')
+    .margin({ bottom: Theme.SPACING_LG })
   }
 
   @Builder
@@ -271,7 +310,7 @@ export struct ProfilePage {
       .width('100%')
       .margin({ top: Theme.SPACING_LG })
     }
-    .width('100%')
+    .width(this.isWideTablet() ? 420 : '100%')
     .alignItems(HorizontalAlign.Center)
     .padding(Theme.SPACING_LG)
     .backgroundColor('rgba(255, 255, 255, 0.8)')
@@ -367,7 +406,11 @@ export struct ProfilePage {
         offsetY: 4
       })
     }
-    .width('100%')
-    .margin({ bottom: Theme.SPACING_XL })
+    .width(this.isWideTablet() ? '49%' : '100%')
+    .margin({ bottom: this.isTablet ? Theme.TABLET_CARD_GAP : Theme.SPACING_XL })
+  }
+
+  private isWideTablet(): boolean {
+    return this.isTablet && this.windowWidth >= Theme.BREAKPOINT_WIDE_TABLET
   }
 }

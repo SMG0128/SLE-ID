@@ -5,6 +5,8 @@ interface ProfilePage_Params {
     isBiometricEnabled?: boolean;
     language?: string;
     showLanguagePage?: boolean;
+    isTablet?: boolean;
+    windowWidth?: number;
 }
 import * as Theme from "@normalized:N&&&entry/src/main/ets/common/Theme&";
 interface SettingsItem {
@@ -28,6 +30,8 @@ export class ProfilePage extends ViewPU {
         this.__isBiometricEnabled = new ObservedPropertySimplePU(true, this, "isBiometricEnabled");
         this.__language = new SynchedPropertySimpleTwoWayPU(params.language, this, "language");
         this.__showLanguagePage = new SynchedPropertySimpleTwoWayPU(params.showLanguagePage, this, "showLanguagePage");
+        this.__isTablet = new SynchedPropertySimpleOneWayPU(params.isTablet, this, "isTablet");
+        this.__windowWidth = new SynchedPropertySimpleOneWayPU(params.windowWidth, this, "windowWidth");
         this.setInitiallyProvidedValue(params);
         this.finalizeConstruction();
     }
@@ -35,18 +39,30 @@ export class ProfilePage extends ViewPU {
         if (params.isBiometricEnabled !== undefined) {
             this.isBiometricEnabled = params.isBiometricEnabled;
         }
+        if (params.isTablet === undefined) {
+            this.__isTablet.set(false);
+        }
+        if (params.windowWidth === undefined) {
+            this.__windowWidth.set(0);
+        }
     }
     updateStateVars(params: ProfilePage_Params) {
+        this.__isTablet.reset(params.isTablet);
+        this.__windowWidth.reset(params.windowWidth);
     }
     purgeVariableDependenciesOnElmtId(rmElmtId) {
         this.__isBiometricEnabled.purgeDependencyOnElmtId(rmElmtId);
         this.__language.purgeDependencyOnElmtId(rmElmtId);
         this.__showLanguagePage.purgeDependencyOnElmtId(rmElmtId);
+        this.__isTablet.purgeDependencyOnElmtId(rmElmtId);
+        this.__windowWidth.purgeDependencyOnElmtId(rmElmtId);
     }
     aboutToBeDeleted() {
         this.__isBiometricEnabled.aboutToBeDeleted();
         this.__language.aboutToBeDeleted();
         this.__showLanguagePage.aboutToBeDeleted();
+        this.__isTablet.aboutToBeDeleted();
+        this.__windowWidth.aboutToBeDeleted();
         SubscriberManager.Get().delete(this.id__());
         this.aboutToBeDeletedInternal();
     }
@@ -71,6 +87,20 @@ export class ProfilePage extends ViewPU {
     set showLanguagePage(newValue: boolean) {
         this.__showLanguagePage.set(newValue);
     }
+    private __isTablet: SynchedPropertySimpleOneWayPU<boolean>;
+    get isTablet() {
+        return this.__isTablet.get();
+    }
+    set isTablet(newValue: boolean) {
+        this.__isTablet.set(newValue);
+    }
+    private __windowWidth: SynchedPropertySimpleOneWayPU<number>;
+    get windowWidth() {
+        return this.__windowWidth.get();
+    }
+    set windowWidth(newValue: number) {
+        this.__windowWidth.set(newValue);
+    }
     initialRender() {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
@@ -79,8 +109,21 @@ export class ProfilePage extends ViewPU {
             Column.backgroundColor(Theme.BACKGROUND);
             Column.padding({ top: Theme.STATUS_BAR_PADDING });
         }, Column);
-        // Top App Bar
-        this.TopAppBar.bind(this)();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            If.create();
+            // Phone keeps a compact title bar; tablet uses the shared content heading.
+            if (!this.isTablet) {
+                this.ifElseBranchUpdateFunction(0, () => {
+                    this.TopAppBar.bind(this)();
+                });
+            }
+            // Scrollable content
+            else {
+                this.ifElseBranchUpdateFunction(1, () => {
+                });
+            }
+        }, If);
+        If.pop();
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             // Scrollable content
             Scroll.create();
@@ -94,16 +137,42 @@ export class ProfilePage extends ViewPU {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
             Column.width('100%');
-            Column.padding({ left: Theme.CONTAINER_MARGIN, right: Theme.CONTAINER_MARGIN, bottom: 120 });
+            Column.constraintSize({ maxWidth: this.isTablet ? 1100 : 10000 });
+            Column.alignSelf(ItemAlign.Center);
+            Column.padding({
+                left: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+                right: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+                bottom: this.isTablet ? Theme.SPACING_XL : 120
+            });
         }, Column);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            If.create();
+            if (this.isTablet) {
+                this.ifElseBranchUpdateFunction(0, () => {
+                    this.TabletPageHeader.bind(this)();
+                });
+            }
+            // User account section
+            else {
+                this.ifElseBranchUpdateFunction(1, () => {
+                });
+            }
+        }, If);
+        If.pop();
         // User account section
         this.UserAccountSection.bind(this)();
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             // Settings groups
-            Column.create();
+            Flex.create({
+                direction: this.isWideTablet() ? FlexDirection.Row : FlexDirection.Column,
+                wrap: this.isWideTablet() ? FlexWrap.Wrap : FlexWrap.NoWrap,
+                justifyContent: FlexAlign.SpaceBetween
+            });
             // Settings groups
-            Column.margin({ top: Theme.SPACING_XL });
-        }, Column);
+            Flex.width('100%');
+            // Settings groups
+            Flex.margin({ top: Theme.SPACING_XL });
+        }, Flex);
         // Security & Identity
         this.SettingsGroup.bind(this)(this.language === 'zh' ? '安全与身份' : 'Security & Identity', [
             {
@@ -183,7 +252,7 @@ export class ProfilePage extends ViewPU {
             }
         ]);
         // Settings groups
-        Column.pop();
+        Flex.pop();
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             // Version info
             Text.create(this.language === 'zh' ? '版本 4.12.0（构建 992）' : 'Version 4.12.0 (Build 992)');
@@ -212,9 +281,12 @@ export class ProfilePage extends ViewPU {
             Row.create();
             Row.width('100%');
             Row.height(56);
-            Row.padding({ left: Theme.CONTAINER_MARGIN, right: Theme.CONTAINER_MARGIN });
-            Row.backgroundColor('rgba(248, 249, 250, 0.8)');
-            Row.backdropBlur(40);
+            Row.padding({
+                left: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN,
+                right: this.isTablet ? Theme.TABLET_CONTAINER_MARGIN : Theme.CONTAINER_MARGIN
+            });
+            Row.backgroundColor(this.isTablet ? 'rgba(255, 255, 255, 0.58)' : 'rgba(248, 249, 250, 0.8)');
+            Row.backdropBlur(this.isTablet ? 24 : 40);
             Row.borderWidth({ bottom: 1 });
             Row.borderColor('rgba(199, 196, 215, 0.3)');
         }, Row);
@@ -233,17 +305,40 @@ export class ProfilePage extends ViewPU {
             Blank.create();
         }, Blank);
         Blank.pop();
+        Row.pop();
+    }
+    TabletPageHeader(parent = null) {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
-            SymbolGlyph.create({ "id": 125832644, "type": 40000, params: [], "bundleName": "com.slekey.app", "moduleName": "entry" });
-            SymbolGlyph.fontSize(Theme.ICON_LG);
-            SymbolGlyph.fontColor([Theme.ON_SURFACE_VARIANT]);
-        }, SymbolGlyph);
+            Row.create();
+            Row.width('100%');
+            Row.margin({ bottom: Theme.SPACING_LG });
+        }, Row);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Column.create();
+            Column.alignItems(HorizontalAlign.Start);
+        }, Column);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.language === 'zh' ? '账户管理' : 'Account Management');
+            Text.fontSize(Theme.LABEL_MD_FONT_SIZE);
+            Text.fontWeight(Theme.FONT_WEIGHT_MEDIUM);
+            Text.fontColor(Theme.ON_SURFACE_VARIANT);
+            Text.margin({ bottom: Theme.SPACING_XS });
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(this.language === 'zh' ? '个人中心' : 'Profile');
+            Text.fontSize(Theme.HEADLINE_LG_FONT_SIZE);
+            Text.fontWeight(Theme.FONT_WEIGHT_BOLD);
+            Text.fontColor(Theme.ON_SURFACE);
+        }, Text);
+        Text.pop();
+        Column.pop();
         Row.pop();
     }
     UserAccountSection(parent = null) {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
-            Column.width('100%');
+            Column.width(this.isWideTablet() ? 420 : '100%');
             Column.alignItems(HorizontalAlign.Center);
             Column.padding(Theme.SPACING_LG);
             Column.backgroundColor('rgba(255, 255, 255, 0.8)');
@@ -434,8 +529,8 @@ export class ProfilePage extends ViewPU {
     SettingsGroup(title: string, items: SettingsItem[], parent = null) {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
-            Column.width('100%');
-            Column.margin({ bottom: Theme.SPACING_XL });
+            Column.width(this.isWideTablet() ? '49%' : '100%');
+            Column.margin({ bottom: this.isTablet ? Theme.TABLET_CARD_GAP : Theme.SPACING_XL });
         }, Column);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Text.create(title);
@@ -577,6 +672,9 @@ export class ProfilePage extends ViewPU {
         ForEach.pop();
         Column.pop();
         Column.pop();
+    }
+    private isWideTablet(): boolean {
+        return this.isTablet && this.windowWidth >= Theme.BREAKPOINT_WIDE_TABLET;
     }
     rerender() {
         this.updateDirtyElements();
