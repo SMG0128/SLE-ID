@@ -1,0 +1,12 @@
+{
+  "intarray": [
+    {
+      "name": "screen_width",
+      "value": [360]
+    },
+    {
+      "name": "screen_height",
+      "value": [800]
+    }
+  ]
+}

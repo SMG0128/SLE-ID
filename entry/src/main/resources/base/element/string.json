@@ -1,0 +1,12 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "SleKey entry module"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "SleKey Entry Ability"
+    }
+  ]
+}
