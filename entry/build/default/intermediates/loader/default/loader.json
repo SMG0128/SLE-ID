@@ -1,0 +1,28 @@
+{
+  "modulePathMap": {
+    "entry": "D:\\SLE-ID\\slekey\\entry"
+  },
+  "compileMode": "esmodule",
+  "projectRootPath": "D:\\SLE-ID\\slekey",
+  "nodeModulesPath": "D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\loader_out\\default\\node_modules",
+  "byteCodeHarInfo": {},
+  "declarationEntry": [],
+  "moduleName": "entry",
+  "hspNameOhmMap": {},
+  "harNameOhmMap": {},
+  "packageManagerType": "ohpm",
+  "compileEntry": [
+    "D:\\SLE-ID\\slekey\\entry\\build\\default\\generated\\r\\default\\ResourceTable.ts"
+  ],
+  "otherCompileFiles": [],
+  "dynamicImportLibInfo": {},
+  "routerMap": [],
+  "hspResourcesMap": {},
+  "updateVersionInfo": {},
+  "customizedHar": false,
+  "anBuildOutPut": "D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\loader_out\\default\\an\\arm64-v8a",
+  "anBuildMode": "type",
+  "patchConfig": {
+    "changedFileList": "D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\patch\\default\\changedFileList.json"
+  }
+}

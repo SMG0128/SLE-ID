@@ -1,0 +1,29 @@
+// Backup of entry/src/main/resources/base/profile/build-profile.json5
+// This file should be deleted from resources directory as it causes naming conflict
+// The correct build-profile.json5 is in entry/build-profile.json5
+{
+  "name": "default",
+  "signingConfig": "default",
+  "compatibleSdkVersion": "5.0.0(12)",
+  "runtimeOS": "HarmonyOS",
+  "buildOption": {
+    "strictMode": {
+      "caseSensitiveCheck": true,
+      "useNormalizedOHMUrl": true
+    }
+  },
+  "buildOptionSet": [
+    {
+      "name": "release",
+      "arkOptions": {
+        "obfuscation": {
+          "ruleOptions": {
+            "enable": false,
+            "files": []
+          }
+        }
+      }
+    }
+  ],
+  "compatibleSdkType": "HarmonyOS"
+}
