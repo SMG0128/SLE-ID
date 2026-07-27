@@ -3,6 +3,7 @@ import { SideNavBar } from '../components/SideNavBar'
 import { CardsPage } from './CardsPage'
 import { CardDetailPage } from './CardDetailPage'
 import { ProfilePage } from './ProfilePage'
+import { ScanPage } from './ScanPage'
 import { LanguagePage } from './LanguagePage'
 import { MockSettingsPage } from './MockSettingsPage'
 import { PhysicalCardManagerPage } from './PhysicalCardManagerPage'
@@ -33,6 +34,7 @@ struct Index {
   @State showCardDetailPage: boolean = false
   @State showMockSettingsPage: boolean = false
   @State showPhysicalCardManagerPage: boolean = false
+  @State showScanPage: boolean = false
   @State showVerificationDialog: boolean = false
   @State slideProgress: number = 0
   @StorageLink('verificationPending') verificationPending: boolean = false
@@ -115,7 +117,11 @@ struct Index {
 
       if (!this.showLanguagePage && !this.showCardDetailPage &&
         !this.showMockSettingsPage && !this.showPhysicalCardManagerPage) {
-        BottomNavBar({ currentIndex: $currentIndex, language: $language })
+        BottomNavBar({
+          currentIndex: $currentIndex,
+          language: $language,
+          showScanPage: $showScanPage
+        })
       }
 
       if (this.showVerificationDialog || this.verificationPending) {
@@ -150,6 +156,11 @@ struct Index {
         language: $language,
         showMockSettingsPage: $showMockSettingsPage,
         showVerificationDialog: $showVerificationDialog
+      })
+    } else if (this.showScanPage) {
+      ScanPage({
+        language: $language,
+        showScanPage: $showScanPage
       })
     } else if (this.currentIndex === 0) {
       CardsPage({

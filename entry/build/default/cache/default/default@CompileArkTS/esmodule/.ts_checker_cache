@@ -1727,12 +1727,13 @@
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\LanguagePage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\MockSettingsPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets"
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ScanPage.ets"
       ],
       "error": false
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\BottomNavBar.ets": {
-      "mtimeMs": 1785074300784.1824,
+      "mtimeMs": 1785131382338.5134,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
       ],
@@ -1920,13 +1921,14 @@
       "error": false
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets": {
-      "mtimeMs": 1785086862670.9,
+      "mtimeMs": 1785127330498.4575,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\BottomNavBar.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ProfilePage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ScanPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\LanguagePage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\MockSettingsPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets",
@@ -2582,6 +2584,16 @@
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets": {
       "mtimeMs": 1785086525436.2014,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ScanPage.ets": {
+      "mtimeMs": 1785133080634.864,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
       ],
