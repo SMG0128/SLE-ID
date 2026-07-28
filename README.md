@@ -1,4 +1,4 @@
-# StarFollow-Admin · 星随管理端
+# MilkWa-Admin · 奶蛙管理端
 
 > 基于**星闪（NearLink）主动感知系统**的检测管理控制中心 Web 前端原型。  
 > HarmonyOS ArkUI 主应用 → Ark Web 容器 → Vue3 管理端 → 本地后端 (SQLite + WS63)
