@@ -1,3 +1,9 @@
+/**
+ * Axios 实例 — 后端就绪后启用
+ *
+ * 当前阶段所有 API 函数走 Mock 本地数据，
+ * 接入真实后端时将各 api/*.ts 中的 mock 调用替换为 request 即可。
+ */
 import axios, { type AxiosInstance, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import { ElMessage } from 'element-plus'
 
@@ -7,10 +13,8 @@ const service: AxiosInstance = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-// 请求拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 后续可从 Pinia store 读取 token
     // const token = useSystemStore().token
     // if (token) config.headers.Authorization = `Bearer ${token}`
     return config
@@ -18,7 +22,6 @@ service.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
-// 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data } = response
@@ -35,3 +38,8 @@ service.interceptors.response.use(
 )
 
 export default service
+
+/** 模拟网络延迟的辅助函数 */
+export function mockDelay<T>(data: T, ms = 200): Promise<T> {
+  return new Promise(resolve => setTimeout(() => resolve(data), ms))
+}

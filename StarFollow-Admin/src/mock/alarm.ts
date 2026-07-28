@@ -1,53 +1,58 @@
-import Mock from 'mockjs'
-import type { AlarmRecord, AlarmListResponse } from '@/types/alarm'
-import { AlarmLevel, AlarmHandleStatus } from '@/types/alarm'
+import type { AlarmRecord, AlarmQuery, AlarmListResponse } from '@/types/alarm'
+import { ALARM_TYPES, ALARM_LEVELS, ALARM_SOLUTIONS, type AlarmType, type AlarmLevel } from '@/types/alarm'
 
-const levels = Object.values(AlarmLevel)
-const handleStatuses = Object.values(AlarmHandleStatus)
-const ruleNames = ['温度过高告警', '湿度异常告警', '震动超阈值', '入侵检测', '设备离线告警']
-const deviceNames = ['正门传感器-A1', '走廊传感器-B2', '机房传感器-C3', '停车场传感器-D4', '会议室传感器-E5']
+const devicePool = ['正门检测端', '走廊检测端', '机房检测端', '车库检测端', '会议室检测端', '仓库检测端']
+const operatorPool = ['系统自动', '系统自动', '系统自动', '张三', '李四']
 
-function randomAlarm(): AlarmRecord {
-  const level = levels[Mock.mock('@integer(0, 3)')]
-  return {
-    id: Mock.mock('@guid'),
-    ruleId: Mock.mock('@guid'),
-    ruleName: ruleNames[Mock.mock('@integer(0, 4)')],
-    eventId: Mock.mock('@guid'),
-    deviceId: `DEV-${Mock.mock('@string("number", 6)')}`,
-    deviceName: deviceNames[Mock.mock('@integer(0, 4)')],
-    level: level as AlarmLevel,
-    message: Mock.mock('@csentence(10, 25)'),
-    value: Mock.mock('@float(0, 120, 1, 2)'),
-    threshold: Mock.mock('@float(50, 100, 1, 1)'),
-    handler: Mock.mock('@cname'),
-    handleStatus: handleStatuses[Mock.mock('@integer(0, 3)')] as AlarmHandleStatus,
-    handleNote: Mock.mock('@csentence(5, 15)'),
-    handleTime: Mock.mock('@datetime("yyyy-MM-dd HH:mm:ss")'),
-    createdAt: Mock.mock('@datetime("yyyy-MM-dd HH:mm:ss")'),
-  }
+function levelForType(type: AlarmType): AlarmLevel {
+  if (type === 'suspected_replay' || type === 'key_failed') return 'severe'
+  if (type === 'unauthorized' || type === 'execute_failed') return 'high'
+  return 'normal'
 }
 
-export function mockAlarmList(params: Record<string, unknown>): AlarmListResponse {
-  const pageSize = (params.pageSize as number) || 10
-  const total = Mock.mock('@integer(20, 100)')
+/** 生成报警列表 */
+export function mockAlarmList(query: AlarmQuery): AlarmListResponse {
   const list: AlarmRecord[] = []
+  let id = 1
 
-  for (let i = 0; i < pageSize; i++) {
-    list.push(randomAlarm())
+  for (const at of ALARM_TYPES) {
+    for (let i = 0; i < 2; i++) {
+      const now = new Date()
+      now.setMinutes(now.getMinutes() - (id * 23 + i * 7))
+      list.push({
+        id: `ALM-${String(id++).padStart(6, '0')}`,
+        level: levelForType(at.value),
+        type: at.value,
+        device: devicePool[Math.floor(Math.random() * devicePool.length)],
+        cardId: `ANON-${String(Math.floor(Math.random() * 9000) + 1000)}`,
+        message: `${at.label}报警触发`,
+        operator: operatorPool[Math.floor(Math.random() * operatorPool.length)],
+        time: now.toLocaleString('zh-CN'),
+        handled: i === 0,
+        solution: ALARM_SOLUTIONS[at.value] || '待人工分析',
+      })
+    }
   }
+
+  // 筛选
+  let filtered = list
+  if (query.level) filtered = filtered.filter(a => a.level === query.level)
+  if (query.type) filtered = filtered.filter(a => a.type === query.type)
+  if (query.handleStatus === 'unhandled') filtered = filtered.filter(a => !a.handled)
+  if (query.handleStatus === 'handled') filtered = filtered.filter(a => a.handled)
+
+  const pageSize = query.pageSize || 10
+  const start = ((query.page || 1) - 1) * pageSize
 
   return {
     stats: {
-      total,
-      unconfirmed: Mock.mock('@integer(0, 15)'),
-      confirmed: Mock.mock('@integer(0, 20)'),
-      processing: Mock.mock('@integer(0, 10)'),
-      resolved: Mock.mock('@integer(10, 40)'),
-      highUrgent: Mock.mock('@integer(0, 10)'),
-      todayNew: Mock.mock('@integer(0, 8)'),
+      severe: list.filter(a => a.level === 'severe').length,
+      high: list.filter(a => a.level === 'high').length,
+      normal: list.filter(a => a.level === 'normal').length,
+      total: list.length,
+      unhandled: list.filter(a => !a.handled).length,
     },
-    total,
-    list,
+    total: filtered.length,
+    list: filtered.slice(start, start + pageSize),
   }
 }

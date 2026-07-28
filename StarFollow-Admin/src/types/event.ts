@@ -1,62 +1,45 @@
-/** 感知事件类型 */
-export enum EventType {
-  Motion = 'motion',
-  Sound = 'sound',
-  Temperature = 'temperature',
-  Humidity = 'humidity',
-  Vibration = 'vibration',
-  Intrusion = 'intrusion',
-  Other = 'other',
+/** 实时事件状态（星闪主动感知生命周期） */
+export type EventStatus = 'IDLE' | 'APPROACHING' | 'IN_ZONE' | 'COMPLETED' | 'COOLDOWN'
+
+/** 认证结果 */
+export type AuthResult = '' | '成功' | '失败'
+
+/** 事件日志记录 */
+export interface EventLogItem {
+  eventId: string
+  time: string
+  dateStr: string
+  device: string
+  cardId: string
+  result: '成功' | '失败' | '待定'
+  status: string
 }
 
-/** 事件严重级别 */
-export enum EventSeverity {
-  Info = 'info',
-  Warning = 'warning',
-  Critical = 'critical',
-}
-
-/** 事件处理状态 */
-export enum EventStatus {
-  Pending = 'pending',
-  Processing = 'processing',
-  Resolved = 'resolved',
-  Ignored = 'ignored',
-}
-
-/** 感知事件 */
-export interface SensingEvent {
-  id: string
-  deviceId: string
-  deviceName: string
-  type: EventType
-  severity: EventSeverity
+/** 实时检测事件 */
+export interface RealtimeEvent {
+  eventId: string
+  cardId: string
+  device: string
   status: EventStatus
-  title: string
-  description: string
-  location: string
-  value: number
-  unit: string
-  snapshot?: string
-  createdAt: string
-  updatedAt: string
+  authResult: AuthResult
+  time: string
 }
 
-/** 事件查询参数 */
+/** 事件日志查询参数 */
 export interface EventQuery {
   page: number
   pageSize: number
-  type?: EventType
-  severity?: EventSeverity
-  status?: EventStatus
-  deviceId?: string
-  startTime?: string
-  endTime?: string
-  keyword?: string
+  device?: string
+  result?: string
+  dateStart?: string
+  dateEnd?: string
 }
 
-/** 事件列表响应 */
+/** 事件日志列表响应 */
 export interface EventListResponse {
   total: number
-  list: SensingEvent[]
+  list: EventLogItem[]
 }
+
+/** 状态流转顺序 */
+export const STATUS_ORDER: EventStatus[] = ['IDLE', 'APPROACHING', 'IN_ZONE', 'COMPLETED', 'COOLDOWN']

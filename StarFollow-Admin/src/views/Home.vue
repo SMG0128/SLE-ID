@@ -67,19 +67,15 @@
       </template>
       <el-table :data="recentEvents" stripe>
         <el-table-column prop="time" label="时间" width="180" />
+        <el-table-column prop="eventId" label="事件ID" width="110" />
         <el-table-column prop="device" label="检测端" width="140" />
-        <el-table-column prop="location" label="位置" width="120" />
-        <el-table-column prop="title" label="事件描述" min-width="200" show-overflow-tooltip />
-        <el-table-column label="类型" width="90">
+        <el-table-column prop="cardId" label="匿名卡ID" width="130" />
+        <el-table-column label="结果" width="90">
           <template #default="{ row }">
-            <el-tag size="small" :type="row.typeColor">{{ row.type }}</el-tag>
+            <el-tag size="small" :type="row.result === '成功' ? 'success' : row.result === '失败' ? 'danger' : 'info'">{{ row.result }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="90">
-          <template #default="{ row }">
-            <el-tag size="small" :type="row.status === '成功' ? 'success' : 'danger'">{{ row.status }}</el-tag>
-          </template>
-        </el-table-column>
+        <el-table-column prop="status" label="状态" min-width="120" show-overflow-tooltip />
       </el-table>
     </el-card>
 
@@ -105,16 +101,11 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import { CircleCheckFilled, CircleCheck, TrendCharts, WarningFilled, Cpu } from '@element-plus/icons-vue'
+import { getEventList } from '@/api/event'
+import type { EventLogItem } from '@/types/event'
 
-// ---- 最近事件 mock 数据 ----
-const recentEvents = [
-  { time: '2026-07-27 16:45:22', device: '正门传感器-A1', location: '正门大厅', title: '检测到人员进入门禁区域', type: '运动检测', typeColor: 'primary', status: '成功' },
-  { time: '2026-07-27 16:42:10', device: '走廊传感器-B2', location: '3F走廊', title: '温度超出正常范围 38.5°C', type: '温度告警', typeColor: 'warning', status: '异常' },
-  { time: '2026-07-27 16:38:05', device: '机房传感器-C3', location: 'B1机房', title: '湿度恢复正常水平 55%', type: '湿度恢复', typeColor: 'success', status: '成功' },
-  { time: '2026-07-27 16:35:41', device: '停车场传感器-D4', location: '地下车库', title: '车辆出入库触发红外检测', type: '运动检测', typeColor: 'primary', status: '成功' },
-  { time: '2026-07-27 16:31:18', device: '会议室传感器-E5', location: '2F会议室', title: '检测到异常震动信号', type: '震动告警', typeColor: 'danger', status: '异常' },
-  { time: '2026-07-27 16:28:00', device: '仓库传感器-F6', location: '1F仓库', title: '门窗关闭状态正常', type: '例行巡检', typeColor: 'info', status: '成功' },
-]
+// ---- 最近事件（通过 API 层获取，不直接访问 mock）----
+const recentEvents = ref<EventLogItem[]>([])
 
 // ---- ECharts 实例 ----
 const trendChartRef = ref<HTMLDivElement>()
@@ -185,6 +176,10 @@ function initAnomalyChart() {
 
 // ---- 生命周期 ----
 onMounted(async () => {
+  // 加载最近事件（通过 API 层）
+  const res = await getEventList({ page: 1, pageSize: 6 })
+  recentEvents.value = res.list
+
   await nextTick()
   initTrendChart()
   initAnomalyChart()

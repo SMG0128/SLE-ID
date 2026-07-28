@@ -1,27 +1,15 @@
-import request from './request'
+import { mockAlarmList } from '@/mock/alarm'
+import { mockDelay } from './request'
 import type { AlarmQuery, AlarmListResponse, AlarmRecord } from '@/types/alarm'
 
-/** 获取报警列表 */
-export function getAlarmList(params: AlarmQuery): Promise<AlarmListResponse> {
-  return request({ url: '/alarms', method: 'get', params })
+/** 获取报警列表 — page → api → mock */
+export function getAlarmList(query: AlarmQuery): Promise<AlarmListResponse> {
+  // TODO: 后端就绪 → return request.get('/alarms', { params: query })
+  return mockDelay(mockAlarmList(query))
 }
 
-/** 获取报警详情 */
-export function getAlarmDetail(id: string): Promise<AlarmRecord> {
-  return request({ url: `/alarms/${id}`, method: 'get' })
-}
-
-/** 确认报警 */
-export function confirmAlarm(id: string, note?: string): Promise<void> {
-  return request({ url: `/alarms/${id}/confirm`, method: 'post', data: { note } })
-}
-
-/** 处理报警 */
-export function handleAlarm(id: string, note: string): Promise<void> {
-  return request({ url: `/alarms/${id}/handle`, method: 'post', data: { note } })
-}
-
-/** 解决报警 */
-export function resolveAlarm(id: string, note: string): Promise<void> {
-  return request({ url: `/alarms/${id}/resolve`, method: 'post', data: { note } })
+/** 标记报警已处理（本地 Mock 写入） */
+export function handleAlarm(id: string): Promise<void> {
+  // TODO: 后端就绪 → return request.post(`/alarms/${id}/handle`)
+  return mockDelay(undefined, 100)
 }

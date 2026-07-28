@@ -1,31 +1,40 @@
-import request from './request'
+import { mockLicenseList, mockAddLicense, mockRemoveLicense } from '@/mock/license'
+import { mockDelay } from './request'
+import type { License, CreateLicenseForm } from '@/types/license'
+import { POLICY_OPTIONS } from '@/types/license'
 
-export interface PermissionUser {
-  id: string
-  name: string
-  role: string
-  permissions: string[]
-  status: string
-  lastLogin: string
-  createdAt: string
+/** 获取许可列表 — page → api → mock */
+export function getLicenses(): Promise<License[]> {
+  // TODO: 后端就绪 → return request.get('/licenses')
+  return mockDelay(mockLicenseList())
 }
 
-/** 获取许可用户列表 */
-export function getPermissionUsers(params: { page: number; pageSize: number }): Promise<{ total: number; list: PermissionUser[] }> {
-  return request({ url: '/permissions/users', method: 'get', params })
+/** 创建许可 */
+export function createLicense(form: CreateLicenseForm, creator: string): Promise<License> {
+  const now = new Date().toISOString().slice(0, 10)
+  const [, expire] = form.dateRange!
+  const status: License['status'] =
+    expire < now ? '已过期'
+    : new Date(expire).getTime() - Date.now() < 7 * 86400000 ? '即将过期' : '有效'
+
+  const license: License = {
+    id: `LC-${String(Date.now()).slice(-3)}`,
+    name: form.name,
+    zone: form.zone,
+    status,
+    cardCount: 0,
+    policies: POLICY_OPTIONS.map(p => ({ ...p, enabled: !!form.policies[p.key] })),
+    creator,
+    createTime: now,
+    expireTime: expire,
+  }
+
+  mockAddLicense(license)
+  return mockDelay(license, 100)
 }
 
-/** 更新用户权限 */
-export function updateUserPermission(id: string, permissions: string[]): Promise<void> {
-  return request({ url: `/permissions/users/${id}`, method: 'put', data: { permissions } })
-}
-
-/** 获取邀请码列表 */
-export function getInviteList(params: { page: number; pageSize: number }): Promise<{ total: number; list: unknown[] }> {
-  return request({ url: '/permissions/invites', method: 'get', params })
-}
-
-/** 生成邀请码 */
-export function generateInviteCode(config: { role: string; expireDays: number; maxUses: number }): Promise<{ code: string }> {
-  return request({ url: '/permissions/invites', method: 'post', data: config })
+/** 吊销许可 */
+export function revokeLicense(id: string): Promise<void> {
+  mockRemoveLicense(id)
+  return mockDelay(undefined, 100)
 }
