@@ -82,13 +82,18 @@ struct Index {
           currentIndex: $currentIndex,
           language: $language,
           showAddCardModal: $showAddCardModal,
-          showPhysicalCardManagerPage: $showPhysicalCardManagerPage
+          showPhysicalCardManagerPage: $showPhysicalCardManagerPage,
+          showScanPage: $showScanPage
         })
       }
 
       // Content area
       Stack({ alignContent: Alignment.TopStart }) {
         this.ContentArea()
+
+        if (this.showScanPage) {
+          this.TabletScanPopover()
+        }
 
         if (this.showAddCardModal) {
           this.AddCardModal()
@@ -104,6 +109,61 @@ struct Index {
     .width('100%')
     .height('100%')
     .alignItems(VerticalAlign.Top)
+  }
+
+  @Builder
+  TabletScanPopover() {
+    Stack({ alignContent: Alignment.BottomStart }) {
+      Column()
+        .width('100%')
+        .height('100%')
+        .backgroundColor('rgba(25, 28, 29, 0.12)')
+        .onClick(() => {
+          this.showScanPage = false
+        })
+
+      Stack({ alignContent: Alignment.TopEnd }) {
+        ScanPage({
+          language: $language,
+          showScanPage: $showScanPage
+        })
+          .width('100%')
+          .height('100%')
+
+        Button() {
+          SymbolGlyph($r('sys.symbol.xmark'))
+            .fontSize(Theme.ICON_MD)
+            .fontColor([Theme.ON_SURFACE_VARIANT])
+        }
+        .width(40)
+        .height(40)
+        .borderRadius(Theme.RADIUS_FULL)
+        .backgroundColor('rgba(255, 255, 255, 0.72)')
+        .backdropBlur(20)
+        .margin({ top: Theme.SPACING_MD, right: Theme.SPACING_MD })
+        .zIndex(2)
+        .onClick(() => {
+          this.showScanPage = false
+        })
+      }
+      .width(440)
+      .height(620)
+      .margin({ left: Theme.SPACING_LG, bottom: Theme.SPACING_LG })
+      .backgroundColor('rgba(248, 249, 250, 0.94)')
+      .backdropBlur(40)
+      .borderRadius(Theme.RADIUS_LG)
+      .borderWidth(1)
+      .borderColor('rgba(255, 255, 255, 0.78)')
+      .shadow({
+        radius: 40,
+        color: 'rgba(30, 34, 78, 0.18)',
+        offsetY: 10
+      })
+      .clip(true)
+    }
+    .width('100%')
+    .height('100%')
+    .zIndex(70)
   }
 
   @Builder
@@ -157,7 +217,7 @@ struct Index {
         showMockSettingsPage: $showMockSettingsPage,
         showVerificationDialog: $showVerificationDialog
       })
-    } else if (this.showScanPage) {
+    } else if (this.showScanPage && this.windowWidth < Theme.BREAKPOINT_TABLET) {
       ScanPage({
         language: $language,
         showScanPage: $showScanPage

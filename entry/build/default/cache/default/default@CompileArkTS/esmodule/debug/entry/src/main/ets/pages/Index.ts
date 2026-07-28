@@ -359,7 +359,8 @@ class Index extends ViewPU {
                                     currentIndex: this.__currentIndex,
                                     language: this.__language,
                                     showAddCardModal: this.__showAddCardModal,
-                                    showPhysicalCardManagerPage: this.__showPhysicalCardManagerPage
+                                    showPhysicalCardManagerPage: this.__showPhysicalCardManagerPage,
+                                    showScanPage: this.__showScanPage
                                 }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 81, col: 9 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
@@ -367,7 +368,8 @@ class Index extends ViewPU {
                                         currentIndex: this.currentIndex,
                                         language: this.language,
                                         showAddCardModal: this.showAddCardModal,
-                                        showPhysicalCardManagerPage: this.showPhysicalCardManagerPage
+                                        showPhysicalCardManagerPage: this.showPhysicalCardManagerPage,
+                                        showScanPage: this.showScanPage
                                     };
                                 };
                                 componentCall.paramsGenerator_ = paramsLambda;
@@ -397,6 +399,19 @@ class Index extends ViewPU {
         this.ContentArea.bind(this)();
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             If.create();
+            if (this.showScanPage) {
+                this.ifElseBranchUpdateFunction(0, () => {
+                    this.TabletScanPopover.bind(this)();
+                });
+            }
+            else {
+                this.ifElseBranchUpdateFunction(1, () => {
+                });
+            }
+        }, If);
+        If.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            If.create();
             if (this.showAddCardModal) {
                 this.ifElseBranchUpdateFunction(0, () => {
                     this.AddCardModal.bind(this)();
@@ -424,6 +439,89 @@ class Index extends ViewPU {
         // Content area
         Stack.pop();
         Row.pop();
+    }
+    TabletScanPopover(parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Stack.create({ alignContent: Alignment.BottomStart });
+            Stack.width('100%');
+            Stack.height('100%');
+            Stack.zIndex(70);
+        }, Stack);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Column.create();
+            Column.width('100%');
+            Column.height('100%');
+            Column.backgroundColor('rgba(25, 28, 29, 0.12)');
+            Column.onClick(() => {
+                this.showScanPage = false;
+            });
+        }, Column);
+        Column.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Stack.create({ alignContent: Alignment.TopEnd });
+            Stack.width(440);
+            Stack.height(620);
+            Stack.margin({ left: Theme.SPACING_LG, bottom: Theme.SPACING_LG });
+            Stack.backgroundColor('rgba(248, 249, 250, 0.94)');
+            Stack.backdropBlur(40);
+            Stack.borderRadius(Theme.RADIUS_LG);
+            Stack.borderWidth(1);
+            Stack.borderColor('rgba(255, 255, 255, 0.78)');
+            Stack.shadow({
+                radius: 40,
+                color: 'rgba(30, 34, 78, 0.18)',
+                offsetY: 10
+            });
+            Stack.clip(true);
+        }, Stack);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            __Common__.create();
+            __Common__.width('100%');
+            __Common__.height('100%');
+        }, __Common__);
+        {
+            this.observeComponentCreation2((elmtId, isInitialRender) => {
+                if (isInitialRender) {
+                    let componentCall = new ScanPage(this, {
+                        language: this.__language,
+                        showScanPage: this.__showScanPage
+                    }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 126, col: 9 });
+                    ViewPU.create(componentCall);
+                    let paramsLambda = () => {
+                        return {
+                            language: this.language,
+                            showScanPage: this.showScanPage
+                        };
+                    };
+                    componentCall.paramsGenerator_ = paramsLambda;
+                }
+                else {
+                    this.updateStateVarsOfChildByElmtId(elmtId, {});
+                }
+            }, { name: "ScanPage" });
+        }
+        __Common__.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Button.createWithChild();
+            Button.width(40);
+            Button.height(40);
+            Button.borderRadius(Theme.RADIUS_FULL);
+            Button.backgroundColor('rgba(255, 255, 255, 0.72)');
+            Button.backdropBlur(20);
+            Button.margin({ top: Theme.SPACING_MD, right: Theme.SPACING_MD });
+            Button.zIndex(2);
+            Button.onClick(() => {
+                this.showScanPage = false;
+            });
+        }, Button);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            SymbolGlyph.create({ "id": 125831487, "type": 40000, params: [], "bundleName": "com.slekey.app", "moduleName": "entry" });
+            SymbolGlyph.fontSize(Theme.ICON_MD);
+            SymbolGlyph.fontColor([Theme.ON_SURFACE_VARIANT]);
+        }, SymbolGlyph);
+        Button.pop();
+        Stack.pop();
+        Stack.pop();
     }
     PhoneLayout(parent = null) {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
@@ -457,7 +555,7 @@ class Index extends ViewPU {
                                     currentIndex: this.__currentIndex,
                                     language: this.__language,
                                     showScanPage: this.__showScanPage
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 120, col: 9 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 180, col: 9 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -511,7 +609,7 @@ class Index extends ViewPU {
                                     selectedCardId: this.__selectedCardId,
                                     isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET,
                                     windowWidth: this.windowWidth
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 138, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 198, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -545,7 +643,7 @@ class Index extends ViewPU {
                                     cardStore: this.cardStore,
                                     language: this.__language,
                                     showPhysicalCardManagerPage: this.__showPhysicalCardManagerPage
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 147, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 207, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -570,7 +668,7 @@ class Index extends ViewPU {
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
                             if (isInitialRender) {
-                                let componentCall = new LanguagePage(this, { language: this.__language, showLanguagePage: this.__showLanguagePage }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 153, col: 7 });
+                                let componentCall = new LanguagePage(this, { language: this.__language, showLanguagePage: this.__showLanguagePage }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 213, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -596,7 +694,7 @@ class Index extends ViewPU {
                                     language: this.__language,
                                     showMockSettingsPage: this.__showMockSettingsPage,
                                     showVerificationDialog: this.__showVerificationDialog
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 155, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 215, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -614,7 +712,7 @@ class Index extends ViewPU {
                     }
                 });
             }
-            else if (this.showScanPage) {
+            else if (this.showScanPage && this.windowWidth < Theme.BREAKPOINT_TABLET) {
                 this.ifElseBranchUpdateFunction(4, () => {
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
@@ -622,7 +720,7 @@ class Index extends ViewPU {
                                 let componentCall = new ScanPage(this, {
                                     language: this.__language,
                                     showScanPage: this.__showScanPage
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 161, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 221, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -653,7 +751,7 @@ class Index extends ViewPU {
                                     showMockSettingsPage: this.__showMockSettingsPage,
                                     showPhysicalCardManagerPage: this.__showPhysicalCardManagerPage,
                                     isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 166, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 226, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -689,7 +787,7 @@ class Index extends ViewPU {
                                     showLanguagePage: this.__showLanguagePage,
                                     isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET,
                                     windowWidth: this.windowWidth
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 177, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 237, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -767,7 +865,7 @@ class Index extends ViewPU {
         {
             this.observeComponentCreation2((elmtId, isInitialRender) => {
                 if (isInitialRender) {
-                    let componentCall = new CardPreview(this, { card: this.verificationCard(), language: this.language }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 211, col: 9 });
+                    let componentCall = new CardPreview(this, { card: this.verificationCard(), language: this.language }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 271, col: 9 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {
@@ -1050,7 +1148,7 @@ class Index extends ViewPU {
         {
             this.observeComponentCreation2((elmtId, isInitialRender) => {
                 if (isInitialRender) {
-                    let componentCall = new CardPreview(this, { card: this.invitationPreviewCard(), language: this.language }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 433, col: 7 });
+                    let componentCall = new CardPreview(this, { card: this.invitationPreviewCard(), language: this.language }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 493, col: 7 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {

@@ -20625,3 +20625,1707 @@ Require stack:
 [2026-07-27T14:18:20.362] [DEBUG] debug-file - worker[22] exits with exit code 1.
 [2026-07-27T14:18:20.363] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
 [2026-07-27T14:18:20.364] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T19:38:55.856] [DEBUG] debug-file - env: nodejsVersion=v18.20.1
+[2026-07-27T19:38:55.967] [DEBUG] debug-file - env: daemon=true
+[2026-07-27T19:38:55.857] [DEBUG] debug-file - env: hvigor-config.json5 content = {
+  modelVersion: '5.0.0',
+  dependencies: {},
+  execution: {},
+  logging: {},
+  debugging: {},
+  nodeOptions: {}
+}
+[2026-07-27T19:38:56.817] [DEBUG] debug-file - hvigor java daemon: Starting java daemon. jvmXmxValue=512m, jarPath=C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\lib\hvigor-java-daemon.jar
+[2026-07-27T19:38:56.818] [DEBUG] debug-file - hvigor java daemon: Read cache file, 
+    port=45050, pid=29508, sessionId exists=true
+[2026-07-27T19:38:56.841] [DEBUG] debug-file - hvigor java daemon: tryConnect failed, Error: connect ECONNREFUSED 127.0.0.1:45050, will start new daemon
+[2026-07-27T19:38:56.858] [DEBUG] debug-file - java daemon started at port 45050 pid 35116
+[2026-07-27T19:38:56.896] [DEBUG] debug-file - session manager: set active socket. socketId=8mmp32tHLziYwgMSAAAB
+[2026-07-27T19:38:57.757] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T19:38:57.761] [DEBUG] debug-file - Since there is no instance or instance is terminated, create a new worker pool.
+[2026-07-27T19:38:57.761] [DEBUG] debug-file - Worker pool is initialized with config:  {
+  minPoolNum: 2,
+  maxPoolNum: undefined,
+  maxCoreSize: undefined,
+  cacheCapacity: undefined,
+  cacheTtl: undefined
+}
+[2026-07-27T19:38:57.762] [DEBUG] debug-file - Create  resident worker with id: 0.
+[2026-07-27T19:38:57.764] [DEBUG] debug-file - Create  resident worker with id: 1.
+[2026-07-27T19:38:57.766] [DEBUG] debug-file - Workers' log level updated to INFO
+[2026-07-27T19:38:57.780] [DEBUG] debug-file - Hvigor init with startParameters:{
+  hvigorfileTypeCheck: false,
+  parallelExecution: true,
+  incrementalExecution: true,
+  printStackTrace: false,
+  daemon: true,
+  analyze: 0,
+  logLevel: Level { level: 20000, levelStr: 'INFO', colour: 'green' },
+  optimizationStrategy: 'memory',
+  hotCompile: undefined,
+  hotReloadBuild: undefined,
+  customizedParam: undefined
+}
+[2026-07-27T19:38:57.786] [DEBUG] debug-file - Cache service initialization finished in 6 ms 
+[2026-07-27T19:38:57.788] [DEBUG] debug-file - hvigorfile, resolving D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T19:39:00.939] [DEBUG] debug-file - hvigorfile, require result:  { default: { plugins: [] } }
+[2026-07-27T19:39:00.940] [DEBUG] debug-file - hvigorfile, binding system plugins null
+[2026-07-27T19:39:00.940] [DEBUG] debug-file - Starting plugin build process
+[2026-07-27T19:39:00.940] [DEBUG] debug-file - App plugin prepare start...
+[2026-07-27T19:39:00.940] [DEBUG] debug-file - App plugin prepare end...
+[2026-07-27T19:39:00.941] [DEBUG] debug-file - App plugin creating...
+[2026-07-27T19:39:01.174] [DEBUG] debug-file - App plugin register hook start...
+[2026-07-27T19:39:01.175] [DEBUG] debug-file - App plugin register hook end...
+[2026-07-27T19:39:01.175] [DEBUG] debug-file - Plugin build process completed
+[2026-07-27T19:39:01.177] [DEBUG] debug-file - Start initialize project's product build option map with build mode debug.
+[2026-07-27T19:39:01.177] [DEBUG] debug-file - Picking option from product 'default' with build mode 'debug'.
+[2026-07-27T19:39:01.178] [DEBUG] debug-file - Product 'default' build option initialized
+[2026-07-27T19:39:01.178] [DEBUG] debug-file - End initialize project's product build option map with build mode 'debug'.
+[2026-07-27T19:39:01.180] [DEBUG] debug-file - Obtain build option for product 'default'in this build.
+[2026-07-27T19:39:01.183] [DEBUG] debug-file - D:\SLE-ID\slekey\build\cache\default\remote_hsp\remoteHspCache.json not exists.
+[2026-07-27T19:39:01.185] [DEBUG] debug-file - Local scan or download HarmonyOS sdk components toolchains,ets,js,native,previewer
+[2026-07-27T19:39:01.193] [DEBUG] debug-file - Local scan or download hmscore sdk components toolchains,ets,native
+[2026-07-27T19:39:01.198] [DEBUG] debug-file - Start recording SDK configuration permission data.
+[2026-07-27T19:39:01.245] [DEBUG] debug-file - Sdk init in 61 ms 
+[2026-07-27T19:39:01.257] [DEBUG] debug-file - Project task initialization takes 10 ms 
+[2026-07-27T19:39:01.257] [DEBUG] debug-file - hvigorfile, begin to bind custom plugins...
+[2026-07-27T19:39:01.257] [DEBUG] debug-file - hvigorfile, no custom plugins were found in D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T19:39:01.257] [DEBUG] debug-file - hvigorfile, resolve finished D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T19:39:01.259] [DEBUG] debug-file - hvigorfile, resolving D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T19:39:01.267] [DEBUG] debug-file - hvigorfile, require result:  { default: { plugins: [] } }
+[2026-07-27T19:39:01.268] [DEBUG] debug-file - hvigorfile, binding system plugins null
+[2026-07-27T19:39:01.268] [DEBUG] debug-file - Starting plugin build process
+[2026-07-27T19:39:01.268] [DEBUG] debug-file - Hap plugin creating...
+[2026-07-27T19:39:01.269] [DEBUG] debug-file - failed to load cangjie to dynamically generate schemas: Error: Cannot find module '@ohos/cangjie-build-support/index'
+Require stack:
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\hooks\cangjie-register.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\strategy\stage-init-strategy.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\builder\abstract-plugin-builder.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\builder\app-plugin-builder.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\factory\plugin-factory.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\index.js
+- D:\SLE-ID\slekey\hvigorfile.ts
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\internal\lifecycle\configuration.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\boot\index.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\daemon\cluster\worker-process-lifecycle.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\daemon\process\daemon-process-boot-script.js
+[2026-07-27T19:39:01.285] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=debug
+[2026-07-27T19:39:01.286] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T19:39:01.287] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T19:39:01.287] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T19:39:01.287] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=release
+[2026-07-27T19:39:01.287] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T19:39:01.288] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T19:39:01.288] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T19:39:01.288] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=debug
+[2026-07-27T19:39:01.289] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T19:39:01.289] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T19:39:01.289] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T19:39:01.289] [DEBUG] debug-file - Obtain build option for module 'entry' target 'default'in this build.
+[2026-07-27T19:39:01.294] [DEBUG] debug-file - Module entry task initialization takes 4 ms 
+[2026-07-27T19:39:01.295] [DEBUG] debug-file - Hap plugin register hook start...
+[2026-07-27T19:39:01.295] [DEBUG] debug-file - Hap plugin register hook end...
+[2026-07-27T19:39:01.295] [DEBUG] debug-file - Plugin build process completed
+[2026-07-27T19:39:01.295] [DEBUG] debug-file - hvigorfile, begin to bind custom plugins...
+[2026-07-27T19:39:01.295] [DEBUG] debug-file - hvigorfile, no custom plugins were found in D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T19:39:01.295] [DEBUG] debug-file - hvigorfile, resolve finished D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T19:39:01.393] [DEBUG] debug-file - hvigorfile, resolve hvigorfile dependencies in 98 ms 
+[2026-07-27T19:39:01.393] [DEBUG] debug-file - project has submodules:entry
+[2026-07-27T19:39:01.395] [DEBUG] debug-file - start to load updatedOhPackageInfo to the disk
+[2026-07-27T19:39:01.397] [DEBUG] debug-file - load to the disk finished
+[2026-07-27T19:39:01.399] [DEBUG] debug-file - Start to initialize dependency information.
+[2026-07-27T19:39:01.407] [DEBUG] debug-file - Module slekey Collected Dependency: D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium
+[2026-07-27T19:39:01.407] [DEBUG] debug-file - Module slekey's total dependency: 1
+[2026-07-27T19:39:01.408] [DEBUG] debug-file - Start to initialize dependency information.
+[2026-07-27T19:39:01.412] [DEBUG] debug-file - Module entry Collected Dependency: D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium
+[2026-07-27T19:39:01.412] [DEBUG] debug-file - Module entry's total dependency: 1
+[2026-07-27T19:39:01.420] [DEBUG] debug-file - Configuration phase cost:3 s 634 ms 
+[2026-07-27T19:39:01.423] [DEBUG] debug-file - Configuration task cost before running: 3 s 656 ms 
+[2026-07-27T19:39:01.432] [DEBUG] debug-file - Executing task :entry:default@PreBuild
+[2026-07-27T19:39:01.434] [DEBUG] debug-file - Task 'entry:default@PreBuild' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.444] [DEBUG] debug-file - entry:default@PreBuild is not up-to-date, since the task snapshots are different.
+[2026-07-27T19:39:01.444] [DEBUG] debug-file - Incremental task entry:default@PreBuild pre-execution cost: 6 ms .
+[2026-07-27T19:39:01.628] [DEBUG] debug-file - current product is not Atomic service.
+[2026-07-27T19:39:01.629] [DEBUG] debug-file - Use tool [win32: JAVA_HOME, CLASSPATH]
+ [
+  { JAVA_HOME: 'C:\\Program Files\\Huawei\\DevEco Studio\\jbr' },
+  { CLASSPATH: undefined }
+]
+[2026-07-27T19:39:01.629] [DEBUG] debug-file - Use tool [win32: NODE_HOME]
+ [
+  {
+    NODE_HOME: 'C:\\Program Files\\Huawei\\DevEco Studio\\tools\\node'
+  }
+]
+[2026-07-27T19:39:01.630] [DEBUG] debug-file - entry : default@PreBuild cost memory 13.413032531738281
+[2026-07-27T19:39:01.630] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 864 ms 
+[2026-07-27T19:39:01.633] [INFO] debug-file - Finished :entry:default@PreBuild... after 199 ms 
+[2026-07-27T19:39:01.634] [DEBUG] debug-file - Executing task :entry:default@CreateModuleInfo
+[2026-07-27T19:39:01.634] [DEBUG] debug-file - Task 'entry:default@CreateModuleInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.635] [DEBUG] debug-file - entry : default@CreateModuleInfo cost memory 0.04248809814453125
+[2026-07-27T19:39:01.635] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 869 ms 
+[2026-07-27T19:39:01.635] [INFO] debug-file - Finished :entry:default@CreateModuleInfo... after 2 ms 
+[2026-07-27T19:39:01.639] [DEBUG] debug-file - Executing task :entry:default@GenerateMetadata
+[2026-07-27T19:39:01.640] [DEBUG] debug-file - Task 'entry:default@GenerateMetadata' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.642] [DEBUG] debug-file - Incremental task entry:default@GenerateMetadata pre-execution cost: 2 ms .
+[2026-07-27T19:39:01.642] [DEBUG] debug-file - entry : default@GenerateMetadata cost memory 0.3460845947265625
+[2026-07-27T19:39:01.642] [INFO] debug-file - UP-TO-DATE :entry:default@GenerateMetadata...  
+[2026-07-27T19:39:01.644] [DEBUG] debug-file - Executing task :entry:default@ConfigureCmake
+[2026-07-27T19:39:01.644] [DEBUG] debug-file - entry : default@ConfigureCmake cost memory 0.014556884765625
+[2026-07-27T19:39:01.645] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 878 ms 
+[2026-07-27T19:39:01.645] [INFO] debug-file - Finished :entry:default@ConfigureCmake... after 1 ms 
+[2026-07-27T19:39:01.646] [DEBUG] debug-file - Executing task :entry:default@MergeProfile
+[2026-07-27T19:39:01.647] [DEBUG] debug-file - Task 'entry:default@MergeProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.650] [DEBUG] debug-file - Incremental task entry:default@MergeProfile pre-execution cost: 3 ms .
+[2026-07-27T19:39:01.650] [DEBUG] debug-file - entry : default@MergeProfile cost memory 0.14606475830078125
+[2026-07-27T19:39:01.650] [INFO] debug-file - UP-TO-DATE :entry:default@MergeProfile...  
+[2026-07-27T19:39:01.652] [DEBUG] debug-file - Executing task :entry:default@CreateBuildProfile
+[2026-07-27T19:39:01.652] [DEBUG] debug-file - Task 'entry:default@CreateBuildProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.654] [DEBUG] debug-file - Incremental task entry:default@CreateBuildProfile pre-execution cost: 1 ms .
+[2026-07-27T19:39:01.654] [DEBUG] debug-file - entry : default@CreateBuildProfile cost memory 0.104248046875
+[2026-07-27T19:39:01.654] [INFO] debug-file - UP-TO-DATE :entry:default@CreateBuildProfile...  
+[2026-07-27T19:39:01.655] [DEBUG] debug-file - Executing task :entry:default@PreCheckSyscap
+[2026-07-27T19:39:01.655] [DEBUG] debug-file - entry : default@PreCheckSyscap cost memory 0.01479339599609375
+[2026-07-27T19:39:01.655] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 889 ms 
+[2026-07-27T19:39:01.655] [INFO] debug-file - Finished :entry:default@PreCheckSyscap... after 1 ms 
+[2026-07-27T19:39:01.657] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgContextInfo
+[2026-07-27T19:39:01.672] [DEBUG] debug-file - Task 'entry:default@GeneratePkgContextInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.673] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgContextInfo pre-execution cost: 1 ms .
+[2026-07-27T19:39:01.673] [DEBUG] debug-file - entry : default@GeneratePkgContextInfo cost memory 0.574737548828125
+[2026-07-27T19:39:01.674] [INFO] debug-file - UP-TO-DATE :entry:default@GeneratePkgContextInfo...  
+[2026-07-27T19:39:01.675] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgSdkInfo
+[2026-07-27T19:39:01.677] [DEBUG] debug-file - Dependency key: @ohos/hypium already exists, current dependency listed in devDependencies will be ignored.
+[2026-07-27T19:39:01.678] [DEBUG] debug-file - Task 'entry:default@GeneratePkgSdkInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.678] [DEBUG] debug-file - entry : default@GeneratePkgSdkInfo cost memory 0.12999725341796875
+[2026-07-27T19:39:01.679] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 912 ms 
+[2026-07-27T19:39:01.679] [INFO] debug-file - Finished :entry:default@GeneratePkgSdkInfo... after 4 ms 
+[2026-07-27T19:39:01.682] [DEBUG] debug-file - Executing task :entry:default@ProcessIntegratedHsp
+[2026-07-27T19:39:01.685] [DEBUG] debug-file - entry:default@ProcessIntegratedHsp is not up-to-date, since the output file 'D:\SLE-ID\slekey\build\cache\default\integrated_hsp\integratedHspCache.json' does not exist.
+[2026-07-27T19:39:01.685] [DEBUG] debug-file - Incremental task entry:default@ProcessIntegratedHsp pre-execution cost: 3 ms .
+[2026-07-27T19:39:01.686] [DEBUG] debug-file - entry : default@ProcessIntegratedHsp cost memory -10.558723449707031
+[2026-07-27T19:39:01.686] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 920 ms 
+[2026-07-27T19:39:01.686] [INFO] debug-file - Finished :entry:default@ProcessIntegratedHsp... after 4 ms 
+[2026-07-27T19:39:01.687] [DEBUG] debug-file - Executing task :entry:default@BuildNativeWithCmake
+[2026-07-27T19:39:01.688] [DEBUG] debug-file - entry : default@BuildNativeWithCmake cost memory 0.01513671875
+[2026-07-27T19:39:01.688] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 921 ms 
+[2026-07-27T19:39:01.688] [INFO] debug-file - Finished :entry:default@BuildNativeWithCmake... after 1 ms 
+[2026-07-27T19:39:01.689] [DEBUG] debug-file - Executing task :entry:default@MakePackInfo
+[2026-07-27T19:39:01.693] [DEBUG] debug-file - Incremental task entry:default@MakePackInfo pre-execution cost: 3 ms .
+[2026-07-27T19:39:01.693] [DEBUG] debug-file - entry : default@MakePackInfo cost memory 0.16501617431640625
+[2026-07-27T19:39:01.693] [INFO] debug-file - UP-TO-DATE :entry:default@MakePackInfo...  
+[2026-07-27T19:39:01.695] [DEBUG] debug-file - Executing task :entry:default@SyscapTransform
+[2026-07-27T19:39:01.695] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\src\main\syscap.json' from 'sysCapJsonPath' is not exists, just ignore.
+[2026-07-27T19:39:01.696] [DEBUG] debug-file - Task 'entry:default@SyscapTransform' cost while wrapping incremental declarations: 2 ms 
+[2026-07-27T19:39:01.735] [DEBUG] debug-file - entry:default@SyscapTransform is not up-to-date, since the output file 'D:\SLE-ID\slekey\entry\build\default\intermediates\syscap\default\rpcid.sc' does not exist.
+[2026-07-27T19:39:01.735] [DEBUG] debug-file - Incremental task entry:default@SyscapTransform pre-execution cost: 39 ms .
+[2026-07-27T19:39:01.736] [DEBUG] debug-file - entry : default@SyscapTransform cost memory 0.1594696044921875
+[2026-07-27T19:39:01.736] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 970 ms 
+[2026-07-27T19:39:01.736] [INFO] debug-file - Finished :entry:default@SyscapTransform... after 42 ms 
+[2026-07-27T19:39:01.739] [DEBUG] debug-file - Executing task :entry:default@ProcessProfile
+[2026-07-27T19:39:01.740] [DEBUG] debug-file - Task 'entry:default@ProcessProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.742] [DEBUG] debug-file - Incremental task entry:default@ProcessProfile pre-execution cost: 1 ms .
+[2026-07-27T19:39:01.742] [DEBUG] debug-file - entry : default@ProcessProfile cost memory 0.133331298828125
+[2026-07-27T19:39:01.742] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessProfile...  
+[2026-07-27T19:39:01.744] [DEBUG] debug-file - Executing task :entry:default@ProcessRouterMap
+[2026-07-27T19:39:01.748] [DEBUG] debug-file - Incremental task entry:default@ProcessRouterMap pre-execution cost: 3 ms .
+[2026-07-27T19:39:01.748] [DEBUG] debug-file - entry : default@ProcessRouterMap cost memory 0.1713104248046875
+[2026-07-27T19:39:01.750] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessRouterMap...  
+[2026-07-27T19:39:01.751] [DEBUG] debug-file - Executing task :entry:default@ProcessShareConfig
+[2026-07-27T19:39:01.755] [DEBUG] debug-file - Incremental task entry:default@ProcessShareConfig pre-execution cost: 3 ms .
+[2026-07-27T19:39:01.755] [DEBUG] debug-file - entry : default@ProcessShareConfig cost memory 0.27419281005859375
+[2026-07-27T19:39:01.757] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessShareConfig...  
+[2026-07-27T19:39:01.758] [DEBUG] debug-file - Executing task :entry:default@ProcessStartupConfig
+[2026-07-27T19:39:01.759] [DEBUG] debug-file - Task 'entry:default@ProcessStartupConfig' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.760] [DEBUG] debug-file - entry:default@ProcessStartupConfig is not up-to-date, since the output file 'D:\SLE-ID\slekey\entry\build\default\intermediates\startup\default\startup_config.json' does not exist.
+[2026-07-27T19:39:01.760] [DEBUG] debug-file - Incremental task entry:default@ProcessStartupConfig pre-execution cost: 1 ms .
+[2026-07-27T19:39:01.761] [DEBUG] debug-file - entry : default@ProcessStartupConfig cost memory 0.16942596435546875
+[2026-07-27T19:39:01.761] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 995 ms 
+[2026-07-27T19:39:01.762] [INFO] debug-file - Finished :entry:default@ProcessStartupConfig... after 4 ms 
+[2026-07-27T19:39:01.763] [DEBUG] debug-file - Executing task :entry:default@BuildNativeWithNinja
+[2026-07-27T19:39:01.764] [DEBUG] debug-file - entry : default@BuildNativeWithNinja cost memory 0.0200347900390625
+[2026-07-27T19:39:01.764] [DEBUG] debug-file - runTaskFromQueue task cost before running: 3 s 998 ms 
+[2026-07-27T19:39:01.764] [INFO] debug-file - Finished :entry:default@BuildNativeWithNinja... after 1 ms 
+[2026-07-27T19:39:01.766] [DEBUG] debug-file - restool module names: entry; moduleName=entry, taskName=default@ProcessResource
+[2026-07-27T19:39:01.769] [DEBUG] debug-file - Executing task :entry:default@ProcessResource
+[2026-07-27T19:39:01.770] [DEBUG] debug-file - Task 'entry:default@ProcessResource' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.772] [DEBUG] debug-file - Incremental task entry:default@ProcessResource pre-execution cost: 2 ms .
+[2026-07-27T19:39:01.772] [DEBUG] debug-file - entry : default@ProcessResource cost memory 0.1333465576171875
+[2026-07-27T19:39:01.775] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessResource...  
+[2026-07-27T19:39:01.778] [DEBUG] debug-file - Executing task :entry:default@GenerateLoaderJson
+[2026-07-27T19:39:01.780] [DEBUG] debug-file - Task 'entry:default@GenerateLoaderJson' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.791] [DEBUG] debug-file - Incremental task entry:default@GenerateLoaderJson pre-execution cost: 6 ms .
+[2026-07-27T19:39:01.791] [DEBUG] debug-file - entry : default@GenerateLoaderJson cost memory 0.5244903564453125
+[2026-07-27T19:39:01.794] [INFO] debug-file - UP-TO-DATE :entry:default@GenerateLoaderJson...  
+[2026-07-27T19:39:01.796] [DEBUG] debug-file - Executing task :entry:default@ProcessLibs
+[2026-07-27T19:39:01.801] [DEBUG] debug-file - Incremental task entry:default@ProcessLibs pre-execution cost: 2 ms .
+[2026-07-27T19:39:01.801] [DEBUG] debug-file - entry : default@ProcessLibs cost memory 0.41628265380859375
+[2026-07-27T19:39:01.802] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessLibs...  
+[2026-07-27T19:39:01.804] [DEBUG] debug-file - restool module names: entry; moduleName=entry, taskName=default@CompileResource
+[2026-07-27T19:39:01.805] [DEBUG] debug-file - Executing task :entry:default@CompileResource
+[2026-07-27T19:39:01.818] [DEBUG] debug-file - Incremental task entry:default@CompileResource pre-execution cost: 12 ms .
+[2026-07-27T19:39:01.819] [DEBUG] debug-file - entry : default@CompileResource cost memory 0.5985565185546875
+[2026-07-27T19:39:01.820] [INFO] debug-file - UP-TO-DATE :entry:default@CompileResource...  
+[2026-07-27T19:39:01.822] [DEBUG] debug-file - Executing task :entry:default@DoNativeStrip
+[2026-07-27T19:39:01.822] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\binxo\default' from 'doBinxoNativeLibs' is not exists, just ignore.
+[2026-07-27T19:39:01.822] [DEBUG] debug-file - Task 'entry:default@DoNativeStrip' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.824] [DEBUG] debug-file - Incremental task entry:default@DoNativeStrip pre-execution cost: 2 ms .
+[2026-07-27T19:39:01.824] [DEBUG] debug-file - entry : default@DoNativeStrip cost memory 0.0958709716796875
+[2026-07-27T19:39:01.824] [INFO] debug-file - UP-TO-DATE :entry:default@DoNativeStrip...  
+[2026-07-27T19:39:01.826] [DEBUG] debug-file - Executing task :entry:default@CompileArkTS
+[2026-07-27T19:39:01.827] [DEBUG] debug-file - obfuscationOptions: undefined
+[2026-07-27T19:39:01.832] [DEBUG] debug-file - Task 'entry:default@CompileArkTS' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.848] [DEBUG] debug-file - Incremental task entry:default@CompileArkTS pre-execution cost: 13 ms .
+[2026-07-27T19:39:01.848] [DEBUG] debug-file - entry : default@CompileArkTS cost memory 1.1901931762695312
+[2026-07-27T19:39:01.850] [INFO] debug-file - UP-TO-DATE :entry:default@CompileArkTS...  
+[2026-07-27T19:39:01.851] [DEBUG] debug-file - Executing task :entry:default@BuildJS
+[2026-07-27T19:39:01.851] [DEBUG] debug-file - Task 'entry:default@BuildJS' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.855] [DEBUG] debug-file - entry : default@BuildJS cost memory 0.15847015380859375
+[2026-07-27T19:39:01.855] [DEBUG] debug-file - runTaskFromQueue task cost before running: 4 s 89 ms 
+[2026-07-27T19:39:01.855] [INFO] debug-file - Finished :entry:default@BuildJS... after 5 ms 
+[2026-07-27T19:39:01.858] [DEBUG] debug-file - Executing task :entry:default@CacheNativeLibs
+[2026-07-27T19:39:01.858] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\binxo\default' from 'cacheBinxoNativeLibs' is not exists, just ignore.
+[2026-07-27T19:39:01.859] [DEBUG] debug-file - Task 'entry:default@CacheNativeLibs' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.860] [DEBUG] debug-file - Incremental task entry:default@CacheNativeLibs pre-execution cost: 2 ms .
+[2026-07-27T19:39:01.860] [DEBUG] debug-file - entry : default@CacheNativeLibs cost memory 0.12323760986328125
+[2026-07-27T19:39:01.860] [INFO] debug-file - UP-TO-DATE :entry:default@CacheNativeLibs...  
+[2026-07-27T19:39:01.861] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgModuleJson
+[2026-07-27T19:39:01.862] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\preload\default\preload.json' from 'preloadSoJsonPath' is not exists, just ignore.
+[2026-07-27T19:39:01.862] [DEBUG] debug-file - Error occurs while handling @Input 'shouldDeduplicateHar': The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined
+[2026-07-27T19:39:01.863] [DEBUG] debug-file - Task 'entry:default@GeneratePkgModuleJson' cost while wrapping incremental declarations: 2 ms 
+[2026-07-27T19:39:01.863] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgModuleJson pre-execution cost: 1 ms .
+[2026-07-27T19:39:01.864] [DEBUG] debug-file - entry : default@GeneratePkgModuleJson cost memory 0.107147216796875
+[2026-07-27T19:39:01.864] [INFO] debug-file - UP-TO-DATE :entry:default@GeneratePkgModuleJson...  
+[2026-07-27T19:39:01.865] [DEBUG] debug-file - Executing task :entry:default@ProcessCompiledResources
+[2026-07-27T19:39:01.865] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\preload\default\preload.json' from 'preloadSoJsonPath' is not exists, just ignore.
+[2026-07-27T19:39:01.865] [DEBUG] debug-file - Task 'entry:default@ProcessCompiledResources' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:39:01.866] [DEBUG] debug-file - entry : default@ProcessCompiledResources cost memory 0.0584716796875
+[2026-07-27T19:39:01.866] [DEBUG] debug-file - runTaskFromQueue task cost before running: 4 s 100 ms 
+[2026-07-27T19:39:01.866] [INFO] debug-file - Finished :entry:default@ProcessCompiledResources... after 2 ms 
+[2026-07-27T19:39:01.869] [DEBUG] debug-file - Executing task :entry:default@PackageHap
+[2026-07-27T19:39:01.880] [DEBUG] debug-file - Incremental task entry:default@PackageHap pre-execution cost: 9 ms .
+[2026-07-27T19:39:01.880] [DEBUG] debug-file - entry : default@PackageHap cost memory 0.44034576416015625
+[2026-07-27T19:39:01.881] [INFO] debug-file - UP-TO-DATE :entry:default@PackageHap...  
+[2026-07-27T19:39:01.883] [DEBUG] debug-file - Executing task :entry:default@PackingCheck
+[2026-07-27T19:39:01.891] [DEBUG] debug-file - entry : default@PackingCheck cost memory 0.3167572021484375
+[2026-07-27T19:39:01.891] [DEBUG] debug-file - runTaskFromQueue task cost before running: 4 s 125 ms 
+[2026-07-27T19:39:01.892] [INFO] debug-file - Finished :entry:default@PackingCheck... after 9 ms 
+[2026-07-27T19:39:01.894] [DEBUG] debug-file - Executing task :entry:default@SignHap
+[2026-07-27T19:39:01.900] [DEBUG] debug-file - Incremental task entry:default@SignHap pre-execution cost: 4 ms .
+[2026-07-27T19:39:01.900] [DEBUG] debug-file - entry : default@SignHap cost memory 0.11840057373046875
+[2026-07-27T19:39:01.901] [INFO] debug-file - UP-TO-DATE :entry:default@SignHap...  
+[2026-07-27T19:39:01.903] [DEBUG] debug-file - Executing task :entry:default@CollectDebugSymbol
+[2026-07-27T19:39:01.905] [DEBUG] debug-file - entry : default@CollectDebugSymbol cost memory 0.0905303955078125
+[2026-07-27T19:39:01.905] [DEBUG] debug-file - runTaskFromQueue task cost before running: 4 s 139 ms 
+[2026-07-27T19:39:01.905] [INFO] debug-file - Finished :entry:default@CollectDebugSymbol... after 2 ms 
+[2026-07-27T19:39:01.906] [DEBUG] debug-file - Executing task :entry:assembleHap
+[2026-07-27T19:39:01.906] [DEBUG] debug-file - entry : assembleHap cost memory 0.0128326416015625
+[2026-07-27T19:39:01.906] [DEBUG] debug-file - runTaskFromQueue task cost before running: 4 s 140 ms 
+[2026-07-27T19:39:01.906] [INFO] debug-file - Finished :entry:assembleHap... after 1 ms 
+[2026-07-27T19:39:01.924] [INFO] debug-file - BUILD SUCCESSFUL in 4 s 158 ms 
+[2026-07-27T19:39:01.926] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\AppScope\app.json5 cache by regenerate.
+[2026-07-27T19:39:01.926] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\entry\src\main\module.json5 cache by regenerate.
+[2026-07-27T19:39:01.926] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\build-profile.json5 cache by regenerate.
+[2026-07-27T19:39:01.927] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\entry\build-profile.json5 cache by regenerate.
+[2026-07-27T19:39:01.927] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\entry\src\main\resources\base\profile\main_pages.json cache by regenerate.
+[2026-07-27T19:39:01.927] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\hvigor\hvigor-config.json5 cache by regenerate.
+[2026-07-27T19:39:01.927] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\entry\oh-package.json5 cache by regenerate.
+[2026-07-27T19:39:01.928] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\oh-package.json5 cache by regenerate.
+[2026-07-27T19:39:01.929] [DEBUG] debug-file - Incremental task entry:default@PreBuild post-execution cost:4 ms .
+[2026-07-27T19:39:01.929] [DEBUG] debug-file - Update task entry:default@CreateModuleInfo output file:D:\SLE-ID\slekey\entry\build\default\generated\profile\default\ModuleInfo.ts cache.
+[2026-07-27T19:39:01.929] [DEBUG] debug-file - Incremental task entry:default@CreateModuleInfo post-execution cost:1 ms .
+[2026-07-27T19:39:01.929] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GenerateMetadata is up-to-date.
+[2026-07-27T19:39:01.929] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@MergeProfile is up-to-date.
+[2026-07-27T19:39:01.929] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CreateBuildProfile is up-to-date.
+[2026-07-27T19:39:01.929] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GeneratePkgContextInfo is up-to-date.
+[2026-07-27T19:39:01.930] [DEBUG] debug-file - Update task entry:default@GeneratePkgSdkInfo output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgSdkInfo.json cache.
+[2026-07-27T19:39:01.930] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgSdkInfo post-execution cost:1 ms .
+[2026-07-27T19:39:01.930] [DEBUG] debug-file - Update task entry:default@ProcessIntegratedHsp output file:D:\SLE-ID\slekey\build\cache\default\integrated_hsp\integratedHspCache.json cache.
+[2026-07-27T19:39:01.930] [DEBUG] debug-file - Incremental task entry:default@ProcessIntegratedHsp post-execution cost:1 ms .
+[2026-07-27T19:39:01.930] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@MakePackInfo is up-to-date.
+[2026-07-27T19:39:01.930] [DEBUG] debug-file - Update task entry:default@SyscapTransform input file:C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\syscap_tool.exe cache by regenerate.
+[2026-07-27T19:39:01.931] [DEBUG] debug-file - Update task entry:default@SyscapTransform input file:C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\ets\api\device-define cache by regenerate.
+[2026-07-27T19:39:01.931] [DEBUG] debug-file - Update task entry:default@SyscapTransform output file:D:\SLE-ID\slekey\entry\build\default\intermediates\syscap\default\rpcid.sc cache.
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - Incremental task entry:default@SyscapTransform post-execution cost:2 ms .
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessProfile is up-to-date.
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessRouterMap is up-to-date.
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessShareConfig is up-to-date.
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - Update task entry:default@ProcessStartupConfig input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - Update task entry:default@ProcessStartupConfig output file:D:\SLE-ID\slekey\entry\build\default\intermediates\startup\default\startup_config.json cache.
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - Incremental task entry:default@ProcessStartupConfig post-execution cost:1 ms .
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessResource is up-to-date.
+[2026-07-27T19:39:01.932] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GenerateLoaderJson is up-to-date.
+[2026-07-27T19:39:01.933] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessLibs is up-to-date.
+[2026-07-27T19:39:01.933] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CompileResource is up-to-date.
+[2026-07-27T19:39:01.933] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@DoNativeStrip is up-to-date.
+[2026-07-27T19:39:01.933] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CompileArkTS is up-to-date.
+[2026-07-27T19:39:01.933] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default cache by regenerate.
+[2026-07-27T19:39:01.934] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium\index.js cache by regenerate.
+[2026-07-27T19:39:01.934] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\rawfile cache by regenerate.
+[2026-07-27T19:39:01.934] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ResourceTable.txt cache by regenerate.
+[2026-07-27T19:39:01.934] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ark_module.json cache by regenerate.
+[2026-07-27T19:39:01.935] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\base\profile cache by regenerate.
+[2026-07-27T19:39:01.935] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T19:39:01.935] [DEBUG] debug-file - Update task entry:default@BuildJS output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\js cache.
+[2026-07-27T19:39:01.935] [DEBUG] debug-file - Incremental task entry:default@BuildJS post-execution cost:3 ms .
+[2026-07-27T19:39:01.935] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CacheNativeLibs is up-to-date.
+[2026-07-27T19:39:01.935] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GeneratePkgModuleJson is up-to-date.
+[2026-07-27T19:39:01.935] [DEBUG] debug-file - Incremental task entry:default@ProcessCompiledResources post-execution cost:1 ms .
+[2026-07-27T19:39:01.935] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@PackageHap is up-to-date.
+[2026-07-27T19:39:01.936] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@SignHap is up-to-date.
+[2026-07-27T19:39:01.936] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\ets\sourceMaps.map cache by regenerate.
+[2026-07-27T19:39:01.936] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol input file:D:\SLE-ID\slekey\entry\build\default\intermediates\libs\default cache by regenerate.
+[2026-07-27T19:39:01.937] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol output file:D:\SLE-ID\slekey\entry\build\default\outputs\default\symbol cache.
+[2026-07-27T19:39:01.937] [DEBUG] debug-file - Incremental task entry:default@CollectDebugSymbol post-execution cost:2 ms .
+[2026-07-27T19:39:01.982] [DEBUG] debug-file - session manager: send message to worker process.
+[2026-07-27T19:39:01.983] [DEBUG] debug-file - session manager: send message to worker process.
+[2026-07-27T19:39:02.098] [DEBUG] debug-file - Cleanup worker 0.
+[2026-07-27T19:39:02.098] [DEBUG] debug-file - Worker 0 has been cleaned up.
+[2026-07-27T19:39:02.098] [DEBUG] debug-file - Current idle worker size: 1.
+[2026-07-27T19:39:02.098] [DEBUG] debug-file - Current resident worker size: 2.
+[2026-07-27T19:39:02.098] [DEBUG] debug-file - Cleanup worker 1.
+[2026-07-27T19:39:02.098] [DEBUG] debug-file - Worker 1 has been cleaned up.
+[2026-07-27T19:39:02.098] [DEBUG] debug-file - Current idle worker size: 0.
+[2026-07-27T19:39:02.098] [DEBUG] debug-file - Current resident worker size: 2.
+[2026-07-27T19:39:02.099] [DEBUG] debug-file - hvigor build process will be closed.
+[2026-07-27T19:39:02.112] [DEBUG] debug-file - worker[0] exits with exit code 1.
+[2026-07-27T19:39:02.112] [DEBUG] debug-file - worker[1] exits with exit code 1.
+[2026-07-27T19:39:02.116] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T19:39:02.116] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T19:40:03.129] [DEBUG] debug-file - session manager: set active socket. socketId=o65viW6DSHDwZFn5AAAD
+[2026-07-27T19:40:03.135] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T19:40:03.137] [DEBUG] debug-file - Workers' log level updated to INFO
+[2026-07-27T19:40:03.140] [DEBUG] debug-file - Hvigor init with startParameters:{
+  hvigorfileTypeCheck: false,
+  parallelExecution: true,
+  incrementalExecution: true,
+  printStackTrace: false,
+  daemon: true,
+  analyze: 0,
+  logLevel: Level { level: 20000, levelStr: 'INFO', colour: 'green' },
+  optimizationStrategy: 'memory',
+  hotCompile: undefined,
+  hotReloadBuild: undefined,
+  customizedParam: undefined
+}
+[2026-07-27T19:40:03.143] [DEBUG] debug-file - Cache service initialization finished in 4 ms 
+[2026-07-27T19:40:03.144] [DEBUG] debug-file - hvigorfile, resolving D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T19:40:03.150] [DEBUG] debug-file - hvigorfile, require result:  { default: { plugins: [] } }
+[2026-07-27T19:40:03.150] [DEBUG] debug-file - hvigorfile, binding system plugins null
+[2026-07-27T19:40:03.150] [DEBUG] debug-file - Starting plugin build process
+[2026-07-27T19:40:03.150] [DEBUG] debug-file - App plugin prepare start...
+[2026-07-27T19:40:03.150] [DEBUG] debug-file - App plugin prepare end...
+[2026-07-27T19:40:03.150] [DEBUG] debug-file - App plugin creating...
+[2026-07-27T19:40:03.154] [DEBUG] debug-file - App plugin register hook start...
+[2026-07-27T19:40:03.154] [DEBUG] debug-file - App plugin register hook end...
+[2026-07-27T19:40:03.154] [DEBUG] debug-file - Plugin build process completed
+[2026-07-27T19:40:03.155] [DEBUG] debug-file - Start initialize project's product build option map with build mode debug.
+[2026-07-27T19:40:03.155] [DEBUG] debug-file - Picking option from product 'default' with build mode 'debug'.
+[2026-07-27T19:40:03.155] [DEBUG] debug-file - Product 'default' build option initialized
+[2026-07-27T19:40:03.155] [DEBUG] debug-file - End initialize project's product build option map with build mode 'debug'.
+[2026-07-27T19:40:03.156] [DEBUG] debug-file - Obtain build option for product 'default'in this build.
+[2026-07-27T19:40:03.157] [DEBUG] debug-file - D:\SLE-ID\slekey\build\cache\default\remote_hsp\remoteHspCache.json not exists.
+[2026-07-27T19:40:03.159] [DEBUG] debug-file - Start recording SDK configuration permission data.
+[2026-07-27T19:40:03.187] [DEBUG] debug-file - Sdk init in 30 ms 
+[2026-07-27T19:40:03.190] [DEBUG] debug-file - Project task initialization takes 3 ms 
+[2026-07-27T19:40:03.190] [DEBUG] debug-file - hvigorfile, begin to bind custom plugins...
+[2026-07-27T19:40:03.190] [DEBUG] debug-file - hvigorfile, no custom plugins were found in D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T19:40:03.190] [DEBUG] debug-file - hvigorfile, resolve finished D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T19:40:03.190] [DEBUG] debug-file - hvigorfile, resolving D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T19:40:03.193] [DEBUG] debug-file - hvigorfile, require result:  { default: { plugins: [] } }
+[2026-07-27T19:40:03.193] [DEBUG] debug-file - hvigorfile, binding system plugins null
+[2026-07-27T19:40:03.193] [DEBUG] debug-file - Starting plugin build process
+[2026-07-27T19:40:03.193] [DEBUG] debug-file - Hap plugin creating...
+[2026-07-27T19:40:03.194] [DEBUG] debug-file - failed to load cangjie to dynamically generate schemas: Error: Cannot find module '@ohos/cangjie-build-support/index'
+Require stack:
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\hooks\cangjie-register.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\strategy\stage-init-strategy.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\builder\abstract-plugin-builder.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\builder\app-plugin-builder.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\factory\plugin-factory.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\index.js
+- D:\SLE-ID\slekey\hvigorfile.ts
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\internal\lifecycle\configuration.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\boot\index.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\daemon\cluster\worker-process-lifecycle.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\daemon\process\daemon-process-boot-script.js
+[2026-07-27T19:40:03.199] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=debug
+[2026-07-27T19:40:03.199] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T19:40:03.199] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T19:40:03.199] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T19:40:03.199] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=release
+[2026-07-27T19:40:03.199] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T19:40:03.200] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T19:40:03.200] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T19:40:03.200] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=debug
+[2026-07-27T19:40:03.200] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T19:40:03.201] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T19:40:03.201] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T19:40:03.201] [DEBUG] debug-file - Obtain build option for module 'entry' target 'default'in this build.
+[2026-07-27T19:40:03.202] [DEBUG] debug-file - Module entry task initialization takes 1 ms 
+[2026-07-27T19:40:03.202] [DEBUG] debug-file - Hap plugin register hook start...
+[2026-07-27T19:40:03.202] [DEBUG] debug-file - Hap plugin register hook end...
+[2026-07-27T19:40:03.202] [DEBUG] debug-file - Plugin build process completed
+[2026-07-27T19:40:03.202] [DEBUG] debug-file - hvigorfile, begin to bind custom plugins...
+[2026-07-27T19:40:03.202] [DEBUG] debug-file - hvigorfile, no custom plugins were found in D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T19:40:03.202] [DEBUG] debug-file - hvigorfile, resolve finished D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T19:40:03.255] [DEBUG] debug-file - hvigorfile, resolve hvigorfile dependencies in 53 ms 
+[2026-07-27T19:40:03.255] [DEBUG] debug-file - project has submodules:entry
+[2026-07-27T19:40:03.256] [DEBUG] debug-file - start to load updatedOhPackageInfo to the disk
+[2026-07-27T19:40:03.257] [DEBUG] debug-file - load to the disk finished
+[2026-07-27T19:40:03.258] [DEBUG] debug-file - Start to initialize dependency information.
+[2026-07-27T19:40:03.260] [DEBUG] debug-file - Module slekey Collected Dependency: D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium
+[2026-07-27T19:40:03.260] [DEBUG] debug-file - Module slekey's total dependency: 1
+[2026-07-27T19:40:03.260] [DEBUG] debug-file - Start to initialize dependency information.
+[2026-07-27T19:40:03.262] [DEBUG] debug-file - Module entry Collected Dependency: D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium
+[2026-07-27T19:40:03.262] [DEBUG] debug-file - Module entry's total dependency: 1
+[2026-07-27T19:40:03.263] [DEBUG] debug-file - Configuration phase cost:120 ms 
+[2026-07-27T19:40:03.264] [DEBUG] debug-file - Configuration task cost before running: 126 ms 
+[2026-07-27T19:40:03.266] [DEBUG] debug-file - Executing task :entry:default@PreBuild
+[2026-07-27T19:40:03.266] [DEBUG] debug-file - Task 'entry:default@PreBuild' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.269] [DEBUG] debug-file - Incremental task entry:default@PreBuild pre-execution cost: 3 ms .
+[2026-07-27T19:40:03.269] [DEBUG] debug-file - entry : default@PreBuild cost memory 0.27911376953125
+[2026-07-27T19:40:03.270] [INFO] debug-file - UP-TO-DATE :entry:default@PreBuild...  
+[2026-07-27T19:40:03.271] [DEBUG] debug-file - Executing task :entry:default@CreateModuleInfo
+[2026-07-27T19:40:03.271] [DEBUG] debug-file - Task 'entry:default@CreateModuleInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.271] [DEBUG] debug-file - entry : default@CreateModuleInfo cost memory 0.04177093505859375
+[2026-07-27T19:40:03.271] [DEBUG] debug-file - runTaskFromQueue task cost before running: 134 ms 
+[2026-07-27T19:40:03.271] [INFO] debug-file - Finished :entry:default@CreateModuleInfo... after 1 ms 
+[2026-07-27T19:40:03.273] [DEBUG] debug-file - Executing task :entry:default@GenerateMetadata
+[2026-07-27T19:40:03.273] [DEBUG] debug-file - Task 'entry:default@GenerateMetadata' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.274] [DEBUG] debug-file - Incremental task entry:default@GenerateMetadata pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.274] [DEBUG] debug-file - entry : default@GenerateMetadata cost memory 0.08263397216796875
+[2026-07-27T19:40:03.274] [INFO] debug-file - UP-TO-DATE :entry:default@GenerateMetadata...  
+[2026-07-27T19:40:03.274] [DEBUG] debug-file - Executing task :entry:default@ConfigureCmake
+[2026-07-27T19:40:03.274] [DEBUG] debug-file - entry : default@ConfigureCmake cost memory 0.0152435302734375
+[2026-07-27T19:40:03.275] [DEBUG] debug-file - runTaskFromQueue task cost before running: 137 ms 
+[2026-07-27T19:40:03.275] [INFO] debug-file - Finished :entry:default@ConfigureCmake... after 1 ms 
+[2026-07-27T19:40:03.275] [DEBUG] debug-file - Executing task :entry:default@MergeProfile
+[2026-07-27T19:40:03.275] [DEBUG] debug-file - Task 'entry:default@MergeProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.277] [DEBUG] debug-file - Incremental task entry:default@MergeProfile pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.277] [DEBUG] debug-file - entry : default@MergeProfile cost memory 0.1333160400390625
+[2026-07-27T19:40:03.277] [INFO] debug-file - UP-TO-DATE :entry:default@MergeProfile...  
+[2026-07-27T19:40:03.278] [DEBUG] debug-file - Executing task :entry:default@CreateBuildProfile
+[2026-07-27T19:40:03.278] [DEBUG] debug-file - Task 'entry:default@CreateBuildProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.279] [DEBUG] debug-file - Incremental task entry:default@CreateBuildProfile pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.279] [DEBUG] debug-file - entry : default@CreateBuildProfile cost memory 0.09828948974609375
+[2026-07-27T19:40:03.279] [INFO] debug-file - UP-TO-DATE :entry:default@CreateBuildProfile...  
+[2026-07-27T19:40:03.280] [DEBUG] debug-file - Executing task :entry:default@PreCheckSyscap
+[2026-07-27T19:40:03.280] [DEBUG] debug-file - entry : default@PreCheckSyscap cost memory 0.01491546630859375
+[2026-07-27T19:40:03.280] [DEBUG] debug-file - runTaskFromQueue task cost before running: 143 ms 
+[2026-07-27T19:40:03.280] [INFO] debug-file - Finished :entry:default@PreCheckSyscap... after 1 ms 
+[2026-07-27T19:40:03.281] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgContextInfo
+[2026-07-27T19:40:03.284] [DEBUG] debug-file - Task 'entry:default@GeneratePkgContextInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.285] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgContextInfo pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.285] [DEBUG] debug-file - entry : default@GeneratePkgContextInfo cost memory 0.32277679443359375
+[2026-07-27T19:40:03.285] [INFO] debug-file - UP-TO-DATE :entry:default@GeneratePkgContextInfo...  
+[2026-07-27T19:40:03.286] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgSdkInfo
+[2026-07-27T19:40:03.287] [DEBUG] debug-file - Dependency key: @ohos/hypium already exists, current dependency listed in devDependencies will be ignored.
+[2026-07-27T19:40:03.287] [DEBUG] debug-file - Task 'entry:default@GeneratePkgSdkInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.287] [DEBUG] debug-file - entry : default@GeneratePkgSdkInfo cost memory 0.1233978271484375
+[2026-07-27T19:40:03.287] [DEBUG] debug-file - runTaskFromQueue task cost before running: 150 ms 
+[2026-07-27T19:40:03.287] [INFO] debug-file - Finished :entry:default@GeneratePkgSdkInfo... after 2 ms 
+[2026-07-27T19:40:03.289] [DEBUG] debug-file - Executing task :entry:default@ProcessIntegratedHsp
+[2026-07-27T19:40:03.289] [DEBUG] debug-file - entry:default@ProcessIntegratedHsp is not up-to-date, since the output file 'D:\SLE-ID\slekey\build\cache\default\integrated_hsp\integratedHspCache.json' does not exist.
+[2026-07-27T19:40:03.289] [DEBUG] debug-file - Incremental task entry:default@ProcessIntegratedHsp pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.289] [DEBUG] debug-file - entry : default@ProcessIntegratedHsp cost memory 0.05472564697265625
+[2026-07-27T19:40:03.289] [DEBUG] debug-file - runTaskFromQueue task cost before running: 152 ms 
+[2026-07-27T19:40:03.289] [INFO] debug-file - Finished :entry:default@ProcessIntegratedHsp... after 1 ms 
+[2026-07-27T19:40:03.290] [DEBUG] debug-file - Executing task :entry:default@BuildNativeWithCmake
+[2026-07-27T19:40:03.290] [DEBUG] debug-file - entry : default@BuildNativeWithCmake cost memory 0.0145721435546875
+[2026-07-27T19:40:03.290] [DEBUG] debug-file - runTaskFromQueue task cost before running: 153 ms 
+[2026-07-27T19:40:03.290] [INFO] debug-file - Finished :entry:default@BuildNativeWithCmake... after 1 ms 
+[2026-07-27T19:40:03.291] [DEBUG] debug-file - Executing task :entry:default@MakePackInfo
+[2026-07-27T19:40:03.292] [DEBUG] debug-file - Incremental task entry:default@MakePackInfo pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.292] [DEBUG] debug-file - entry : default@MakePackInfo cost memory 0.09716796875
+[2026-07-27T19:40:03.292] [INFO] debug-file - UP-TO-DATE :entry:default@MakePackInfo...  
+[2026-07-27T19:40:03.293] [DEBUG] debug-file - Executing task :entry:default@SyscapTransform
+[2026-07-27T19:40:03.293] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\src\main\syscap.json' from 'sysCapJsonPath' is not exists, just ignore.
+[2026-07-27T19:40:03.293] [DEBUG] debug-file - Task 'entry:default@SyscapTransform' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.294] [DEBUG] debug-file - entry:default@SyscapTransform is not up-to-date, since the output file 'D:\SLE-ID\slekey\entry\build\default\intermediates\syscap\default\rpcid.sc' does not exist.
+[2026-07-27T19:40:03.294] [DEBUG] debug-file - Incremental task entry:default@SyscapTransform pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.294] [DEBUG] debug-file - entry : default@SyscapTransform cost memory 0.142822265625
+[2026-07-27T19:40:03.294] [DEBUG] debug-file - runTaskFromQueue task cost before running: 157 ms 
+[2026-07-27T19:40:03.294] [INFO] debug-file - Finished :entry:default@SyscapTransform... after 2 ms 
+[2026-07-27T19:40:03.295] [DEBUG] debug-file - Executing task :entry:default@ProcessProfile
+[2026-07-27T19:40:03.296] [DEBUG] debug-file - Task 'entry:default@ProcessProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.296] [DEBUG] debug-file - Incremental task entry:default@ProcessProfile pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.296] [DEBUG] debug-file - entry : default@ProcessProfile cost memory 0.2180938720703125
+[2026-07-27T19:40:03.296] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessProfile...  
+[2026-07-27T19:40:03.297] [DEBUG] debug-file - Executing task :entry:default@ProcessRouterMap
+[2026-07-27T19:40:03.298] [DEBUG] debug-file - Incremental task entry:default@ProcessRouterMap pre-execution cost: 2 ms .
+[2026-07-27T19:40:03.298] [DEBUG] debug-file - entry : default@ProcessRouterMap cost memory 0.162689208984375
+[2026-07-27T19:40:03.299] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessRouterMap...  
+[2026-07-27T19:40:03.301] [DEBUG] debug-file - Executing task :entry:default@ProcessShareConfig
+[2026-07-27T19:40:03.302] [DEBUG] debug-file - Incremental task entry:default@ProcessShareConfig pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.302] [DEBUG] debug-file - entry : default@ProcessShareConfig cost memory 0.135284423828125
+[2026-07-27T19:40:03.302] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessShareConfig...  
+[2026-07-27T19:40:03.303] [DEBUG] debug-file - Executing task :entry:default@ProcessStartupConfig
+[2026-07-27T19:40:03.303] [DEBUG] debug-file - Task 'entry:default@ProcessStartupConfig' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.303] [DEBUG] debug-file - entry:default@ProcessStartupConfig is not up-to-date, since the output file 'D:\SLE-ID\slekey\entry\build\default\intermediates\startup\default\startup_config.json' does not exist.
+[2026-07-27T19:40:03.304] [DEBUG] debug-file - Incremental task entry:default@ProcessStartupConfig pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.304] [DEBUG] debug-file - entry : default@ProcessStartupConfig cost memory 0.13297271728515625
+[2026-07-27T19:40:03.304] [DEBUG] debug-file - runTaskFromQueue task cost before running: 167 ms 
+[2026-07-27T19:40:03.304] [INFO] debug-file - Finished :entry:default@ProcessStartupConfig... after 2 ms 
+[2026-07-27T19:40:03.305] [DEBUG] debug-file - Executing task :entry:default@BuildNativeWithNinja
+[2026-07-27T19:40:03.305] [DEBUG] debug-file - entry : default@BuildNativeWithNinja cost memory 0.0201416015625
+[2026-07-27T19:40:03.305] [DEBUG] debug-file - runTaskFromQueue task cost before running: 168 ms 
+[2026-07-27T19:40:03.305] [INFO] debug-file - Finished :entry:default@BuildNativeWithNinja... after 1 ms 
+[2026-07-27T19:40:03.306] [DEBUG] debug-file - restool module names: entry; moduleName=entry, taskName=default@ProcessResource
+[2026-07-27T19:40:03.308] [DEBUG] debug-file - Executing task :entry:default@ProcessResource
+[2026-07-27T19:40:03.308] [DEBUG] debug-file - Task 'entry:default@ProcessResource' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.309] [DEBUG] debug-file - Incremental task entry:default@ProcessResource pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.309] [DEBUG] debug-file - entry : default@ProcessResource cost memory 0.12772369384765625
+[2026-07-27T19:40:03.310] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessResource...  
+[2026-07-27T19:40:03.311] [DEBUG] debug-file - Executing task :entry:default@GenerateLoaderJson
+[2026-07-27T19:40:03.312] [DEBUG] debug-file - Task 'entry:default@GenerateLoaderJson' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.315] [DEBUG] debug-file - Incremental task entry:default@GenerateLoaderJson pre-execution cost: 3 ms .
+[2026-07-27T19:40:03.315] [DEBUG] debug-file - entry : default@GenerateLoaderJson cost memory 0.49767303466796875
+[2026-07-27T19:40:03.317] [INFO] debug-file - UP-TO-DATE :entry:default@GenerateLoaderJson...  
+[2026-07-27T19:40:03.317] [DEBUG] debug-file - Executing task :entry:default@ProcessLibs
+[2026-07-27T19:40:03.319] [DEBUG] debug-file - Incremental task entry:default@ProcessLibs pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.319] [DEBUG] debug-file - entry : default@ProcessLibs cost memory 0.16840362548828125
+[2026-07-27T19:40:03.320] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessLibs...  
+[2026-07-27T19:40:03.320] [DEBUG] debug-file - restool module names: entry; moduleName=entry, taskName=default@CompileResource
+[2026-07-27T19:40:03.321] [DEBUG] debug-file - Executing task :entry:default@CompileResource
+[2026-07-27T19:40:03.326] [DEBUG] debug-file - Incremental task entry:default@CompileResource pre-execution cost: 5 ms .
+[2026-07-27T19:40:03.326] [DEBUG] debug-file - entry : default@CompileResource cost memory 0.5468215942382812
+[2026-07-27T19:40:03.327] [INFO] debug-file - UP-TO-DATE :entry:default@CompileResource...  
+[2026-07-27T19:40:03.327] [DEBUG] debug-file - Executing task :entry:default@DoNativeStrip
+[2026-07-27T19:40:03.327] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\binxo\default' from 'doBinxoNativeLibs' is not exists, just ignore.
+[2026-07-27T19:40:03.328] [DEBUG] debug-file - Task 'entry:default@DoNativeStrip' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.328] [DEBUG] debug-file - Incremental task entry:default@DoNativeStrip pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.328] [DEBUG] debug-file - entry : default@DoNativeStrip cost memory 0.091400146484375
+[2026-07-27T19:40:03.328] [INFO] debug-file - UP-TO-DATE :entry:default@DoNativeStrip...  
+[2026-07-27T19:40:03.329] [DEBUG] debug-file - Executing task :entry:default@CompileArkTS
+[2026-07-27T19:40:03.329] [DEBUG] debug-file - obfuscationOptions: undefined
+[2026-07-27T19:40:03.331] [DEBUG] debug-file - Task 'entry:default@CompileArkTS' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.336] [DEBUG] debug-file - Incremental task entry:default@CompileArkTS pre-execution cost: 5 ms .
+[2026-07-27T19:40:03.336] [DEBUG] debug-file - entry : default@CompileArkTS cost memory 0.8746185302734375
+[2026-07-27T19:40:03.338] [INFO] debug-file - UP-TO-DATE :entry:default@CompileArkTS...  
+[2026-07-27T19:40:03.339] [DEBUG] debug-file - Executing task :entry:default@BuildJS
+[2026-07-27T19:40:03.339] [DEBUG] debug-file - Task 'entry:default@BuildJS' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.343] [DEBUG] debug-file - entry : default@BuildJS cost memory 0.16017913818359375
+[2026-07-27T19:40:03.343] [DEBUG] debug-file - runTaskFromQueue task cost before running: 206 ms 
+[2026-07-27T19:40:03.343] [INFO] debug-file - Finished :entry:default@BuildJS... after 4 ms 
+[2026-07-27T19:40:03.344] [DEBUG] debug-file - Executing task :entry:default@CacheNativeLibs
+[2026-07-27T19:40:03.345] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\binxo\default' from 'cacheBinxoNativeLibs' is not exists, just ignore.
+[2026-07-27T19:40:03.345] [DEBUG] debug-file - Task 'entry:default@CacheNativeLibs' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.346] [DEBUG] debug-file - Incremental task entry:default@CacheNativeLibs pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.346] [DEBUG] debug-file - entry : default@CacheNativeLibs cost memory 0.11173248291015625
+[2026-07-27T19:40:03.346] [INFO] debug-file - UP-TO-DATE :entry:default@CacheNativeLibs...  
+[2026-07-27T19:40:03.347] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgModuleJson
+[2026-07-27T19:40:03.347] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\preload\default\preload.json' from 'preloadSoJsonPath' is not exists, just ignore.
+[2026-07-27T19:40:03.347] [DEBUG] debug-file - Error occurs while handling @Input 'shouldDeduplicateHar': The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined
+[2026-07-27T19:40:03.347] [DEBUG] debug-file - Task 'entry:default@GeneratePkgModuleJson' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.348] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgModuleJson pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.348] [DEBUG] debug-file - entry : default@GeneratePkgModuleJson cost memory 0.10260009765625
+[2026-07-27T19:40:03.348] [INFO] debug-file - UP-TO-DATE :entry:default@GeneratePkgModuleJson...  
+[2026-07-27T19:40:03.349] [DEBUG] debug-file - Executing task :entry:default@ProcessCompiledResources
+[2026-07-27T19:40:03.349] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\preload\default\preload.json' from 'preloadSoJsonPath' is not exists, just ignore.
+[2026-07-27T19:40:03.349] [DEBUG] debug-file - Task 'entry:default@ProcessCompiledResources' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T19:40:03.349] [DEBUG] debug-file - entry : default@ProcessCompiledResources cost memory 0.0565338134765625
+[2026-07-27T19:40:03.349] [DEBUG] debug-file - runTaskFromQueue task cost before running: 212 ms 
+[2026-07-27T19:40:03.349] [INFO] debug-file - Finished :entry:default@ProcessCompiledResources... after 1 ms 
+[2026-07-27T19:40:03.352] [DEBUG] debug-file - Executing task :entry:default@PackageHap
+[2026-07-27T19:40:03.363] [DEBUG] debug-file - Incremental task entry:default@PackageHap pre-execution cost: 11 ms .
+[2026-07-27T19:40:03.363] [DEBUG] debug-file - entry : default@PackageHap cost memory -13.633415222167969
+[2026-07-27T19:40:03.364] [INFO] debug-file - UP-TO-DATE :entry:default@PackageHap...  
+[2026-07-27T19:40:03.365] [DEBUG] debug-file - Executing task :entry:default@PackingCheck
+[2026-07-27T19:40:03.370] [DEBUG] debug-file - entry : default@PackingCheck cost memory 0.69952392578125
+[2026-07-27T19:40:03.370] [DEBUG] debug-file - runTaskFromQueue task cost before running: 233 ms 
+[2026-07-27T19:40:03.370] [INFO] debug-file - Finished :entry:default@PackingCheck... after 5 ms 
+[2026-07-27T19:40:03.371] [DEBUG] debug-file - Executing task :entry:default@SignHap
+[2026-07-27T19:40:03.373] [DEBUG] debug-file - Incremental task entry:default@SignHap pre-execution cost: 1 ms .
+[2026-07-27T19:40:03.373] [DEBUG] debug-file - entry : default@SignHap cost memory 0.10699462890625
+[2026-07-27T19:40:03.373] [INFO] debug-file - UP-TO-DATE :entry:default@SignHap...  
+[2026-07-27T19:40:03.374] [DEBUG] debug-file - Executing task :entry:default@CollectDebugSymbol
+[2026-07-27T19:40:03.375] [DEBUG] debug-file - entry : default@CollectDebugSymbol cost memory 0.0812530517578125
+[2026-07-27T19:40:03.375] [DEBUG] debug-file - runTaskFromQueue task cost before running: 238 ms 
+[2026-07-27T19:40:03.375] [INFO] debug-file - Finished :entry:default@CollectDebugSymbol... after 1 ms 
+[2026-07-27T19:40:03.375] [DEBUG] debug-file - Executing task :entry:assembleHap
+[2026-07-27T19:40:03.376] [DEBUG] debug-file - entry : assembleHap cost memory 0.01275634765625
+[2026-07-27T19:40:03.376] [DEBUG] debug-file - runTaskFromQueue task cost before running: 238 ms 
+[2026-07-27T19:40:03.376] [INFO] debug-file - Finished :entry:assembleHap... after 1 ms 
+[2026-07-27T19:40:03.386] [INFO] debug-file - BUILD SUCCESSFUL in 249 ms 
+[2026-07-27T19:40:03.386] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@PreBuild is up-to-date.
+[2026-07-27T19:40:03.386] [DEBUG] debug-file - Update task entry:default@CreateModuleInfo output file:D:\SLE-ID\slekey\entry\build\default\generated\profile\default\ModuleInfo.ts cache.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - Incremental task entry:default@CreateModuleInfo post-execution cost:1 ms .
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GenerateMetadata is up-to-date.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@MergeProfile is up-to-date.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CreateBuildProfile is up-to-date.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GeneratePkgContextInfo is up-to-date.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - Update task entry:default@GeneratePkgSdkInfo output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgSdkInfo.json cache.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgSdkInfo post-execution cost:1 ms .
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - Update task entry:default@ProcessIntegratedHsp output file:D:\SLE-ID\slekey\build\cache\default\integrated_hsp\integratedHspCache.json cache.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - Incremental task entry:default@ProcessIntegratedHsp post-execution cost:1 ms .
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@MakePackInfo is up-to-date.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - Update task entry:default@SyscapTransform input file:C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\syscap_tool.exe cache by regenerate.
+[2026-07-27T19:40:03.387] [DEBUG] debug-file - Update task entry:default@SyscapTransform input file:C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\ets\api\device-define cache by regenerate.
+[2026-07-27T19:40:03.388] [DEBUG] debug-file - Update task entry:default@SyscapTransform output file:D:\SLE-ID\slekey\entry\build\default\intermediates\syscap\default\rpcid.sc cache.
+[2026-07-27T19:40:03.388] [DEBUG] debug-file - Incremental task entry:default@SyscapTransform post-execution cost:1 ms .
+[2026-07-27T19:40:03.388] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessProfile is up-to-date.
+[2026-07-27T19:40:03.388] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessRouterMap is up-to-date.
+[2026-07-27T19:40:03.388] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessShareConfig is up-to-date.
+[2026-07-27T19:40:03.388] [DEBUG] debug-file - Update task entry:default@ProcessStartupConfig input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T19:40:03.388] [DEBUG] debug-file - Update task entry:default@ProcessStartupConfig output file:D:\SLE-ID\slekey\entry\build\default\intermediates\startup\default\startup_config.json cache.
+[2026-07-27T19:40:03.389] [DEBUG] debug-file - Incremental task entry:default@ProcessStartupConfig post-execution cost:1 ms .
+[2026-07-27T19:40:03.389] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessResource is up-to-date.
+[2026-07-27T19:40:03.389] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GenerateLoaderJson is up-to-date.
+[2026-07-27T19:40:03.389] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessLibs is up-to-date.
+[2026-07-27T19:40:03.389] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CompileResource is up-to-date.
+[2026-07-27T19:40:03.389] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@DoNativeStrip is up-to-date.
+[2026-07-27T19:40:03.389] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CompileArkTS is up-to-date.
+[2026-07-27T19:40:03.389] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default cache by regenerate.
+[2026-07-27T19:40:03.390] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium\index.js cache by regenerate.
+[2026-07-27T19:40:03.390] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\rawfile cache by regenerate.
+[2026-07-27T19:40:03.390] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ResourceTable.txt cache by regenerate.
+[2026-07-27T19:40:03.390] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ark_module.json cache by regenerate.
+[2026-07-27T19:40:03.390] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\base\profile cache by regenerate.
+[2026-07-27T19:40:03.390] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T19:40:03.390] [DEBUG] debug-file - Update task entry:default@BuildJS output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\js cache.
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - Incremental task entry:default@BuildJS post-execution cost:2 ms .
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CacheNativeLibs is up-to-date.
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GeneratePkgModuleJson is up-to-date.
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - Incremental task entry:default@ProcessCompiledResources post-execution cost:1 ms .
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@PackageHap is up-to-date.
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@SignHap is up-to-date.
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\ets\sourceMaps.map cache by regenerate.
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol input file:D:\SLE-ID\slekey\entry\build\default\intermediates\libs\default cache by regenerate.
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol output file:D:\SLE-ID\slekey\entry\build\default\outputs\default\symbol cache.
+[2026-07-27T19:40:03.391] [DEBUG] debug-file - Incremental task entry:default@CollectDebugSymbol post-execution cost:1 ms .
+[2026-07-27T19:40:03.411] [DEBUG] debug-file - There's no busy workers and idle workers need cleanup.
+[2026-07-27T19:40:03.411] [DEBUG] debug-file - hvigor build process will be closed.
+[2026-07-27T19:40:03.420] [DEBUG] debug-file - session manager: send message to worker process.
+[2026-07-27T19:40:03.421] [DEBUG] debug-file - session manager: send message to worker process.
+[2026-07-27T19:40:03.445] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T19:40:03.446] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T20:34:25.342] [DEBUG] debug-file - env: nodejsVersion=v24.16.0
+[2026-07-27T20:34:25.397] [DEBUG] debug-file - env: daemon=true
+[2026-07-27T20:34:25.343] [DEBUG] debug-file - env: hvigor-config.json5 content = {
+  modelVersion: '5.0.0',
+  dependencies: {},
+  execution: {},
+  logging: {},
+  debugging: {},
+  nodeOptions: {}
+}
+[2026-07-27T20:34:25.831] [DEBUG] debug-file - hvigor java daemon: Starting java daemon. jvmXmxValue=512m, jarPath=C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\lib\hvigor-java-daemon.jar
+[2026-07-27T20:34:25.831] [DEBUG] debug-file - hvigor java daemon: Read cache file, 
+    port=45050, pid=35116, sessionId exists=true
+[2026-07-27T20:34:25.850] [DEBUG] debug-file - hvigor java daemon: tryConnect failed, Error: connect ECONNREFUSED 127.0.0.1:45050, will start new daemon
+[2026-07-27T20:34:25.860] [DEBUG] debug-file - java daemon started at port 45050 pid 6796
+[2026-07-27T20:34:25.881] [DEBUG] debug-file - session manager: set active socket. socketId=Ul4jkFuxavDFNg9aAAAB
+[2026-07-27T20:34:26.230] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T20:34:26.232] [DEBUG] debug-file - Since there is no instance or instance is terminated, create a new worker pool.
+[2026-07-27T20:34:26.232] [DEBUG] debug-file - Worker pool is initialized with config:  {
+  minPoolNum: 2,
+  maxPoolNum: undefined,
+  maxCoreSize: undefined,
+  cacheCapacity: undefined,
+  cacheTtl: undefined
+}
+[2026-07-27T20:34:26.232] [DEBUG] debug-file - Create  resident worker with id: 0.
+[2026-07-27T20:34:26.234] [DEBUG] debug-file - Create  resident worker with id: 1.
+[2026-07-27T20:34:26.235] [DEBUG] debug-file - Workers' log level updated to INFO
+[2026-07-27T20:34:26.242] [DEBUG] debug-file - Hvigor init with startParameters:{
+  hvigorfileTypeCheck: false,
+  parallelExecution: true,
+  incrementalExecution: true,
+  printStackTrace: false,
+  daemon: true,
+  analyze: 0,
+  logLevel: Level { level: 20000, levelStr: 'INFO', colour: 'green' },
+  optimizationStrategy: 'memory',
+  hotCompile: undefined,
+  hotReloadBuild: undefined,
+  customizedParam: undefined
+}
+[2026-07-27T20:34:26.246] [DEBUG] debug-file - Cache service initialization finished in 5 ms 
+[2026-07-27T20:34:26.247] [DEBUG] debug-file - hvigorfile, resolving D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T20:34:27.704] [DEBUG] debug-file - hvigorfile, require result:  { default: { plugins: [] } }
+[2026-07-27T20:34:27.704] [DEBUG] debug-file - hvigorfile, binding system plugins null
+[2026-07-27T20:34:27.704] [DEBUG] debug-file - Starting plugin build process
+[2026-07-27T20:34:27.704] [DEBUG] debug-file - App plugin prepare start...
+[2026-07-27T20:34:27.704] [DEBUG] debug-file - App plugin prepare end...
+[2026-07-27T20:34:27.704] [DEBUG] debug-file - App plugin creating...
+[2026-07-27T20:34:27.826] [DEBUG] debug-file - App plugin register hook start...
+[2026-07-27T20:34:27.826] [DEBUG] debug-file - App plugin register hook end...
+[2026-07-27T20:34:27.826] [DEBUG] debug-file - Plugin build process completed
+[2026-07-27T20:34:27.827] [DEBUG] debug-file - Start initialize project's product build option map with build mode debug.
+[2026-07-27T20:34:27.827] [DEBUG] debug-file - Picking option from product 'default' with build mode 'debug'.
+[2026-07-27T20:34:27.827] [DEBUG] debug-file - Product 'default' build option initialized
+[2026-07-27T20:34:27.828] [DEBUG] debug-file - End initialize project's product build option map with build mode 'debug'.
+[2026-07-27T20:34:27.829] [DEBUG] debug-file - Obtain build option for product 'default'in this build.
+[2026-07-27T20:34:27.830] [DEBUG] debug-file - D:\SLE-ID\slekey\build\cache\default\remote_hsp\remoteHspCache.json not exists.
+[2026-07-27T20:34:27.831] [DEBUG] debug-file - Local scan or download HarmonyOS sdk components toolchains,ets,js,native,previewer
+[2026-07-27T20:34:27.834] [DEBUG] debug-file - Local scan or download hmscore sdk components toolchains,ets,native
+[2026-07-27T20:34:27.835] [DEBUG] debug-file - Start recording SDK configuration permission data.
+[2026-07-27T20:34:27.854] [DEBUG] debug-file - Sdk init in 24 ms 
+[2026-07-27T20:34:27.858] [DEBUG] debug-file - Project task initialization takes 3 ms 
+[2026-07-27T20:34:27.858] [DEBUG] debug-file - hvigorfile, begin to bind custom plugins...
+[2026-07-27T20:34:27.858] [DEBUG] debug-file - hvigorfile, no custom plugins were found in D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T20:34:27.858] [DEBUG] debug-file - hvigorfile, resolve finished D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T20:34:27.858] [DEBUG] debug-file - hvigorfile, resolving D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T20:34:27.863] [DEBUG] debug-file - hvigorfile, require result:  { default: { plugins: [] } }
+[2026-07-27T20:34:27.863] [DEBUG] debug-file - hvigorfile, binding system plugins null
+[2026-07-27T20:34:27.863] [DEBUG] debug-file - Starting plugin build process
+[2026-07-27T20:34:27.863] [DEBUG] debug-file - Hap plugin creating...
+[2026-07-27T20:34:27.863] [DEBUG] debug-file - failed to load cangjie to dynamically generate schemas: Error: Cannot find module '@ohos/cangjie-build-support/index'
+Require stack:
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\hooks\cangjie-register.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\strategy\stage-init-strategy.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\builder\abstract-plugin-builder.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\builder\app-plugin-builder.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\factory\plugin-factory.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\index.js
+- D:\SLE-ID\slekey\hvigorfile.ts
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\internal\lifecycle\configuration.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\boot\index.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\daemon\cluster\worker-process-lifecycle.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\daemon\process\daemon-process-boot-script.js
+[2026-07-27T20:34:27.870] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=debug
+[2026-07-27T20:34:27.870] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T20:34:27.870] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T20:34:27.870] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T20:34:27.872] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=release
+[2026-07-27T20:34:27.872] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T20:34:27.873] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T20:34:27.873] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T20:34:27.873] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=debug
+[2026-07-27T20:34:27.873] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T20:34:27.873] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T20:34:27.873] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T20:34:27.873] [DEBUG] debug-file - Obtain build option for module 'entry' target 'default'in this build.
+[2026-07-27T20:34:27.876] [DEBUG] debug-file - Module entry task initialization takes 3 ms 
+[2026-07-27T20:34:27.876] [DEBUG] debug-file - Hap plugin register hook start...
+[2026-07-27T20:34:27.876] [DEBUG] debug-file - Hap plugin register hook end...
+[2026-07-27T20:34:27.876] [DEBUG] debug-file - Plugin build process completed
+[2026-07-27T20:34:27.876] [DEBUG] debug-file - hvigorfile, begin to bind custom plugins...
+[2026-07-27T20:34:27.876] [DEBUG] debug-file - hvigorfile, no custom plugins were found in D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T20:34:27.876] [DEBUG] debug-file - hvigorfile, resolve finished D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T20:34:27.921] [DEBUG] debug-file - hvigorfile, resolve hvigorfile dependencies in 44 ms 
+[2026-07-27T20:34:27.921] [DEBUG] debug-file - project has submodules:entry
+[2026-07-27T20:34:27.922] [DEBUG] debug-file - start to load updatedOhPackageInfo to the disk
+[2026-07-27T20:34:27.925] [DEBUG] debug-file - load to the disk finished
+[2026-07-27T20:34:27.925] [DEBUG] debug-file - Start to initialize dependency information.
+[2026-07-27T20:34:27.930] [DEBUG] debug-file - Module slekey Collected Dependency: D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium
+[2026-07-27T20:34:27.930] [DEBUG] debug-file - Module slekey's total dependency: 1
+[2026-07-27T20:34:27.930] [DEBUG] debug-file - Start to initialize dependency information.
+[2026-07-27T20:34:27.932] [DEBUG] debug-file - Module entry Collected Dependency: D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium
+[2026-07-27T20:34:27.932] [DEBUG] debug-file - Module entry's total dependency: 1
+[2026-07-27T20:34:27.935] [DEBUG] debug-file - Configuration phase cost:1 s 689 ms 
+[2026-07-27T20:34:27.937] [DEBUG] debug-file - Configuration task cost before running: 1 s 701 ms 
+[2026-07-27T20:34:27.941] [DEBUG] debug-file - Executing task :entry:default@PreBuild
+[2026-07-27T20:34:27.942] [DEBUG] debug-file - Task 'entry:default@PreBuild' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:27.946] [DEBUG] debug-file - entry:default@PreBuild is not up-to-date, since the task snapshots are different.
+[2026-07-27T20:34:27.946] [DEBUG] debug-file - Incremental task entry:default@PreBuild pre-execution cost: 3 ms .
+[2026-07-27T20:34:28.026] [DEBUG] debug-file - current product is not Atomic service.
+[2026-07-27T20:34:28.026] [DEBUG] debug-file - Use tool [win32: JAVA_HOME, CLASSPATH]
+ [
+  { JAVA_HOME: 'C:\\Program Files\\Huawei\\DevEco Studio\\jbr' },
+  { CLASSPATH: undefined }
+]
+[2026-07-27T20:34:28.026] [DEBUG] debug-file - Use tool [win32: NODE_HOME]
+ [
+  {
+    NODE_HOME: 'C:\\Program Files\\Huawei\\DevEco Studio\\tools\\node'
+  }
+]
+[2026-07-27T20:34:28.027] [DEBUG] debug-file - entry : default@PreBuild cost memory -0.6988525390625
+[2026-07-27T20:34:28.027] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 791 ms 
+[2026-07-27T20:34:28.028] [INFO] debug-file - Finished :entry:default@PreBuild... after 86 ms 
+[2026-07-27T20:34:28.029] [DEBUG] debug-file - Executing task :entry:default@CreateModuleInfo
+[2026-07-27T20:34:28.029] [DEBUG] debug-file - Task 'entry:default@CreateModuleInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.031] [DEBUG] debug-file - entry : default@CreateModuleInfo cost memory 0.05861663818359375
+[2026-07-27T20:34:28.031] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 795 ms 
+[2026-07-27T20:34:28.031] [INFO] debug-file - Finished :entry:default@CreateModuleInfo... after 2 ms 
+[2026-07-27T20:34:28.033] [DEBUG] debug-file - Executing task :entry:default@GenerateMetadata
+[2026-07-27T20:34:28.033] [DEBUG] debug-file - Task 'entry:default@GenerateMetadata' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.034] [DEBUG] debug-file - Incremental task entry:default@GenerateMetadata pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.034] [DEBUG] debug-file - entry : default@GenerateMetadata cost memory 0.14650726318359375
+[2026-07-27T20:34:28.034] [INFO] debug-file - UP-TO-DATE :entry:default@GenerateMetadata...  
+[2026-07-27T20:34:28.035] [DEBUG] debug-file - Executing task :entry:default@ConfigureCmake
+[2026-07-27T20:34:28.035] [DEBUG] debug-file - entry : default@ConfigureCmake cost memory 0.01755523681640625
+[2026-07-27T20:34:28.036] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 800 ms 
+[2026-07-27T20:34:28.036] [INFO] debug-file - Finished :entry:default@ConfigureCmake... after 1 ms 
+[2026-07-27T20:34:28.036] [DEBUG] debug-file - Executing task :entry:default@MergeProfile
+[2026-07-27T20:34:28.037] [DEBUG] debug-file - Task 'entry:default@MergeProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.038] [DEBUG] debug-file - Incremental task entry:default@MergeProfile pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.038] [DEBUG] debug-file - entry : default@MergeProfile cost memory 0.5570068359375
+[2026-07-27T20:34:28.038] [INFO] debug-file - UP-TO-DATE :entry:default@MergeProfile...  
+[2026-07-27T20:34:28.039] [DEBUG] debug-file - Executing task :entry:default@CreateBuildProfile
+[2026-07-27T20:34:28.039] [DEBUG] debug-file - Task 'entry:default@CreateBuildProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.040] [DEBUG] debug-file - Incremental task entry:default@CreateBuildProfile pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.040] [DEBUG] debug-file - entry : default@CreateBuildProfile cost memory 0.12534332275390625
+[2026-07-27T20:34:28.040] [INFO] debug-file - UP-TO-DATE :entry:default@CreateBuildProfile...  
+[2026-07-27T20:34:28.041] [DEBUG] debug-file - Executing task :entry:default@PreCheckSyscap
+[2026-07-27T20:34:28.041] [DEBUG] debug-file - entry : default@PreCheckSyscap cost memory 0.0200653076171875
+[2026-07-27T20:34:28.041] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 806 ms 
+[2026-07-27T20:34:28.041] [INFO] debug-file - Finished :entry:default@PreCheckSyscap... after 1 ms 
+[2026-07-27T20:34:28.042] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgContextInfo
+[2026-07-27T20:34:28.048] [DEBUG] debug-file - Task 'entry:default@GeneratePkgContextInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.049] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgContextInfo pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.049] [DEBUG] debug-file - entry : default@GeneratePkgContextInfo cost memory 0.5338897705078125
+[2026-07-27T20:34:28.049] [INFO] debug-file - UP-TO-DATE :entry:default@GeneratePkgContextInfo...  
+[2026-07-27T20:34:28.050] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgSdkInfo
+[2026-07-27T20:34:28.051] [DEBUG] debug-file - Dependency key: @ohos/hypium already exists, current dependency listed in devDependencies will be ignored.
+[2026-07-27T20:34:28.051] [DEBUG] debug-file - Task 'entry:default@GeneratePkgSdkInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.051] [DEBUG] debug-file - entry : default@GeneratePkgSdkInfo cost memory -0.30324554443359375
+[2026-07-27T20:34:28.051] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 816 ms 
+[2026-07-27T20:34:28.051] [INFO] debug-file - Finished :entry:default@GeneratePkgSdkInfo... after 2 ms 
+[2026-07-27T20:34:28.053] [DEBUG] debug-file - Executing task :entry:default@ProcessIntegratedHsp
+[2026-07-27T20:34:28.054] [DEBUG] debug-file - entry:default@ProcessIntegratedHsp is not up-to-date, since the output file 'D:\SLE-ID\slekey\build\cache\default\integrated_hsp\integratedHspCache.json' does not exist.
+[2026-07-27T20:34:28.054] [DEBUG] debug-file - Incremental task entry:default@ProcessIntegratedHsp pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.054] [DEBUG] debug-file - entry : default@ProcessIntegratedHsp cost memory 0.0584259033203125
+[2026-07-27T20:34:28.054] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 819 ms 
+[2026-07-27T20:34:28.054] [INFO] debug-file - Finished :entry:default@ProcessIntegratedHsp... after 1 ms 
+[2026-07-27T20:34:28.055] [DEBUG] debug-file - Executing task :entry:default@BuildNativeWithCmake
+[2026-07-27T20:34:28.055] [DEBUG] debug-file - entry : default@BuildNativeWithCmake cost memory 0.0179443359375
+[2026-07-27T20:34:28.055] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 820 ms 
+[2026-07-27T20:34:28.055] [INFO] debug-file - Finished :entry:default@BuildNativeWithCmake... after 1 ms 
+[2026-07-27T20:34:28.056] [DEBUG] debug-file - Executing task :entry:default@MakePackInfo
+[2026-07-27T20:34:28.057] [DEBUG] debug-file - Incremental task entry:default@MakePackInfo pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.057] [DEBUG] debug-file - entry : default@MakePackInfo cost memory 0.14601898193359375
+[2026-07-27T20:34:28.057] [INFO] debug-file - UP-TO-DATE :entry:default@MakePackInfo...  
+[2026-07-27T20:34:28.058] [DEBUG] debug-file - Executing task :entry:default@SyscapTransform
+[2026-07-27T20:34:28.058] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\src\main\syscap.json' from 'sysCapJsonPath' is not exists, just ignore.
+[2026-07-27T20:34:28.059] [DEBUG] debug-file - Task 'entry:default@SyscapTransform' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.068] [DEBUG] debug-file - entry:default@SyscapTransform is not up-to-date, since the output file 'D:\SLE-ID\slekey\entry\build\default\intermediates\syscap\default\rpcid.sc' does not exist.
+[2026-07-27T20:34:28.069] [DEBUG] debug-file - Incremental task entry:default@SyscapTransform pre-execution cost: 10 ms .
+[2026-07-27T20:34:28.069] [DEBUG] debug-file - entry : default@SyscapTransform cost memory 0.1568145751953125
+[2026-07-27T20:34:28.069] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 833 ms 
+[2026-07-27T20:34:28.069] [INFO] debug-file - Finished :entry:default@SyscapTransform... after 11 ms 
+[2026-07-27T20:34:28.070] [DEBUG] debug-file - Executing task :entry:default@ProcessProfile
+[2026-07-27T20:34:28.071] [DEBUG] debug-file - Task 'entry:default@ProcessProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.072] [DEBUG] debug-file - Incremental task entry:default@ProcessProfile pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.072] [DEBUG] debug-file - entry : default@ProcessProfile cost memory 0.16446685791015625
+[2026-07-27T20:34:28.072] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessProfile...  
+[2026-07-27T20:34:28.073] [DEBUG] debug-file - Executing task :entry:default@ProcessRouterMap
+[2026-07-27T20:34:28.075] [DEBUG] debug-file - Incremental task entry:default@ProcessRouterMap pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.075] [DEBUG] debug-file - entry : default@ProcessRouterMap cost memory 0.16243743896484375
+[2026-07-27T20:34:28.075] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessRouterMap...  
+[2026-07-27T20:34:28.076] [DEBUG] debug-file - Executing task :entry:default@ProcessShareConfig
+[2026-07-27T20:34:28.077] [DEBUG] debug-file - Incremental task entry:default@ProcessShareConfig pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.077] [DEBUG] debug-file - entry : default@ProcessShareConfig cost memory 0.14575958251953125
+[2026-07-27T20:34:28.077] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessShareConfig...  
+[2026-07-27T20:34:28.077] [DEBUG] debug-file - Executing task :entry:default@ProcessStartupConfig
+[2026-07-27T20:34:28.078] [DEBUG] debug-file - Task 'entry:default@ProcessStartupConfig' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.078] [DEBUG] debug-file - entry:default@ProcessStartupConfig is not up-to-date, since the output file 'D:\SLE-ID\slekey\entry\build\default\intermediates\startup\default\startup_config.json' does not exist.
+[2026-07-27T20:34:28.078] [DEBUG] debug-file - Incremental task entry:default@ProcessStartupConfig pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.079] [DEBUG] debug-file - entry : default@ProcessStartupConfig cost memory 0.1331634521484375
+[2026-07-27T20:34:28.079] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 844 ms 
+[2026-07-27T20:34:28.079] [INFO] debug-file - Finished :entry:default@ProcessStartupConfig... after 2 ms 
+[2026-07-27T20:34:28.080] [DEBUG] debug-file - Executing task :entry:default@BuildNativeWithNinja
+[2026-07-27T20:34:28.080] [DEBUG] debug-file - entry : default@BuildNativeWithNinja cost memory 0.023681640625
+[2026-07-27T20:34:28.080] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 845 ms 
+[2026-07-27T20:34:28.080] [INFO] debug-file - Finished :entry:default@BuildNativeWithNinja... after 1 ms 
+[2026-07-27T20:34:28.081] [DEBUG] debug-file - restool module names: entry; moduleName=entry, taskName=default@ProcessResource
+[2026-07-27T20:34:28.085] [DEBUG] debug-file - Executing task :entry:default@ProcessResource
+[2026-07-27T20:34:28.085] [DEBUG] debug-file - Task 'entry:default@ProcessResource' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.085] [DEBUG] debug-file - Incremental task entry:default@ProcessResource pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.085] [DEBUG] debug-file - entry : default@ProcessResource cost memory 0.1410675048828125
+[2026-07-27T20:34:28.086] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessResource...  
+[2026-07-27T20:34:28.088] [DEBUG] debug-file - Executing task :entry:default@GenerateLoaderJson
+[2026-07-27T20:34:28.088] [DEBUG] debug-file - Task 'entry:default@GenerateLoaderJson' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.093] [DEBUG] debug-file - Incremental task entry:default@GenerateLoaderJson pre-execution cost: 3 ms .
+[2026-07-27T20:34:28.093] [DEBUG] debug-file - entry : default@GenerateLoaderJson cost memory 0.5269927978515625
+[2026-07-27T20:34:28.094] [INFO] debug-file - UP-TO-DATE :entry:default@GenerateLoaderJson...  
+[2026-07-27T20:34:28.095] [DEBUG] debug-file - Executing task :entry:default@ProcessLibs
+[2026-07-27T20:34:28.097] [DEBUG] debug-file - Incremental task entry:default@ProcessLibs pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.097] [DEBUG] debug-file - entry : default@ProcessLibs cost memory 0.20240020751953125
+[2026-07-27T20:34:28.097] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessLibs...  
+[2026-07-27T20:34:28.098] [DEBUG] debug-file - restool module names: entry; moduleName=entry, taskName=default@CompileResource
+[2026-07-27T20:34:28.098] [DEBUG] debug-file - Executing task :entry:default@CompileResource
+[2026-07-27T20:34:28.105] [DEBUG] debug-file - Incremental task entry:default@CompileResource pre-execution cost: 6 ms .
+[2026-07-27T20:34:28.105] [DEBUG] debug-file - entry : default@CompileResource cost memory 0.49710845947265625
+[2026-07-27T20:34:28.105] [INFO] debug-file - UP-TO-DATE :entry:default@CompileResource...  
+[2026-07-27T20:34:28.106] [DEBUG] debug-file - Executing task :entry:default@DoNativeStrip
+[2026-07-27T20:34:28.106] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\binxo\default' from 'doBinxoNativeLibs' is not exists, just ignore.
+[2026-07-27T20:34:28.106] [DEBUG] debug-file - Task 'entry:default@DoNativeStrip' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.107] [DEBUG] debug-file - Incremental task entry:default@DoNativeStrip pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.107] [DEBUG] debug-file - entry : default@DoNativeStrip cost memory 0.08617401123046875
+[2026-07-27T20:34:28.107] [INFO] debug-file - UP-TO-DATE :entry:default@DoNativeStrip...  
+[2026-07-27T20:34:28.108] [DEBUG] debug-file - Executing task :entry:default@CompileArkTS
+[2026-07-27T20:34:28.108] [DEBUG] debug-file - obfuscationOptions: undefined
+[2026-07-27T20:34:28.110] [DEBUG] debug-file - Task 'entry:default@CompileArkTS' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.116] [DEBUG] debug-file - entry:default@CompileArkTS is not up-to-date, since the input file 'D:\SLE-ID\slekey\entry\src\main\ets' has been changed.
+[2026-07-27T20:34:28.116] [DEBUG] debug-file - Incremental task entry:default@CompileArkTS pre-execution cost: 5 ms .
+[2026-07-27T20:34:28.125] [DEBUG] debug-file - build config:
+[2026-07-27T20:34:28.125] [DEBUG] debug-file - {
+  moduleType: 'entry',
+  perf: 0,
+  targetName: '.default',
+  packageManagerType: 'ohpm',
+  localPropertiesPath: 'D:\\SLE-ID\\slekey\\local.properties',
+  isPreview: false,
+  isOhosTest: false,
+  isLocalTest: false,
+  buildMode: 'Debug',
+  hotReloadBuild: undefined,
+  watchMode: 'false',
+  aceProfilePath: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\res\\default\\resources\\base\\profile',
+  etsLoaderPath: 'C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\build-tools\\ets-loader',
+  modulePath: 'D:\\SLE-ID\\slekey\\entry',
+  testFrameworkPar: {
+    testMode: undefined,
+    coveragePathFilter: undefined,
+    coverageMode: undefined
+  },
+  needCoverageInsert: false,
+  debugLine: false,
+  projectTopDir: 'D:\\SLE-ID\\slekey',
+  compileSdkVersion: 23,
+  compatibleSdkVersion: 12,
+  originCompatibleSdkVersion: '5.0.0(12)',
+  compatibleSdkVersionStage: 'beta1',
+  bundleName: 'c***p',
+  etsLoaderVersion: '6.1.0.105',
+  etsLoaderReleaseType: 'Release',
+  aotCompileMode: 'type',
+  apPath: 'D:\\SLE-ID\\slekey\\entry\\modules.ap',
+  entryModuleName: 'entry',
+  entryModuleVersion: '1.0.0',
+  entryPackageName: 'entry',
+  allModuleNameHash: 'f50575914c85e3183d91a020539fc5ec331fa18837794d3ea3a2aada5c34fdd7',
+  externalApiPaths: [
+    'C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\hms\\ets'
+  ],
+  compilerTypes: [],
+  isCrossplatform: false,
+  hvigorPluginFile: undefined,
+  compilePluginPath: undefined,
+  buildGeneratedProfilePath: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\generated\\profile\\default',
+  bundleType: 'app',
+  arkTSVersion: '1.0',
+  apiVersion: 23,
+  needCompleteSourcesMap: false,
+  isFaMode: false,
+  buildDir: 'D:\\SLE-ID\\slekey\\entry\\build',
+  deviceTypes: [ 'phone', 'tablet' ],
+  pkgContextInfo: {
+    '@ohos/hypium': {
+      packageName: '@ohos/hypium',
+      bundleName: '*****',
+      moduleName: '',
+      version: '1.0.19',
+      entryPath: 'index.js',
+      isSO: false,
+      dependencyAlias: ''
+    },
+    entry: {
+      packageName: 'entry',
+      bundleName: '*****',
+      moduleName: '',
+      version: '',
+      entryPath: 'src/main/',
+      isSO: false,
+      dependencyAlias: ''
+    }
+  },
+  ohPackagePathMap: {},
+  dependencyAliasMap: {},
+  permission: { requestPermissions: [], definePermissions: undefined },
+  useGetCurrentBundleName: false,
+  projectArkOption: undefined,
+  sourceMapDir: undefined,
+  branchElimination: false,
+  transformLib: undefined,
+  tsImportSendable: false,
+  resolveConflictMode: true,
+  depName2RootPath: {},
+  depName2DepInfo: {},
+  depName2OhExports: {},
+  rootPathSet: [ 'D:\\SLE-ID\\slekey' ],
+  useNativeResolver: true,
+  shouldEmitJs: true,
+  useTscResolve: false,
+  singleFileEmit: false,
+  userProjectConfig: {
+    autoLazyImport: false,
+    allowEmptyBundleName: false,
+    reExportCheckMode: 'noCheck',
+    executionMode: 'memory',
+    usePathPlaceholder: false,
+    writeRollupCache: true,
+    isExpandImportEnabled: false,
+    expandImportExclude: '',
+    lazyImportExclude: '',
+    lazyImportInclude: '',
+    ignoreCrossplatformCheck: false,
+    isHarDeduplicateEnabled: false,
+    skipOhModulesLint: false,
+    enableStrictCheckOHModule: false,
+    disableSendableCheckRules: [],
+    useDeclarationFileSignature: false,
+    customizedOptions: undefined,
+    integratedHsp: false,
+    isPreloadSoEnabled: false
+  },
+  executionMode: 'memory',
+  arkCompileCachePath: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\cache\\default\\default@CompileArkTS\\esmodule',
+  autoLazyFilter: undefined,
+  isHarDeduplicateEnabled: false,
+  intermediateHarDuplicateDirPath: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\har_duplicate\\default',
+  autoLazyImport: false,
+  allowEmptyBundleName: false,
+  reExportCheckMode: 'noCheck',
+  usePathPlaceholder: false,
+  writeRollupCache: true,
+  isExpandImportEnabled: false,
+  expandImportExclude: '',
+  lazyImportExclude: '',
+  lazyImportInclude: '',
+  ignoreCrossplatformCheck: false,
+  skipOhModulesLint: false,
+  enableStrictCheckOHModule: false,
+  disableSendableCheckRules: [],
+  useDeclarationFileSignature: false,
+  customizedOptions: undefined,
+  integratedHsp: false,
+  isPreloadSoEnabled: false,
+  strictMode: {
+    caseSensitiveCheck: true,
+    useNormalizedOHMUrl: true,
+    noExternalImportByPath: true
+  },
+  useNormalizedOHMUrl: true,
+  caseSensitiveCheck: true,
+  aceModuleJsonPath: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\res\\default\\ark_module.json',
+  appResource: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\res\\default\\ResourceTable.txt',
+  rawFileResource: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\res\\default\\resources\\rawfile',
+  resourceTableHash: '8d499eae98a35ebfd449f640cb0204dc46fbfe126b8cecf18b5dae055c1b4570',
+  runtimeOS: 'HarmonyOS',
+  sdkInfo: 'false:23:6.1.0.105:Release',
+  aceModuleRoot: 'D:\\SLE-ID\\slekey\\entry\\src\\main\\ets',
+  compileMode: 'esmodule',
+  aceSuperVisualPath: 'D:\\SLE-ID\\slekey\\entry\\src\\main\\supervisual',
+  aceBuildJson: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\loader\\default\\loader.json',
+  cachePath: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\cache\\default\\default@CompileArkTS\\esmodule\\debug',
+  aceModuleBuild: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\loader_out\\default\\ets',
+  supportChunks: true,
+  declaredFilesPath: undefined,
+  shouldCollectDirectImportees: false,
+  isByteCodeHarOptimize: false,
+  expandImportPath: undefined,
+  resourceTableTs: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\generated\\r\\default\\ResourceTable.ts',
+  moduleMetaInfoFiles: [
+    {
+      filePath: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\generated\\r\\default\\ResourceTable.ts',
+      ohmurl: '&entry/build/generated/r/ResourceTable&'
+    }
+  ],
+  pkgNameToPkgBriefInfo: {
+    '@ohos/hypium': {
+      pkgRoot: 'D:\\SLE-ID\\slekey\\oh_modules\\.ohpm\\@ohos+hypium@1.0.19\\oh_modules\\@ohos\\hypium',
+      pkgName: '@ohos/hypium',
+      sourceRoots: undefined
+    },
+    entry: {
+      pkgRoot: 'D:\\SLE-ID\\slekey\\entry',
+      originalSourceRoots: undefined,
+      sourceRoots: [Array],
+      pkgName: 'entry'
+    }
+  },
+  projectModel: {
+    'D:\\SLE-ID\\slekey\\entry\\src\\main': {
+      moduleName: 'entry',
+      modulePkgPath: 'D:\\SLE-ID\\slekey\\entry',
+      belongProjectPath: 'D:\\SLE-ID\\slekey'
+    },
+    'D:\\SLE-ID\\slekey\\entry': {
+      moduleName: 'entry',
+      modulePkgPath: 'D:\\SLE-ID\\slekey\\entry',
+      belongProjectPath: 'D:\\SLE-ID\\slekey'
+    },
+    'D:\\SLE-ID\\slekey': {
+      moduleName: 'slekey',
+      modulePkgPath: 'D:\\SLE-ID\\slekey',
+      belongProjectPath: 'D:\\SLE-ID\\slekey'
+    }
+  },
+  pkgJsonFileHash: 'ec6406b50c1f0667f15176d21572c003d2c01d5ebca6edba903080a6bf4e4385',
+  allModulePaths: [ 'D:\\SLE-ID\\slekey\\entry' ],
+  routerMap: {},
+  obfuscationOptions: undefined,
+  byteCodeHarToDependencyKeys: undefined,
+  compileBlockPkg: [],
+  mockParams: {
+    decorator: '@MockSetup',
+    packageName: '@ohos/hamock',
+    etsSourceRootPath: 'src/main/ets',
+    mockConfigPath: undefined,
+    mockConfigKey2ModuleInfo: {},
+    source2ModuleIdMap: {}
+  },
+  copyCodeResourceEnable: true,
+  copyCodeResourceExcludes: [],
+  copyCodeResourceIncludes: undefined,
+  uiTransformOptimization: false,
+  sdkPath: 'C:/Program Files/Huawei/DevEco Studio/sdk',
+  needPreloadSoFileSet: {},
+  preloadSoFilePath: 'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\preload\\default\\preload.json',
+  useSourceHash: false,
+  localModuleParamMap: {},
+  otherPaths: {
+    'entry/*': [
+      '..\\*',
+      '..\\..\\..\\build\\default\\generated\\profile\\default\\*'
+    ]
+  },
+  collectImportersConfig: undefined
+}
+[2026-07-27T20:34:28.125] [DEBUG] debug-file - Compile arkts with external api path: C:\Program Files\Huawei\DevEco Studio\sdk\default\hms\ets
+[2026-07-27T20:34:28.126] [DEBUG] debug-file - default@CompileArkTS work[0] is submitted.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - default@CompileArkTS work[0] is pushed to ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[23] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[22] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[21] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[20] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[19] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[18] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[17] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[16] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[15] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[14] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[13] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[12] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[11] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[10] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[9] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[8] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[7] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[6] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - A work dispatched to worker[5] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.127] [DEBUG] debug-file - Create  resident worker with id: 4.
+[2026-07-27T20:34:28.128] [DEBUG] debug-file - default@CompileArkTS work[0] has been dispatched to worker[4].
+[2026-07-27T20:34:28.128] [DEBUG] debug-file - default@CompileArkTS work[0] is dispatched.
+[2026-07-27T20:34:28.128] [DEBUG] debug-file - CopyResources startTime: 30179088217600
+[2026-07-27T20:34:28.128] [DEBUG] debug-file - default@CompileArkTS work[1] is submitted.
+[2026-07-27T20:34:28.128] [DEBUG] debug-file - default@CompileArkTS work[1] is pushed to ready queue.
+[2026-07-27T20:34:28.128] [DEBUG] debug-file - A work dispatched to worker[23] failed because unable to get work from ready queue.
+[2026-07-27T20:34:28.128] [DEBUG] debug-file - Create  resident worker with id: 22.
+[2026-07-27T20:34:28.129] [DEBUG] debug-file - default@CompileArkTS work[1] has been dispatched to worker[22].
+[2026-07-27T20:34:28.129] [DEBUG] debug-file - default@CompileArkTS work[1] is dispatched.
+[2026-07-27T20:34:28.129] [DEBUG] debug-file - entry : default@CompileArkTS cost memory 2.0643157958984375
+[2026-07-27T20:34:28.130] [DEBUG] debug-file - Executing task :entry:default@BuildJS
+[2026-07-27T20:34:28.130] [DEBUG] debug-file - Task 'entry:default@BuildJS' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.131] [DEBUG] debug-file - entry : default@BuildJS cost memory 0.41064453125
+[2026-07-27T20:34:28.131] [DEBUG] debug-file - runTaskFromQueue task cost before running: 1 s 896 ms 
+[2026-07-27T20:34:28.132] [INFO] debug-file - Finished :entry:default@BuildJS... after 2 ms 
+[2026-07-27T20:34:28.132] [DEBUG] debug-file - Executing task :entry:default@CacheNativeLibs
+[2026-07-27T20:34:28.132] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\binxo\default' from 'cacheBinxoNativeLibs' is not exists, just ignore.
+[2026-07-27T20:34:28.133] [DEBUG] debug-file - Task 'entry:default@CacheNativeLibs' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:28.133] [DEBUG] debug-file - Incremental task entry:default@CacheNativeLibs pre-execution cost: 1 ms .
+[2026-07-27T20:34:28.133] [DEBUG] debug-file - entry : default@CacheNativeLibs cost memory 0.1025848388671875
+[2026-07-27T20:34:28.133] [INFO] debug-file - UP-TO-DATE :entry:default@CacheNativeLibs...  
+[2026-07-27T20:34:28.558] [DEBUG] debug-file - worker[22] has one work done.
+[2026-07-27T20:34:28.559] [DEBUG] debug-file - CopyResources is end, endTime: 30179518542100
+[2026-07-27T20:34:28.559] [DEBUG] debug-file - default@CompileArkTS work[1] done.
+[2026-07-27T20:34:28.559] [DEBUG] debug-file - A work dispatched to worker[22] failed because unable to get work from ready queue.
+[2026-07-27T20:34:33.925] [DEBUG] debug-file - worker[4] has one work done.
+[2026-07-27T20:34:33.925] [DEBUG] debug-file - Ark compile task finished.finished time is 30184884864800
+[2026-07-27T20:34:33.928] [DEBUG] debug-file - default@CompileArkTS work[0] done.
+[2026-07-27T20:34:33.928] [DEBUG] debug-file - A work dispatched to worker[4] failed because unable to get work from ready queue.
+[2026-07-27T20:34:33.930] [INFO] debug-file - Finished :entry:default@CompileArkTS... after 4 s 606 ms 
+[2026-07-27T20:34:33.931] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgModuleJson
+[2026-07-27T20:34:33.931] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\preload\default\preload.json' from 'preloadSoJsonPath' is not exists, just ignore.
+[2026-07-27T20:34:33.931] [DEBUG] debug-file - Error occurs while handling @Input 'shouldDeduplicateHar': The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined
+[2026-07-27T20:34:33.932] [DEBUG] debug-file - Task 'entry:default@GeneratePkgModuleJson' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:33.932] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgModuleJson pre-execution cost: 1 ms .
+[2026-07-27T20:34:33.932] [DEBUG] debug-file - entry : default@GeneratePkgModuleJson cost memory 0.09918975830078125
+[2026-07-27T20:34:33.932] [INFO] debug-file - UP-TO-DATE :entry:default@GeneratePkgModuleJson...  
+[2026-07-27T20:34:33.933] [DEBUG] debug-file - Executing task :entry:default@ProcessCompiledResources
+[2026-07-27T20:34:33.934] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\preload\default\preload.json' from 'preloadSoJsonPath' is not exists, just ignore.
+[2026-07-27T20:34:33.934] [DEBUG] debug-file - Task 'entry:default@ProcessCompiledResources' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:33.934] [DEBUG] debug-file - entry : default@ProcessCompiledResources cost memory 0.05889129638671875
+[2026-07-27T20:34:33.935] [DEBUG] debug-file - runTaskFromQueue task cost before running: 7 s 699 ms 
+[2026-07-27T20:34:33.935] [INFO] debug-file - Finished :entry:default@ProcessCompiledResources... after 2 ms 
+[2026-07-27T20:34:33.937] [DEBUG] debug-file - Executing task :entry:default@PackageHap
+[2026-07-27T20:34:33.941] [DEBUG] debug-file - entry:default@PackageHap is not up-to-date, since the input file 'D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\ets' has been changed.
+[2026-07-27T20:34:33.941] [DEBUG] debug-file - Incremental task entry:default@PackageHap pre-execution cost: 4 ms .
+[2026-07-27T20:34:33.943] [DEBUG] debug-file - Use tool [C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\lib\app_packing_tool.jar]
+ [
+  'java',
+  '-Dfile.encoding=GBK',
+  '-jar',
+  'C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\toolchains\\lib\\app_packing_tool.jar',
+  '--mode',
+  'hap',
+  '--force',
+  'true',
+  '--lib-path',
+  'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\stripped_native_libs\\default',
+  '--json-path',
+  'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\package\\default\\module.json',
+  '--resources-path',
+  'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\res\\default\\resources',
+  '--index-path',
+  'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\res\\default\\resources.index',
+  '--pack-info-path',
+  'D:\\SLE-ID\\slekey\\entry\\build\\default\\outputs\\default\\pack.info',
+  '--out-path',
+  'D:\\SLE-ID\\slekey\\entry\\build\\default\\outputs\\default\\entry-default-unsigned.hap',
+  '--ets-path',
+  'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\loader_out\\default\\ets',
+  '--pkg-context-path',
+  'D:\\SLE-ID\\slekey\\entry\\build\\default\\intermediates\\loader\\default\\pkgContextInfo.json'
+]
+[2026-07-27T20:34:33.943] [DEBUG] debug-file - default@PackageHap work[2] is submitted.
+[2026-07-27T20:34:33.943] [DEBUG] debug-file - default@PackageHap work[2] is pushed to ready queue.
+[2026-07-27T20:34:33.943] [DEBUG] debug-file - A work dispatched to worker[23] failed because unable to get work from ready queue.
+[2026-07-27T20:34:33.944] [DEBUG] debug-file - default@PackageHap work[2] has been dispatched to worker[22].
+[2026-07-27T20:34:33.944] [DEBUG] debug-file - default@PackageHap work[2] is dispatched.
+[2026-07-27T20:34:33.949] [DEBUG] debug-file - entry : default@PackageHap cost memory 0.453765869140625
+[2026-07-27T20:34:34.066] [DEBUG] debug-file - current process  memoryUsage: {
+  rss: 788176896,
+  heapTotal: 80293888,
+  heapUsed: 54213592,
+  external: 4176555,
+  arrayBuffers: 22783
+} os memoryUsage :14.681926727294922
+[2026-07-27T20:34:34.432] [DEBUG] debug-file - worker[22] has one work done.
+[2026-07-27T20:34:34.432] [DEBUG] debug-file - default@PackageHap work[2] done.
+[2026-07-27T20:34:34.432] [DEBUG] debug-file - A work dispatched to worker[22] failed because unable to get work from ready queue.
+[2026-07-27T20:34:34.433] [INFO] debug-file - Finished :entry:default@PackageHap... after 381 ms 
+[2026-07-27T20:34:34.435] [DEBUG] debug-file - Executing task :entry:default@PackingCheck
+[2026-07-27T20:34:34.440] [DEBUG] debug-file - entry : default@PackingCheck cost memory 0.426910400390625
+[2026-07-27T20:34:34.440] [DEBUG] debug-file - runTaskFromQueue task cost before running: 8 s 205 ms 
+[2026-07-27T20:34:34.441] [INFO] debug-file - Finished :entry:default@PackingCheck... after 6 ms 
+[2026-07-27T20:34:34.442] [DEBUG] debug-file - Executing task :entry:default@SignHap
+[2026-07-27T20:34:34.447] [DEBUG] debug-file - entry:default@SignHap is not up-to-date, since the input file 'D:\SLE-ID\slekey\entry\build\default\outputs\default\entry-default-unsigned.hap' has been changed.
+[2026-07-27T20:34:34.448] [DEBUG] debug-file - Incremental task entry:default@SignHap pre-execution cost: 2 ms .
+[2026-07-27T20:34:35.418] [DEBUG] debug-file - java daemon socket received message:{"code":0,"message":"verify profile success"}
+[2026-07-27T20:34:35.423] [DEBUG] debug-file - java daemon socket close code:1000 reason:close by user
+[2026-07-27T20:34:35.681] [DEBUG] debug-file - java daemon socket received message:{"code":0,"message":"sign app success"}
+[2026-07-27T20:34:35.682] [DEBUG] debug-file - entry : default@SignHap cost memory 1.2284393310546875
+[2026-07-27T20:34:35.682] [DEBUG] debug-file - runTaskFromQueue task cost before running: 9 s 447 ms 
+[2026-07-27T20:34:35.683] [INFO] debug-file - Finished :entry:default@SignHap... after 1 s 241 ms 
+[2026-07-27T20:34:35.684] [DEBUG] debug-file - Executing task :entry:default@CollectDebugSymbol
+[2026-07-27T20:34:35.686] [DEBUG] debug-file - entry : default@CollectDebugSymbol cost memory 0.08391571044921875
+[2026-07-27T20:34:35.686] [DEBUG] debug-file - runTaskFromQueue task cost before running: 9 s 450 ms 
+[2026-07-27T20:34:35.686] [INFO] debug-file - Finished :entry:default@CollectDebugSymbol... after 2 ms 
+[2026-07-27T20:34:35.686] [DEBUG] debug-file - Executing task :entry:assembleHap
+[2026-07-27T20:34:35.686] [DEBUG] debug-file - entry : assembleHap cost memory 0.0176544189453125
+[2026-07-27T20:34:35.686] [DEBUG] debug-file - runTaskFromQueue task cost before running: 9 s 451 ms 
+[2026-07-27T20:34:35.686] [INFO] debug-file - Finished :entry:assembleHap... after 1 ms 
+[2026-07-27T20:34:35.688] [INFO] debug-file - BUILD SUCCESSFUL in 9 s 452 ms 
+[2026-07-27T20:34:35.690] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\AppScope\app.json5 cache by regenerate.
+[2026-07-27T20:34:35.690] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\entry\src\main\module.json5 cache by regenerate.
+[2026-07-27T20:34:35.690] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\build-profile.json5 cache by regenerate.
+[2026-07-27T20:34:35.690] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\entry\build-profile.json5 cache by regenerate.
+[2026-07-27T20:34:35.690] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\entry\src\main\resources\base\profile\main_pages.json cache by regenerate.
+[2026-07-27T20:34:35.690] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\hvigor\hvigor-config.json5 cache by regenerate.
+[2026-07-27T20:34:35.691] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\entry\oh-package.json5 cache by regenerate.
+[2026-07-27T20:34:35.691] [DEBUG] debug-file - Update task entry:default@PreBuild input file:D:\SLE-ID\slekey\oh-package.json5 cache by regenerate.
+[2026-07-27T20:34:35.691] [DEBUG] debug-file - Incremental task entry:default@PreBuild post-execution cost:3 ms .
+[2026-07-27T20:34:35.691] [DEBUG] debug-file - Update task entry:default@CreateModuleInfo output file:D:\SLE-ID\slekey\entry\build\default\generated\profile\default\ModuleInfo.ts cache.
+[2026-07-27T20:34:35.691] [DEBUG] debug-file - Incremental task entry:default@CreateModuleInfo post-execution cost:1 ms .
+[2026-07-27T20:34:35.691] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GenerateMetadata is up-to-date.
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@MergeProfile is up-to-date.
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CreateBuildProfile is up-to-date.
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GeneratePkgContextInfo is up-to-date.
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - Update task entry:default@GeneratePkgSdkInfo output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgSdkInfo.json cache.
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgSdkInfo post-execution cost:1 ms .
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - Update task entry:default@ProcessIntegratedHsp output file:D:\SLE-ID\slekey\build\cache\default\integrated_hsp\integratedHspCache.json cache.
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - Incremental task entry:default@ProcessIntegratedHsp post-execution cost:1 ms .
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@MakePackInfo is up-to-date.
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - Update task entry:default@SyscapTransform input file:C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\syscap_tool.exe cache by regenerate.
+[2026-07-27T20:34:35.692] [DEBUG] debug-file - Update task entry:default@SyscapTransform input file:C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\ets\api\device-define cache by regenerate.
+[2026-07-27T20:34:35.693] [DEBUG] debug-file - Update task entry:default@SyscapTransform output file:D:\SLE-ID\slekey\entry\build\default\intermediates\syscap\default\rpcid.sc cache.
+[2026-07-27T20:34:35.694] [DEBUG] debug-file - Incremental task entry:default@SyscapTransform post-execution cost:2 ms .
+[2026-07-27T20:34:35.694] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessProfile is up-to-date.
+[2026-07-27T20:34:35.694] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessRouterMap is up-to-date.
+[2026-07-27T20:34:35.694] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessShareConfig is up-to-date.
+[2026-07-27T20:34:35.694] [DEBUG] debug-file - Update task entry:default@ProcessStartupConfig input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T20:34:35.694] [DEBUG] debug-file - Update task entry:default@ProcessStartupConfig output file:D:\SLE-ID\slekey\entry\build\default\intermediates\startup\default\startup_config.json cache.
+[2026-07-27T20:34:35.694] [DEBUG] debug-file - Incremental task entry:default@ProcessStartupConfig post-execution cost:1 ms .
+[2026-07-27T20:34:35.694] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessResource is up-to-date.
+[2026-07-27T20:34:35.695] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GenerateLoaderJson is up-to-date.
+[2026-07-27T20:34:35.695] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessLibs is up-to-date.
+[2026-07-27T20:34:35.695] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CompileResource is up-to-date.
+[2026-07-27T20:34:35.695] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@DoNativeStrip is up-to-date.
+[2026-07-27T20:34:35.696] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default cache by regenerate.
+[2026-07-27T20:34:35.696] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium\index.js cache by regenerate.
+[2026-07-27T20:34:35.696] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\rawfile cache by regenerate.
+[2026-07-27T20:34:35.697] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ResourceTable.txt cache by regenerate.
+[2026-07-27T20:34:35.697] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ark_module.json cache by regenerate.
+[2026-07-27T20:34:35.697] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\base\profile cache by regenerate.
+[2026-07-27T20:34:35.697] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\entry\src\main\ets cache from map.
+[2026-07-27T20:34:35.697] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T20:34:35.698] [DEBUG] debug-file - Update task entry:default@CompileArkTS input file:D:\SLE-ID\slekey\entry\build\default\generated\profile\default\BuildProfile.ets cache by regenerate.
+[2026-07-27T20:34:35.698] [DEBUG] debug-file - Update task entry:default@CompileArkTS output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\ets cache.
+[2026-07-27T20:34:35.698] [DEBUG] debug-file - Incremental task entry:default@CompileArkTS post-execution cost:4 ms .
+[2026-07-27T20:34:35.699] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default cache by regenerate.
+[2026-07-27T20:34:35.699] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium\index.js cache by regenerate.
+[2026-07-27T20:34:35.700] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\rawfile cache by regenerate.
+[2026-07-27T20:34:35.700] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ResourceTable.txt cache by regenerate.
+[2026-07-27T20:34:35.700] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ark_module.json cache by regenerate.
+[2026-07-27T20:34:35.700] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\base\profile cache by regenerate.
+[2026-07-27T20:34:35.700] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T20:34:35.701] [DEBUG] debug-file - Update task entry:default@BuildJS output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\js cache.
+[2026-07-27T20:34:35.701] [DEBUG] debug-file - Incremental task entry:default@BuildJS post-execution cost:3 ms .
+[2026-07-27T20:34:35.701] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CacheNativeLibs is up-to-date.
+[2026-07-27T20:34:35.701] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GeneratePkgModuleJson is up-to-date.
+[2026-07-27T20:34:35.701] [DEBUG] debug-file - Incremental task entry:default@ProcessCompiledResources post-execution cost:1 ms .
+[2026-07-27T20:34:35.701] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\intermediates\stripped_native_libs\default cache by regenerate.
+[2026-07-27T20:34:35.701] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\module.json cache by regenerate.
+[2026-07-27T20:34:35.702] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources cache by regenerate.
+[2026-07-27T20:34:35.702] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources.index cache by regenerate.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\outputs\default\pack.info cache by regenerate.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\ets cache from map.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\ets\sourceMaps.map cache by regenerate.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Update task entry:default@PackageHap input file:D:\SLE-ID\slekey\entry\build\default\generated\profile\default\BuildProfile.ets cache by regenerate.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Update task entry:default@PackageHap output file:D:\SLE-ID\slekey\entry\build\default\outputs\default\entry-default-unsigned.hap cache.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Update task entry:default@PackageHap output file:D:\SLE-ID\slekey\entry\build\default\intermediates\source_map\default\sourceMaps.map cache.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Update task entry:default@PackageHap output file:D:\SLE-ID\slekey\entry\build\default\outputs\default\mapping\sourceMaps.map cache.
+[2026-07-27T20:34:35.703] [DEBUG] debug-file - Incremental task entry:default@PackageHap post-execution cost:3 ms .
+[2026-07-27T20:34:35.704] [DEBUG] debug-file - Update task entry:default@SignHap input file:C:\Users\32569\.ohos\config\default_slekey_UdSWNgKqYUi41KW_P95ww1Ca7HcZmrBKmrk2w4ao7DE=.cer cache by regenerate.
+[2026-07-27T20:34:35.704] [DEBUG] debug-file - Update task entry:default@SignHap input file:C:\Users\32569\.ohos\config\default_slekey_UdSWNgKqYUi41KW_P95ww1Ca7HcZmrBKmrk2w4ao7DE=.p7b cache by regenerate.
+[2026-07-27T20:34:35.704] [DEBUG] debug-file - Update task entry:default@SignHap input file:C:\Users\32569\.ohos\config\default_slekey_UdSWNgKqYUi41KW_P95ww1Ca7HcZmrBKmrk2w4ao7DE=.p12 cache by regenerate.
+[2026-07-27T20:34:35.704] [DEBUG] debug-file - Update task entry:default@SignHap input file:D:\SLE-ID\slekey\entry\build\default\outputs\default\entry-default-unsigned.hap cache from map.
+[2026-07-27T20:34:35.704] [DEBUG] debug-file - Update task entry:default@SignHap output file:D:\SLE-ID\slekey\entry\build\default\outputs\default\entry-default-signed.hap cache.
+[2026-07-27T20:34:35.704] [DEBUG] debug-file - Incremental task entry:default@SignHap post-execution cost:1 ms .
+[2026-07-27T20:34:35.704] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\ets\sourceMaps.map cache by regenerate.
+[2026-07-27T20:34:35.704] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol input file:D:\SLE-ID\slekey\entry\build\default\intermediates\libs\default cache by regenerate.
+[2026-07-27T20:34:35.705] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol output file:D:\SLE-ID\slekey\entry\build\default\outputs\default\symbol cache.
+[2026-07-27T20:34:35.705] [DEBUG] debug-file - Incremental task entry:default@CollectDebugSymbol post-execution cost:1 ms .
+[2026-07-27T20:34:35.722] [DEBUG] debug-file - Cleanup worker 0.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Worker 0 has been cleaned up.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Current idle worker size: 3.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Current resident worker size: 4.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Cleanup worker 1.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Worker 1 has been cleaned up.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Current idle worker size: 2.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Current resident worker size: 4.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Cleanup worker 22.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Worker 22 has been cleaned up.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Current idle worker size: 1.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - Current resident worker size: 4.
+[2026-07-27T20:34:35.723] [DEBUG] debug-file - hvigor build process will be closed.
+[2026-07-27T20:34:35.724] [DEBUG] debug-file - java daemon socket close code:1000 reason:close by user
+[2026-07-27T20:34:35.729] [DEBUG] debug-file - session manager: send message to worker process.
+[2026-07-27T20:34:35.730] [DEBUG] debug-file - session manager: send message to worker process.
+[2026-07-27T20:34:35.726] [DEBUG] debug-file - worker[1] exits with exit code 1.
+[2026-07-27T20:34:35.727] [DEBUG] debug-file - worker[0] exits with exit code 1.
+[2026-07-27T20:34:35.729] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T20:34:35.729] [DEBUG] debug-file - worker[22] exits with exit code 1.
+[2026-07-27T20:34:35.730] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T20:34:49.839] [DEBUG] debug-file - env: nodejsVersion=v24.16.0
+[2026-07-27T20:34:49.850] [DEBUG] debug-file - env: daemon=true
+[2026-07-27T20:34:49.840] [DEBUG] debug-file - env: hvigor-config.json5 content = {
+  modelVersion: '5.0.0',
+  dependencies: {},
+  execution: {},
+  logging: {},
+  debugging: {},
+  nodeOptions: {}
+}
+[2026-07-27T20:34:50.109] [DEBUG] debug-file - session manager: set active socket. socketId=ZJj_BH6KKrep8igtAAAD
+[2026-07-27T20:34:50.113] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T20:34:50.114] [DEBUG] debug-file - Workers' log level updated to INFO
+[2026-07-27T20:34:50.116] [DEBUG] debug-file - Hvigor init with startParameters:{
+  hvigorfileTypeCheck: false,
+  parallelExecution: true,
+  incrementalExecution: true,
+  printStackTrace: false,
+  daemon: true,
+  analyze: 0,
+  logLevel: Level { level: 20000, levelStr: 'INFO', colour: 'green' },
+  optimizationStrategy: 'memory',
+  hotCompile: undefined,
+  hotReloadBuild: undefined,
+  customizedParam: undefined
+}
+[2026-07-27T20:34:50.122] [DEBUG] debug-file - Cache service initialization finished in 6 ms 
+[2026-07-27T20:34:50.123] [DEBUG] debug-file - hvigorfile, resolving D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T20:34:50.130] [DEBUG] debug-file - hvigorfile, require result:  { default: { plugins: [] } }
+[2026-07-27T20:34:50.130] [DEBUG] debug-file - hvigorfile, binding system plugins null
+[2026-07-27T20:34:50.131] [DEBUG] debug-file - Starting plugin build process
+[2026-07-27T20:34:50.131] [DEBUG] debug-file - App plugin prepare start...
+[2026-07-27T20:34:50.131] [DEBUG] debug-file - App plugin prepare end...
+[2026-07-27T20:34:50.131] [DEBUG] debug-file - App plugin creating...
+[2026-07-27T20:34:50.136] [DEBUG] debug-file - App plugin register hook start...
+[2026-07-27T20:34:50.136] [DEBUG] debug-file - App plugin register hook end...
+[2026-07-27T20:34:50.136] [DEBUG] debug-file - Plugin build process completed
+[2026-07-27T20:34:50.137] [DEBUG] debug-file - Start initialize project's product build option map with build mode debug.
+[2026-07-27T20:34:50.137] [DEBUG] debug-file - Picking option from product 'default' with build mode 'debug'.
+[2026-07-27T20:34:50.137] [DEBUG] debug-file - Product 'default' build option initialized
+[2026-07-27T20:34:50.137] [DEBUG] debug-file - End initialize project's product build option map with build mode 'debug'.
+[2026-07-27T20:34:50.137] [DEBUG] debug-file - Obtain build option for product 'default'in this build.
+[2026-07-27T20:34:50.138] [DEBUG] debug-file - D:\SLE-ID\slekey\build\cache\default\remote_hsp\remoteHspCache.json not exists.
+[2026-07-27T20:34:50.140] [DEBUG] debug-file - Start recording SDK configuration permission data.
+[2026-07-27T20:34:50.174] [DEBUG] debug-file - Sdk init in 36 ms 
+[2026-07-27T20:34:50.177] [DEBUG] debug-file - Project task initialization takes 3 ms 
+[2026-07-27T20:34:50.177] [DEBUG] debug-file - hvigorfile, begin to bind custom plugins...
+[2026-07-27T20:34:50.177] [DEBUG] debug-file - hvigorfile, no custom plugins were found in D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T20:34:50.177] [DEBUG] debug-file - hvigorfile, resolve finished D:\SLE-ID\slekey\hvigorfile.ts
+[2026-07-27T20:34:50.178] [DEBUG] debug-file - hvigorfile, resolving D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T20:34:50.181] [DEBUG] debug-file - hvigorfile, require result:  { default: { plugins: [] } }
+[2026-07-27T20:34:50.181] [DEBUG] debug-file - hvigorfile, binding system plugins null
+[2026-07-27T20:34:50.181] [DEBUG] debug-file - Starting plugin build process
+[2026-07-27T20:34:50.181] [DEBUG] debug-file - Hap plugin creating...
+[2026-07-27T20:34:50.182] [DEBUG] debug-file - failed to load cangjie to dynamically generate schemas: Error: Cannot find module '@ohos/cangjie-build-support/index'
+Require stack:
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\hooks\cangjie-register.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\strategy\stage-init-strategy.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\builder\abstract-plugin-builder.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\builder\app-plugin-builder.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\plugin\factory\plugin-factory.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\index.js
+- D:\SLE-ID\slekey\hvigorfile.ts
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\internal\lifecycle\configuration.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\boot\index.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\daemon\cluster\worker-process-lifecycle.js
+- C:\Program Files\Huawei\DevEco Studio\tools\hvigor\hvigor\src\base\daemon\process\daemon-process-boot-script.js
+[2026-07-27T20:34:50.184] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=debug
+[2026-07-27T20:34:50.184] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T20:34:50.185] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T20:34:50.185] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T20:34:50.185] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=release
+[2026-07-27T20:34:50.185] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T20:34:50.185] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T20:34:50.185] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T20:34:50.185] [DEBUG] debug-file - Start initialize module-target build option map, moduleName=entry, buildMode=debug
+[2026-07-27T20:34:50.185] [DEBUG] debug-file - Target 'default' config initialized
+[2026-07-27T20:34:50.186] [DEBUG] debug-file - Module 'entry' target 'default' build option initialized
+[2026-07-27T20:34:50.186] [DEBUG] debug-file - End initialize module-target build option map, moduleName=entry
+[2026-07-27T20:34:50.186] [DEBUG] debug-file - Obtain build option for module 'entry' target 'default'in this build.
+[2026-07-27T20:34:50.187] [DEBUG] debug-file - Module entry task initialization takes 1 ms 
+[2026-07-27T20:34:50.187] [DEBUG] debug-file - Hap plugin register hook start...
+[2026-07-27T20:34:50.187] [DEBUG] debug-file - Hap plugin register hook end...
+[2026-07-27T20:34:50.187] [DEBUG] debug-file - Plugin build process completed
+[2026-07-27T20:34:50.188] [DEBUG] debug-file - hvigorfile, begin to bind custom plugins...
+[2026-07-27T20:34:50.188] [DEBUG] debug-file - hvigorfile, no custom plugins were found in D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T20:34:50.188] [DEBUG] debug-file - hvigorfile, resolve finished D:\SLE-ID\slekey\entry\hvigorfile.ts
+[2026-07-27T20:34:50.252] [DEBUG] debug-file - hvigorfile, resolve hvigorfile dependencies in 64 ms 
+[2026-07-27T20:34:50.252] [DEBUG] debug-file - project has submodules:entry
+[2026-07-27T20:34:50.253] [DEBUG] debug-file - start to load updatedOhPackageInfo to the disk
+[2026-07-27T20:34:50.253] [DEBUG] debug-file - load to the disk finished
+[2026-07-27T20:34:50.254] [DEBUG] debug-file - Start to initialize dependency information.
+[2026-07-27T20:34:50.256] [DEBUG] debug-file - Module slekey Collected Dependency: D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium
+[2026-07-27T20:34:50.256] [DEBUG] debug-file - Module slekey's total dependency: 1
+[2026-07-27T20:34:50.257] [DEBUG] debug-file - Start to initialize dependency information.
+[2026-07-27T20:34:50.258] [DEBUG] debug-file - Module entry Collected Dependency: D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium
+[2026-07-27T20:34:50.258] [DEBUG] debug-file - Module entry's total dependency: 1
+[2026-07-27T20:34:50.260] [DEBUG] debug-file - Configuration phase cost:138 ms 
+[2026-07-27T20:34:50.261] [DEBUG] debug-file - Configuration task cost before running: 147 ms 
+[2026-07-27T20:34:50.263] [DEBUG] debug-file - Executing task :entry:default@PreBuild
+[2026-07-27T20:34:50.264] [DEBUG] debug-file - Task 'entry:default@PreBuild' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.267] [DEBUG] debug-file - Incremental task entry:default@PreBuild pre-execution cost: 2 ms .
+[2026-07-27T20:34:50.267] [DEBUG] debug-file - entry : default@PreBuild cost memory 0.24692535400390625
+[2026-07-27T20:34:50.268] [INFO] debug-file - UP-TO-DATE :entry:default@PreBuild...  
+[2026-07-27T20:34:50.268] [DEBUG] debug-file - Executing task :entry:default@CreateModuleInfo
+[2026-07-27T20:34:50.268] [DEBUG] debug-file - Task 'entry:default@CreateModuleInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.269] [DEBUG] debug-file - entry : default@CreateModuleInfo cost memory 0.0406646728515625
+[2026-07-27T20:34:50.269] [DEBUG] debug-file - runTaskFromQueue task cost before running: 155 ms 
+[2026-07-27T20:34:50.269] [INFO] debug-file - Finished :entry:default@CreateModuleInfo... after 1 ms 
+[2026-07-27T20:34:50.270] [DEBUG] debug-file - Executing task :entry:default@GenerateMetadata
+[2026-07-27T20:34:50.270] [DEBUG] debug-file - Task 'entry:default@GenerateMetadata' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.271] [DEBUG] debug-file - Incremental task entry:default@GenerateMetadata pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.271] [DEBUG] debug-file - entry : default@GenerateMetadata cost memory 0.07831573486328125
+[2026-07-27T20:34:50.271] [INFO] debug-file - UP-TO-DATE :entry:default@GenerateMetadata...  
+[2026-07-27T20:34:50.272] [DEBUG] debug-file - Executing task :entry:default@ConfigureCmake
+[2026-07-27T20:34:50.272] [DEBUG] debug-file - entry : default@ConfigureCmake cost memory 0.014678955078125
+[2026-07-27T20:34:50.272] [DEBUG] debug-file - runTaskFromQueue task cost before running: 158 ms 
+[2026-07-27T20:34:50.272] [INFO] debug-file - Finished :entry:default@ConfigureCmake... after 1 ms 
+[2026-07-27T20:34:50.273] [DEBUG] debug-file - Executing task :entry:default@MergeProfile
+[2026-07-27T20:34:50.273] [DEBUG] debug-file - Task 'entry:default@MergeProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.275] [DEBUG] debug-file - Incremental task entry:default@MergeProfile pre-execution cost: 2 ms .
+[2026-07-27T20:34:50.275] [DEBUG] debug-file - entry : default@MergeProfile cost memory 0.49188232421875
+[2026-07-27T20:34:50.275] [INFO] debug-file - UP-TO-DATE :entry:default@MergeProfile...  
+[2026-07-27T20:34:50.276] [DEBUG] debug-file - Executing task :entry:default@CreateBuildProfile
+[2026-07-27T20:34:50.276] [DEBUG] debug-file - Task 'entry:default@CreateBuildProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.277] [DEBUG] debug-file - Incremental task entry:default@CreateBuildProfile pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.277] [DEBUG] debug-file - entry : default@CreateBuildProfile cost memory 0.112274169921875
+[2026-07-27T20:34:50.277] [INFO] debug-file - UP-TO-DATE :entry:default@CreateBuildProfile...  
+[2026-07-27T20:34:50.278] [DEBUG] debug-file - Executing task :entry:default@PreCheckSyscap
+[2026-07-27T20:34:50.278] [DEBUG] debug-file - entry : default@PreCheckSyscap cost memory 0.01473236083984375
+[2026-07-27T20:34:50.278] [DEBUG] debug-file - runTaskFromQueue task cost before running: 164 ms 
+[2026-07-27T20:34:50.278] [INFO] debug-file - Finished :entry:default@PreCheckSyscap... after 1 ms 
+[2026-07-27T20:34:50.279] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgContextInfo
+[2026-07-27T20:34:50.284] [DEBUG] debug-file - Task 'entry:default@GeneratePkgContextInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.284] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgContextInfo pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.284] [DEBUG] debug-file - entry : default@GeneratePkgContextInfo cost memory 0.32100677490234375
+[2026-07-27T20:34:50.284] [INFO] debug-file - UP-TO-DATE :entry:default@GeneratePkgContextInfo...  
+[2026-07-27T20:34:50.285] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgSdkInfo
+[2026-07-27T20:34:50.286] [DEBUG] debug-file - Dependency key: @ohos/hypium already exists, current dependency listed in devDependencies will be ignored.
+[2026-07-27T20:34:50.286] [DEBUG] debug-file - Task 'entry:default@GeneratePkgSdkInfo' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.286] [DEBUG] debug-file - entry : default@GeneratePkgSdkInfo cost memory 0.0988311767578125
+[2026-07-27T20:34:50.286] [DEBUG] debug-file - runTaskFromQueue task cost before running: 172 ms 
+[2026-07-27T20:34:50.286] [INFO] debug-file - Finished :entry:default@GeneratePkgSdkInfo... after 2 ms 
+[2026-07-27T20:34:50.288] [DEBUG] debug-file - Executing task :entry:default@ProcessIntegratedHsp
+[2026-07-27T20:34:50.288] [DEBUG] debug-file - entry:default@ProcessIntegratedHsp is not up-to-date, since the output file 'D:\SLE-ID\slekey\build\cache\default\integrated_hsp\integratedHspCache.json' does not exist.
+[2026-07-27T20:34:50.288] [DEBUG] debug-file - Incremental task entry:default@ProcessIntegratedHsp pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.288] [DEBUG] debug-file - entry : default@ProcessIntegratedHsp cost memory 0.04842376708984375
+[2026-07-27T20:34:50.288] [DEBUG] debug-file - runTaskFromQueue task cost before running: 174 ms 
+[2026-07-27T20:34:50.288] [INFO] debug-file - Finished :entry:default@ProcessIntegratedHsp... after 1 ms 
+[2026-07-27T20:34:50.291] [DEBUG] debug-file - Executing task :entry:default@BuildNativeWithCmake
+[2026-07-27T20:34:50.291] [DEBUG] debug-file - entry : default@BuildNativeWithCmake cost memory 0.01441192626953125
+[2026-07-27T20:34:50.291] [DEBUG] debug-file - runTaskFromQueue task cost before running: 177 ms 
+[2026-07-27T20:34:50.292] [INFO] debug-file - Finished :entry:default@BuildNativeWithCmake... after 1 ms 
+[2026-07-27T20:34:50.292] [DEBUG] debug-file - Executing task :entry:default@MakePackInfo
+[2026-07-27T20:34:50.293] [DEBUG] debug-file - Incremental task entry:default@MakePackInfo pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.293] [DEBUG] debug-file - entry : default@MakePackInfo cost memory 0.0953369140625
+[2026-07-27T20:34:50.293] [INFO] debug-file - UP-TO-DATE :entry:default@MakePackInfo...  
+[2026-07-27T20:34:50.293] [DEBUG] debug-file - Executing task :entry:default@SyscapTransform
+[2026-07-27T20:34:50.294] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\src\main\syscap.json' from 'sysCapJsonPath' is not exists, just ignore.
+[2026-07-27T20:34:50.294] [DEBUG] debug-file - Task 'entry:default@SyscapTransform' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.294] [DEBUG] debug-file - entry:default@SyscapTransform is not up-to-date, since the output file 'D:\SLE-ID\slekey\entry\build\default\intermediates\syscap\default\rpcid.sc' does not exist.
+[2026-07-27T20:34:50.294] [DEBUG] debug-file - Incremental task entry:default@SyscapTransform pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.294] [DEBUG] debug-file - entry : default@SyscapTransform cost memory 0.13336181640625
+[2026-07-27T20:34:50.295] [DEBUG] debug-file - runTaskFromQueue task cost before running: 180 ms 
+[2026-07-27T20:34:50.295] [INFO] debug-file - Finished :entry:default@SyscapTransform... after 2 ms 
+[2026-07-27T20:34:50.295] [DEBUG] debug-file - Executing task :entry:default@ProcessProfile
+[2026-07-27T20:34:50.296] [DEBUG] debug-file - Task 'entry:default@ProcessProfile' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.296] [DEBUG] debug-file - Incremental task entry:default@ProcessProfile pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.296] [DEBUG] debug-file - entry : default@ProcessProfile cost memory 0.1140594482421875
+[2026-07-27T20:34:50.296] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessProfile...  
+[2026-07-27T20:34:50.297] [DEBUG] debug-file - Executing task :entry:default@ProcessRouterMap
+[2026-07-27T20:34:50.298] [DEBUG] debug-file - Incremental task entry:default@ProcessRouterMap pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.298] [DEBUG] debug-file - entry : default@ProcessRouterMap cost memory 0.13722991943359375
+[2026-07-27T20:34:50.298] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessRouterMap...  
+[2026-07-27T20:34:50.298] [DEBUG] debug-file - Executing task :entry:default@ProcessShareConfig
+[2026-07-27T20:34:50.299] [DEBUG] debug-file - Incremental task entry:default@ProcessShareConfig pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.299] [DEBUG] debug-file - entry : default@ProcessShareConfig cost memory 0.11275482177734375
+[2026-07-27T20:34:50.300] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessShareConfig...  
+[2026-07-27T20:34:50.300] [DEBUG] debug-file - Executing task :entry:default@ProcessStartupConfig
+[2026-07-27T20:34:50.301] [DEBUG] debug-file - Task 'entry:default@ProcessStartupConfig' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.301] [DEBUG] debug-file - entry:default@ProcessStartupConfig is not up-to-date, since the output file 'D:\SLE-ID\slekey\entry\build\default\intermediates\startup\default\startup_config.json' does not exist.
+[2026-07-27T20:34:50.301] [DEBUG] debug-file - Incremental task entry:default@ProcessStartupConfig pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.302] [DEBUG] debug-file - entry : default@ProcessStartupConfig cost memory 0.1217193603515625
+[2026-07-27T20:34:50.302] [DEBUG] debug-file - runTaskFromQueue task cost before running: 188 ms 
+[2026-07-27T20:34:50.303] [INFO] debug-file - Finished :entry:default@ProcessStartupConfig... after 2 ms 
+[2026-07-27T20:34:50.303] [DEBUG] debug-file - Executing task :entry:default@BuildNativeWithNinja
+[2026-07-27T20:34:50.304] [DEBUG] debug-file - entry : default@BuildNativeWithNinja cost memory 0.0186920166015625
+[2026-07-27T20:34:50.304] [DEBUG] debug-file - runTaskFromQueue task cost before running: 190 ms 
+[2026-07-27T20:34:50.304] [INFO] debug-file - Finished :entry:default@BuildNativeWithNinja... after 1 ms 
+[2026-07-27T20:34:50.305] [DEBUG] debug-file - restool module names: entry; moduleName=entry, taskName=default@ProcessResource
+[2026-07-27T20:34:50.307] [DEBUG] debug-file - Executing task :entry:default@ProcessResource
+[2026-07-27T20:34:50.307] [DEBUG] debug-file - Task 'entry:default@ProcessResource' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.308] [DEBUG] debug-file - Incremental task entry:default@ProcessResource pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.308] [DEBUG] debug-file - entry : default@ProcessResource cost memory 0.1043701171875
+[2026-07-27T20:34:50.309] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessResource...  
+[2026-07-27T20:34:50.311] [DEBUG] debug-file - Executing task :entry:default@GenerateLoaderJson
+[2026-07-27T20:34:50.312] [DEBUG] debug-file - Task 'entry:default@GenerateLoaderJson' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.318] [DEBUG] debug-file - Incremental task entry:default@GenerateLoaderJson pre-execution cost: 4 ms .
+[2026-07-27T20:34:50.318] [DEBUG] debug-file - entry : default@GenerateLoaderJson cost memory 0.4290313720703125
+[2026-07-27T20:34:50.320] [INFO] debug-file - UP-TO-DATE :entry:default@GenerateLoaderJson...  
+[2026-07-27T20:34:50.321] [DEBUG] debug-file - Executing task :entry:default@ProcessLibs
+[2026-07-27T20:34:50.323] [DEBUG] debug-file - Incremental task entry:default@ProcessLibs pre-execution cost: 2 ms .
+[2026-07-27T20:34:50.323] [DEBUG] debug-file - entry : default@ProcessLibs cost memory 0.200775146484375
+[2026-07-27T20:34:50.323] [INFO] debug-file - UP-TO-DATE :entry:default@ProcessLibs...  
+[2026-07-27T20:34:50.324] [DEBUG] debug-file - restool module names: entry; moduleName=entry, taskName=default@CompileResource
+[2026-07-27T20:34:50.325] [DEBUG] debug-file - Executing task :entry:default@CompileResource
+[2026-07-27T20:34:50.331] [DEBUG] debug-file - Incremental task entry:default@CompileResource pre-execution cost: 6 ms .
+[2026-07-27T20:34:50.331] [DEBUG] debug-file - entry : default@CompileResource cost memory 0.42438507080078125
+[2026-07-27T20:34:50.332] [INFO] debug-file - UP-TO-DATE :entry:default@CompileResource...  
+[2026-07-27T20:34:50.333] [DEBUG] debug-file - Executing task :entry:default@DoNativeStrip
+[2026-07-27T20:34:50.333] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\binxo\default' from 'doBinxoNativeLibs' is not exists, just ignore.
+[2026-07-27T20:34:50.333] [DEBUG] debug-file - Task 'entry:default@DoNativeStrip' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.334] [DEBUG] debug-file - Incremental task entry:default@DoNativeStrip pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.334] [DEBUG] debug-file - entry : default@DoNativeStrip cost memory 0.07346343994140625
+[2026-07-27T20:34:50.334] [INFO] debug-file - UP-TO-DATE :entry:default@DoNativeStrip...  
+[2026-07-27T20:34:50.336] [DEBUG] debug-file - Executing task :entry:default@CompileArkTS
+[2026-07-27T20:34:50.336] [DEBUG] debug-file - obfuscationOptions: undefined
+[2026-07-27T20:34:50.338] [DEBUG] debug-file - Task 'entry:default@CompileArkTS' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.347] [DEBUG] debug-file - Incremental task entry:default@CompileArkTS pre-execution cost: 8 ms .
+[2026-07-27T20:34:50.347] [DEBUG] debug-file - entry : default@CompileArkTS cost memory 0.7299575805664062
+[2026-07-27T20:34:50.349] [INFO] debug-file - UP-TO-DATE :entry:default@CompileArkTS...  
+[2026-07-27T20:34:50.350] [DEBUG] debug-file - Executing task :entry:default@BuildJS
+[2026-07-27T20:34:50.350] [DEBUG] debug-file - Task 'entry:default@BuildJS' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.352] [DEBUG] debug-file - entry : default@BuildJS cost memory 0.12705230712890625
+[2026-07-27T20:34:50.352] [DEBUG] debug-file - runTaskFromQueue task cost before running: 238 ms 
+[2026-07-27T20:34:50.352] [INFO] debug-file - Finished :entry:default@BuildJS... after 3 ms 
+[2026-07-27T20:34:50.353] [DEBUG] debug-file - Executing task :entry:default@CacheNativeLibs
+[2026-07-27T20:34:50.353] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\binxo\default' from 'cacheBinxoNativeLibs' is not exists, just ignore.
+[2026-07-27T20:34:50.354] [DEBUG] debug-file - Task 'entry:default@CacheNativeLibs' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.355] [DEBUG] debug-file - Incremental task entry:default@CacheNativeLibs pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.355] [DEBUG] debug-file - entry : default@CacheNativeLibs cost memory 0.08648681640625
+[2026-07-27T20:34:50.355] [INFO] debug-file - UP-TO-DATE :entry:default@CacheNativeLibs...  
+[2026-07-27T20:34:50.356] [DEBUG] debug-file - Executing task :entry:default@GeneratePkgModuleJson
+[2026-07-27T20:34:50.356] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\preload\default\preload.json' from 'preloadSoJsonPath' is not exists, just ignore.
+[2026-07-27T20:34:50.356] [DEBUG] debug-file - Error occurs while handling @Input 'shouldDeduplicateHar': The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined
+[2026-07-27T20:34:50.356] [DEBUG] debug-file - Task 'entry:default@GeneratePkgModuleJson' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.357] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgModuleJson pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.357] [DEBUG] debug-file - entry : default@GeneratePkgModuleJson cost memory 0.079742431640625
+[2026-07-27T20:34:50.357] [INFO] debug-file - UP-TO-DATE :entry:default@GeneratePkgModuleJson...  
+[2026-07-27T20:34:50.357] [DEBUG] debug-file - Executing task :entry:default@ProcessCompiledResources
+[2026-07-27T20:34:50.357] [DEBUG] debug-file - File: 'D:\SLE-ID\slekey\entry\build\default\intermediates\preload\default\preload.json' from 'preloadSoJsonPath' is not exists, just ignore.
+[2026-07-27T20:34:50.358] [DEBUG] debug-file - Task 'entry:default@ProcessCompiledResources' cost while wrapping incremental declarations: 1 ms 
+[2026-07-27T20:34:50.358] [DEBUG] debug-file - entry : default@ProcessCompiledResources cost memory 0.049591064453125
+[2026-07-27T20:34:50.358] [DEBUG] debug-file - runTaskFromQueue task cost before running: 244 ms 
+[2026-07-27T20:34:50.358] [INFO] debug-file - Finished :entry:default@ProcessCompiledResources... after 1 ms 
+[2026-07-27T20:34:50.359] [DEBUG] debug-file - Executing task :entry:default@PackageHap
+[2026-07-27T20:34:50.364] [DEBUG] debug-file - Incremental task entry:default@PackageHap pre-execution cost: 4 ms .
+[2026-07-27T20:34:50.364] [DEBUG] debug-file - entry : default@PackageHap cost memory 0.2706756591796875
+[2026-07-27T20:34:50.364] [INFO] debug-file - UP-TO-DATE :entry:default@PackageHap...  
+[2026-07-27T20:34:50.365] [DEBUG] debug-file - Executing task :entry:default@PackingCheck
+[2026-07-27T20:34:50.368] [DEBUG] debug-file - entry : default@PackingCheck cost memory 0.29734039306640625
+[2026-07-27T20:34:50.369] [DEBUG] debug-file - runTaskFromQueue task cost before running: 255 ms 
+[2026-07-27T20:34:50.369] [INFO] debug-file - Finished :entry:default@PackingCheck... after 4 ms 
+[2026-07-27T20:34:50.370] [DEBUG] debug-file - Executing task :entry:default@SignHap
+[2026-07-27T20:34:50.371] [DEBUG] debug-file - Incremental task entry:default@SignHap pre-execution cost: 1 ms .
+[2026-07-27T20:34:50.371] [DEBUG] debug-file - entry : default@SignHap cost memory 0.0866546630859375
+[2026-07-27T20:34:50.371] [INFO] debug-file - UP-TO-DATE :entry:default@SignHap...  
+[2026-07-27T20:34:50.372] [DEBUG] debug-file - Executing task :entry:default@CollectDebugSymbol
+[2026-07-27T20:34:50.372] [DEBUG] debug-file - entry : default@CollectDebugSymbol cost memory 0.07241058349609375
+[2026-07-27T20:34:50.372] [DEBUG] debug-file - runTaskFromQueue task cost before running: 258 ms 
+[2026-07-27T20:34:50.372] [INFO] debug-file - Finished :entry:default@CollectDebugSymbol... after 1 ms 
+[2026-07-27T20:34:50.372] [DEBUG] debug-file - Executing task :entry:assembleHap
+[2026-07-27T20:34:50.372] [DEBUG] debug-file - entry : assembleHap cost memory 0.013946533203125
+[2026-07-27T20:34:50.372] [DEBUG] debug-file - runTaskFromQueue task cost before running: 258 ms 
+[2026-07-27T20:34:50.372] [INFO] debug-file - Finished :entry:assembleHap... after 1 ms 
+[2026-07-27T20:34:50.373] [INFO] debug-file - BUILD SUCCESSFUL in 259 ms 
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@PreBuild is up-to-date.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - Update task entry:default@CreateModuleInfo output file:D:\SLE-ID\slekey\entry\build\default\generated\profile\default\ModuleInfo.ts cache.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - Incremental task entry:default@CreateModuleInfo post-execution cost:1 ms .
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GenerateMetadata is up-to-date.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@MergeProfile is up-to-date.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CreateBuildProfile is up-to-date.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GeneratePkgContextInfo is up-to-date.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - Update task entry:default@GeneratePkgSdkInfo output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgSdkInfo.json cache.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - Incremental task entry:default@GeneratePkgSdkInfo post-execution cost:1 ms .
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - Update task entry:default@ProcessIntegratedHsp output file:D:\SLE-ID\slekey\build\cache\default\integrated_hsp\integratedHspCache.json cache.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - Incremental task entry:default@ProcessIntegratedHsp post-execution cost:1 ms .
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@MakePackInfo is up-to-date.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - Update task entry:default@SyscapTransform input file:C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\syscap_tool.exe cache by regenerate.
+[2026-07-27T20:34:50.373] [DEBUG] debug-file - Update task entry:default@SyscapTransform input file:C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\ets\api\device-define cache by regenerate.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - Update task entry:default@SyscapTransform output file:D:\SLE-ID\slekey\entry\build\default\intermediates\syscap\default\rpcid.sc cache.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - Incremental task entry:default@SyscapTransform post-execution cost:1 ms .
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessProfile is up-to-date.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessRouterMap is up-to-date.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessShareConfig is up-to-date.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - Update task entry:default@ProcessStartupConfig input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - Update task entry:default@ProcessStartupConfig output file:D:\SLE-ID\slekey\entry\build\default\intermediates\startup\default\startup_config.json cache.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - Incremental task entry:default@ProcessStartupConfig post-execution cost:1 ms .
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessResource is up-to-date.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GenerateLoaderJson is up-to-date.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@ProcessLibs is up-to-date.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CompileResource is up-to-date.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@DoNativeStrip is up-to-date.
+[2026-07-27T20:34:50.374] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CompileArkTS is up-to-date.
+[2026-07-27T20:34:50.375] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default cache by regenerate.
+[2026-07-27T20:34:50.375] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\oh_modules\.ohpm\@ohos+hypium@1.0.19\oh_modules\@ohos\hypium\index.js cache by regenerate.
+[2026-07-27T20:34:50.375] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\rawfile cache by regenerate.
+[2026-07-27T20:34:50.375] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ResourceTable.txt cache by regenerate.
+[2026-07-27T20:34:50.375] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\ark_module.json cache by regenerate.
+[2026-07-27T20:34:50.375] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\res\default\resources\base\profile cache by regenerate.
+[2026-07-27T20:34:50.375] [DEBUG] debug-file - Update task entry:default@BuildJS input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader\default\pkgContextInfo.json cache by regenerate.
+[2026-07-27T20:34:50.375] [DEBUG] debug-file - Update task entry:default@BuildJS output file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\js cache.
+[2026-07-27T20:34:50.376] [DEBUG] debug-file - Incremental task entry:default@BuildJS post-execution cost:2 ms .
+[2026-07-27T20:34:50.376] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@CacheNativeLibs is up-to-date.
+[2026-07-27T20:34:50.376] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@GeneratePkgModuleJson is up-to-date.
+[2026-07-27T20:34:50.376] [DEBUG] debug-file - Incremental task entry:default@ProcessCompiledResources post-execution cost:1 ms .
+[2026-07-27T20:34:50.376] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@PackageHap is up-to-date.
+[2026-07-27T20:34:50.376] [DEBUG] debug-file - There is no need to refresh cache, since the incremental task entry:default@SignHap is up-to-date.
+[2026-07-27T20:34:50.376] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol input file:D:\SLE-ID\slekey\entry\build\default\intermediates\loader_out\default\ets\sourceMaps.map cache by regenerate.
+[2026-07-27T20:34:50.376] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol input file:D:\SLE-ID\slekey\entry\build\default\intermediates\libs\default cache by regenerate.
+[2026-07-27T20:34:50.377] [DEBUG] debug-file - Update task entry:default@CollectDebugSymbol output file:D:\SLE-ID\slekey\entry\build\default\outputs\default\symbol cache.
+[2026-07-27T20:34:50.377] [DEBUG] debug-file - Incremental task entry:default@CollectDebugSymbol post-execution cost:1 ms .
+[2026-07-27T20:34:50.386] [DEBUG] debug-file - hvigor build process will be closed.
+[2026-07-27T20:34:50.394] [DEBUG] debug-file - session manager: send message to worker process.
+[2026-07-27T20:34:50.395] [DEBUG] debug-file - session manager: send message to worker process.
+[2026-07-27T20:34:50.428] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
+[2026-07-27T20:34:50.429] [DEBUG] debug-file - watch worker: worker id should be larger than 0. Nothing will be sent to any worker thread.
