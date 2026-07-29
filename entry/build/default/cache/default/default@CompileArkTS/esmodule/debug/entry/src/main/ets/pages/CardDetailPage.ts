@@ -157,7 +157,7 @@ export class CardDetailPage extends ViewPU {
     }
     initialRender() {
         this.observeComponentCreation2((elmtId, isInitialRender) => {
-            Stack.create({ alignContent: Alignment.Center });
+            Stack.create({ alignContent: Alignment.TopStart });
             Stack.width('100%');
             Stack.height('100%');
         }, Stack);

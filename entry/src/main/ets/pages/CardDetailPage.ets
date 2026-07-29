@@ -32,7 +32,7 @@ export struct CardDetailPage {
   }
 
   build() {
-    Stack({ alignContent: Alignment.Center }) {
+    Stack({ alignContent: Alignment.TopStart }) {
       Column() {
         // Top App Bar
         this.TopAppBar()

@@ -12,13 +12,13 @@ export struct BottomNavBar {
       Circle()
         .width(72)
         .height(72)
-        .fill('rgba(238, 240, 255, 0.9)')
+        .fill('rgba(248, 249, 250, 0.92)')
         .backdropBlur(40)
         .borderWidth(1)
-        .borderColor('rgba(70, 72, 212, 0.16)')
+        .borderColor('rgba(255, 255, 255, 0.72)')
         .shadow({
           radius: 18,
-          color: 'rgba(70, 72, 212, 0.12)',
+          color: 'rgba(30, 34, 78, 0.08)',
           offsetY: 3
         })
         .position({ x: '50%', y: 0 })
@@ -101,10 +101,7 @@ export struct BottomNavBar {
         Circle()
           .width(42)
           .height(42)
-          .fill(this.showScanPage ? 'rgba(70, 72, 212, 0.17)' : 'rgba(70, 72, 212, 0.08)')
-          .borderWidth(1)
-          .borderColor(this.showScanPage ?
-            'rgba(70, 72, 212, 0.28)' : 'rgba(255, 255, 255, 0.52)')
+          .fill(this.showScanPage ? 'rgba(70, 72, 212, 0.11)' : 'rgba(255, 255, 255, 0.6)')
 
         SymbolGlyph($r('sys.symbol.camera'))
           .fontSize(Theme.ICON_LG)
@@ -112,6 +109,11 @@ export struct BottomNavBar {
       }
       .width(44)
       .height(44)
+      .borderRadius(22)
+      .borderWidth(1)
+      .borderColor(this.showScanPage ?
+        'rgba(70, 72, 212, 0.18)' : 'rgba(255, 255, 255, 0.72)')
+      .clip(true)
       .alignContent(Alignment.Center)
 
       Text(this.language === 'zh' ? '扫描' : 'Scan')

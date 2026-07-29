@@ -1719,21 +1719,31 @@
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\ImmersiveEffect.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\BottomNavBar.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardsPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\CardPreview.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\CardModel.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ProfilePage.ets",
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ScanPage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\LanguagePage.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\MockSettingsPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets",
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ScanPage.ets"
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets"
       ],
       "error": false
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\BottomNavBar.ets": {
-      "mtimeMs": 1785131382338.5134,
+      "mtimeMs": 1785303570105.7998,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets": {
+      "mtimeMs": 1785303433591.3381,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
       ],
@@ -1756,7 +1766,7 @@
       "error": false
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\CardDetailPage.ets": {
-      "mtimeMs": 1785087032998.4082,
+      "mtimeMs": 1785302520193.1597,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\DigitalCard.ets",
@@ -1772,6 +1782,16 @@
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ProfilePage.ets": {
       "mtimeMs": 1785086524085.1055,
+      "children": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
+      ],
+      "parent": [
+        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
+      ],
+      "error": false
+    },
+    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ScanPage.ets": {
+      "mtimeMs": 1785303250955.8164,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
       ],
@@ -1801,7 +1821,7 @@
       "error": false
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\PhysicalCardManagerPage.ets": {
-      "mtimeMs": 1785081508075.4868,
+      "mtimeMs": 1785303035295.1323,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\models\\Credential.ets",
@@ -1921,7 +1941,7 @@
       "error": false
     },
     "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets": {
-      "mtimeMs": 1785155653023.8367,
+      "mtimeMs": 1785303146237.3882,
       "children": [
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\BottomNavBar.ets",
         "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets",
@@ -2579,26 +2599,6 @@
       ],
       "parent": [
         "C:\\Program Files\\Huawei\\DevEco Studio\\sdk\\default\\openharmony\\ets\\api\\@ohos.security.cert.d.ts"
-      ],
-      "error": false
-    },
-    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\components\\SideNavBar.ets": {
-      "mtimeMs": 1785155623848.3901,
-      "children": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
-      ],
-      "parent": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
-      ],
-      "error": false
-    },
-    "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\ScanPage.ets": {
-      "mtimeMs": 1785133080634.864,
-      "children": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\common\\Theme.ets"
-      ],
-      "parent": [
-        "D:\\SLE-ID\\slekey\\entry\\src\\main\\ets\\pages\\Index.ets"
       ],
       "error": false
     }

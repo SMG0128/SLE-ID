@@ -85,6 +85,7 @@ struct Index {
           showPhysicalCardManagerPage: $showPhysicalCardManagerPage,
           showScanPage: $showScanPage
         })
+          .zIndex(110)
       }
 
       // Content area
@@ -121,6 +122,10 @@ struct Index {
         .onClick(() => {
           this.showScanPage = false
         })
+        .transition(
+          TransitionEffect.OPACITY
+            .animation({ duration: 200, curve: Curve.EaseOut })
+        )
 
       Stack({ alignContent: Alignment.TopEnd }) {
         ScanPage({
@@ -160,6 +165,12 @@ struct Index {
         offsetY: 10
       })
       .clip(true)
+      .transition(
+        TransitionEffect.OPACITY
+          .combine(TransitionEffect.translate({ x: -60, y: 80 }))
+          .combine(TransitionEffect.scale({ x: 0.8, y: 0.8 }))
+          .animation({ duration: 400, curve: Curve.EaseOut })
+      )
     }
     .width('100%')
     .height('100%')
@@ -182,6 +193,7 @@ struct Index {
           language: $language,
           showScanPage: $showScanPage
         })
+          .zIndex(110)
       }
 
       if (this.showVerificationDialog || this.verificationPending) {
@@ -203,25 +215,50 @@ struct Index {
         isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET,
         windowWidth: this.windowWidth
       })
+        .transition(
+          TransitionEffect.OPACITY
+            .combine(TransitionEffect.translate({ y: 40 }))
+            .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut })
+        )
     } else if (this.showPhysicalCardManagerPage) {
       PhysicalCardManagerPage({
         cardStore: this.cardStore,
         language: $language,
         showPhysicalCardManagerPage: $showPhysicalCardManagerPage
       })
+        .transition(
+          TransitionEffect.OPACITY
+            .combine(TransitionEffect.translate({ y: 40 }))
+            .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut })
+        )
     } else if (this.showLanguagePage) {
       LanguagePage({ language: $language, showLanguagePage: $showLanguagePage })
+        .transition(
+          TransitionEffect.OPACITY
+            .combine(TransitionEffect.translate({ y: 40 }))
+            .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut })
+        )
     } else if (this.showMockSettingsPage) {
       MockSettingsPage({
         language: $language,
         showMockSettingsPage: $showMockSettingsPage,
         showVerificationDialog: $showVerificationDialog
       })
+        .transition(
+          TransitionEffect.OPACITY
+            .combine(TransitionEffect.translate({ y: 40 }))
+            .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut })
+        )
     } else if (this.showScanPage && this.windowWidth < Theme.BREAKPOINT_TABLET) {
       ScanPage({
         language: $language,
         showScanPage: $showScanPage
       })
+        .transition(
+          TransitionEffect.OPACITY
+            .combine(TransitionEffect.scale({ x: 0.85, y: 0.85 }))
+            .animation({ duration: 550, curve: Curve.EaseInOut })
+        )
     } else if (this.currentIndex === 0) {
       CardsPage({
         showAddCardModal: $showAddCardModal,
@@ -247,8 +284,8 @@ struct Index {
   VerificationDialog() {
     Stack({ alignContent: Alignment.Center }) {
       Column()
-        .width('100%')
-        .height('100%')
+        .width('120%')
+        .height('120%')
         .backgroundColor('rgba(25, 28, 29, 0.46)')
         .backdropBlur(12)
 
@@ -317,6 +354,11 @@ struct Index {
     .width('100%')
     .height('100%')
     .zIndex(100)
+    .transition(
+      TransitionEffect.OPACITY
+        .combine(TransitionEffect.scale({ x: 0.9, y: 0.9 }))
+        .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut })
+    )
   }
 
   private verificationCard(): DigitalCard {
@@ -346,8 +388,8 @@ struct Index {
   AddCardModal() {
     Stack() {
       Column()
-        .width('100%')
-        .height('100%')
+        .width('120%')
+        .height('120%')
         .backgroundColor('rgba(0, 0, 0, 0.4)')
         .onClick(() => {
           this.closeAddCardModal()
@@ -485,6 +527,11 @@ struct Index {
     }
     .width('100%')
     .height('100%')
+    .transition(
+      TransitionEffect.OPACITY
+        .combine(TransitionEffect.scale({ x: 0.9, y: 0.9 }))
+        .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut })
+    )
   }
 
   @Builder

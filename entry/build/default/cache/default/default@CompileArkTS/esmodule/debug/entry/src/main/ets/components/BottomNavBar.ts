@@ -72,17 +72,17 @@ export class BottomNavBar extends ViewPU {
             // The center dome and the bar share one glass material so Scan reads as a tab extension.
             Circle.height(72);
             // The center dome and the bar share one glass material so Scan reads as a tab extension.
-            Circle.fill('rgba(238, 240, 255, 0.9)');
+            Circle.fill('rgba(248, 249, 250, 0.92)');
             // The center dome and the bar share one glass material so Scan reads as a tab extension.
             Circle.backdropBlur(40);
             // The center dome and the bar share one glass material so Scan reads as a tab extension.
             Circle.borderWidth(1);
             // The center dome and the bar share one glass material so Scan reads as a tab extension.
-            Circle.borderColor('rgba(70, 72, 212, 0.16)');
+            Circle.borderColor('rgba(255, 255, 255, 0.72)');
             // The center dome and the bar share one glass material so Scan reads as a tab extension.
             Circle.shadow({
                 radius: 18,
-                color: 'rgba(70, 72, 212, 0.12)',
+                color: 'rgba(30, 34, 78, 0.08)',
                 offsetY: 3
             });
             // The center dome and the bar share one glass material so Scan reads as a tab extension.
@@ -178,16 +178,18 @@ export class BottomNavBar extends ViewPU {
             Stack.create();
             Stack.width(44);
             Stack.height(44);
+            Stack.borderRadius(22);
+            Stack.borderWidth(1);
+            Stack.borderColor(this.showScanPage ?
+                'rgba(70, 72, 212, 0.18)' : 'rgba(255, 255, 255, 0.72)');
+            Stack.clip(true);
             Stack.alignContent(Alignment.Center);
         }, Stack);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Circle.create();
             Circle.width(42);
             Circle.height(42);
-            Circle.fill(this.showScanPage ? 'rgba(70, 72, 212, 0.17)' : 'rgba(70, 72, 212, 0.08)');
-            Circle.borderWidth(1);
-            Circle.borderColor(this.showScanPage ?
-                'rgba(70, 72, 212, 0.28)' : 'rgba(255, 255, 255, 0.52)');
+            Circle.fill(this.showScanPage ? 'rgba(70, 72, 212, 0.11)' : 'rgba(255, 255, 255, 0.6)');
         }, Circle);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             SymbolGlyph.create({ "id": 125832421, "type": 40000, params: [], "bundleName": "com.slekey.app", "moduleName": "entry" });

@@ -352,6 +352,10 @@ class Index extends ViewPU {
             if (!this.showLanguagePage && !this.showCardDetailPage &&
                 !this.showMockSettingsPage && !this.showPhysicalCardManagerPage) {
                 this.ifElseBranchUpdateFunction(0, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        __Common__.create();
+                        __Common__.zIndex(110);
+                    }, __Common__);
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
                             if (isInitialRender) {
@@ -379,6 +383,7 @@ class Index extends ViewPU {
                             }
                         }, { name: "SideNavBar" });
                     }
+                    __Common__.pop();
                 });
             }
             // Content area
@@ -455,6 +460,8 @@ class Index extends ViewPU {
             Column.onClick(() => {
                 this.showScanPage = false;
             });
+            Column.transition(TransitionEffect.OPACITY
+                .animation({ duration: 200, curve: Curve.EaseOut }));
         }, Column);
         Column.pop();
         this.observeComponentCreation2((elmtId, isInitialRender) => {
@@ -473,6 +480,10 @@ class Index extends ViewPU {
                 offsetY: 10
             });
             Stack.clip(true);
+            Stack.transition(TransitionEffect.OPACITY
+                .combine(TransitionEffect.translate({ x: -60, y: 80 }))
+                .combine(TransitionEffect.scale({ x: 0.8, y: 0.8 }))
+                .animation({ duration: 400, curve: Curve.EaseOut }));
         }, Stack);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             __Common__.create();
@@ -485,7 +496,7 @@ class Index extends ViewPU {
                     let componentCall = new ScanPage(this, {
                         language: this.__language,
                         showScanPage: this.__showScanPage
-                    }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 126, col: 9 });
+                    }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 131, col: 9 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {
@@ -548,6 +559,10 @@ class Index extends ViewPU {
             if (!this.showLanguagePage && !this.showCardDetailPage &&
                 !this.showMockSettingsPage && !this.showPhysicalCardManagerPage) {
                 this.ifElseBranchUpdateFunction(0, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        __Common__.create();
+                        __Common__.zIndex(110);
+                    }, __Common__);
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
                             if (isInitialRender) {
@@ -555,7 +570,7 @@ class Index extends ViewPU {
                                     currentIndex: this.__currentIndex,
                                     language: this.__language,
                                     showScanPage: this.__showScanPage
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 180, col: 9 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 191, col: 9 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -571,6 +586,7 @@ class Index extends ViewPU {
                             }
                         }, { name: "BottomNavBar" });
                     }
+                    __Common__.pop();
                 });
             }
             else {
@@ -599,6 +615,12 @@ class Index extends ViewPU {
             If.create();
             if (this.showCardDetailPage) {
                 this.ifElseBranchUpdateFunction(0, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        __Common__.create();
+                        __Common__.transition(TransitionEffect.OPACITY
+                            .combine(TransitionEffect.translate({ y: 40 }))
+                            .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut }));
+                    }, __Common__);
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
                             if (isInitialRender) {
@@ -609,7 +631,7 @@ class Index extends ViewPU {
                                     selectedCardId: this.__selectedCardId,
                                     isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET,
                                     windowWidth: this.windowWidth
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 198, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 210, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -632,10 +654,17 @@ class Index extends ViewPU {
                             }
                         }, { name: "CardDetailPage" });
                     }
+                    __Common__.pop();
                 });
             }
             else if (this.showPhysicalCardManagerPage) {
                 this.ifElseBranchUpdateFunction(1, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        __Common__.create();
+                        __Common__.transition(TransitionEffect.OPACITY
+                            .combine(TransitionEffect.translate({ y: 40 }))
+                            .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut }));
+                    }, __Common__);
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
                             if (isInitialRender) {
@@ -643,7 +672,7 @@ class Index extends ViewPU {
                                     cardStore: this.cardStore,
                                     language: this.__language,
                                     showPhysicalCardManagerPage: this.__showPhysicalCardManagerPage
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 207, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 224, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -661,14 +690,21 @@ class Index extends ViewPU {
                             }
                         }, { name: "PhysicalCardManagerPage" });
                     }
+                    __Common__.pop();
                 });
             }
             else if (this.showLanguagePage) {
                 this.ifElseBranchUpdateFunction(2, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        __Common__.create();
+                        __Common__.transition(TransitionEffect.OPACITY
+                            .combine(TransitionEffect.translate({ y: 40 }))
+                            .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut }));
+                    }, __Common__);
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
                             if (isInitialRender) {
-                                let componentCall = new LanguagePage(this, { language: this.__language, showLanguagePage: this.__showLanguagePage }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 213, col: 7 });
+                                let componentCall = new LanguagePage(this, { language: this.__language, showLanguagePage: this.__showLanguagePage }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 235, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -683,10 +719,17 @@ class Index extends ViewPU {
                             }
                         }, { name: "LanguagePage" });
                     }
+                    __Common__.pop();
                 });
             }
             else if (this.showMockSettingsPage) {
                 this.ifElseBranchUpdateFunction(3, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        __Common__.create();
+                        __Common__.transition(TransitionEffect.OPACITY
+                            .combine(TransitionEffect.translate({ y: 40 }))
+                            .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut }));
+                    }, __Common__);
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
                             if (isInitialRender) {
@@ -694,7 +737,7 @@ class Index extends ViewPU {
                                     language: this.__language,
                                     showMockSettingsPage: this.__showMockSettingsPage,
                                     showVerificationDialog: this.__showVerificationDialog
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 215, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 242, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -710,17 +753,24 @@ class Index extends ViewPU {
                             }
                         }, { name: "MockSettingsPage" });
                     }
+                    __Common__.pop();
                 });
             }
             else if (this.showScanPage && this.windowWidth < Theme.BREAKPOINT_TABLET) {
                 this.ifElseBranchUpdateFunction(4, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        __Common__.create();
+                        __Common__.transition(TransitionEffect.OPACITY
+                            .combine(TransitionEffect.scale({ x: 0.85, y: 0.85 }))
+                            .animation({ duration: 550, curve: Curve.EaseInOut }));
+                    }, __Common__);
                     {
                         this.observeComponentCreation2((elmtId, isInitialRender) => {
                             if (isInitialRender) {
                                 let componentCall = new ScanPage(this, {
                                     language: this.__language,
                                     showScanPage: this.__showScanPage
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 221, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 253, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -735,6 +785,7 @@ class Index extends ViewPU {
                             }
                         }, { name: "ScanPage" });
                     }
+                    __Common__.pop();
                 });
             }
             else if (this.currentIndex === 0) {
@@ -751,7 +802,7 @@ class Index extends ViewPU {
                                     showMockSettingsPage: this.__showMockSettingsPage,
                                     showPhysicalCardManagerPage: this.__showPhysicalCardManagerPage,
                                     isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 226, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 263, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -787,7 +838,7 @@ class Index extends ViewPU {
                                     showLanguagePage: this.__showLanguagePage,
                                     isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET,
                                     windowWidth: this.windowWidth
-                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 237, col: 7 });
+                                }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 274, col: 7 });
                                 ViewPU.create(componentCall);
                                 let paramsLambda = () => {
                                     return {
@@ -818,11 +869,14 @@ class Index extends ViewPU {
             Stack.width('100%');
             Stack.height('100%');
             Stack.zIndex(100);
+            Stack.transition(TransitionEffect.OPACITY
+                .combine(TransitionEffect.scale({ x: 0.9, y: 0.9 }))
+                .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut }));
         }, Stack);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
-            Column.width('100%');
-            Column.height('100%');
+            Column.width('120%');
+            Column.height('120%');
             Column.backgroundColor('rgba(25, 28, 29, 0.46)');
             Column.backdropBlur(12);
         }, Column);
@@ -865,7 +919,7 @@ class Index extends ViewPU {
         {
             this.observeComponentCreation2((elmtId, isInitialRender) => {
                 if (isInitialRender) {
-                    let componentCall = new CardPreview(this, { card: this.verificationCard(), language: this.language }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 271, col: 9 });
+                    let componentCall = new CardPreview(this, { card: this.verificationCard(), language: this.language }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 308, col: 9 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {
@@ -951,11 +1005,14 @@ class Index extends ViewPU {
             Stack.create();
             Stack.width('100%');
             Stack.height('100%');
+            Stack.transition(TransitionEffect.OPACITY
+                .combine(TransitionEffect.scale({ x: 0.9, y: 0.9 }))
+                .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut }));
         }, Stack);
         this.observeComponentCreation2((elmtId, isInitialRender) => {
             Column.create();
-            Column.width('100%');
-            Column.height('100%');
+            Column.width('120%');
+            Column.height('120%');
             Column.backgroundColor('rgba(0, 0, 0, 0.4)');
             Column.onClick(() => {
                 this.closeAddCardModal();
@@ -1148,7 +1205,7 @@ class Index extends ViewPU {
         {
             this.observeComponentCreation2((elmtId, isInitialRender) => {
                 if (isInitialRender) {
-                    let componentCall = new CardPreview(this, { card: this.invitationPreviewCard(), language: this.language }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 493, col: 7 });
+                    let componentCall = new CardPreview(this, { card: this.invitationPreviewCard(), language: this.language }, undefined, elmtId, () => { }, { page: "entry/src/main/ets/pages/Index.ets", line: 540, col: 7 });
                     ViewPU.create(componentCall);
                     let paramsLambda = () => {
                         return {
