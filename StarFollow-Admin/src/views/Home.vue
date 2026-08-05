@@ -13,6 +13,10 @@
           <span>运行时长: <strong>15天 8小时</strong></span>
           <el-divider direction="vertical" />
           <span>WS63 节点: <strong>4/4 正常</strong></span>
+          <el-divider direction="vertical" />
+          <span>串口: <strong :style="{ color: serial.connected ? '#67c23a' : '#f56c6c' }">{{ serial.connected ? `${serial.port} 已连接` : '未连接' }}</strong></span>
+          <el-divider direction="vertical" />
+          <span>数据库: <strong style="color:#67c23a">正常</strong></span>
         </div>
       </div>
     </el-card>
@@ -102,10 +106,15 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import { CircleCheckFilled, CircleCheck, TrendCharts, WarningFilled, Cpu } from '@element-plus/icons-vue'
 import { getEventList } from '@/api/event'
+import { getSerialStatus } from '@/api/device'
 import type { EventLogItem } from '@/types/event'
+import type { SerialStatus } from '@/types/device'
 
 // ---- 最近事件（通过 API 层获取，不直接访问 mock）----
 const recentEvents = ref<EventLogItem[]>([])
+
+// ---- 系统状态（串口/数据库）----
+const serial = ref<SerialStatus>({ connected: false, port: '-', baudRate: 0, autoReconnect: false, lastFrameAt: null, frameCount: 0, errorCount: 0 })
 
 // ---- ECharts 实例 ----
 const trendChartRef = ref<HTMLDivElement>()
@@ -179,6 +188,8 @@ onMounted(async () => {
   // 加载最近事件（通过 API 层）
   const res = await getEventList({ page: 1, pageSize: 6 })
   recentEvents.value = res.list
+  // 加载串口状态
+  serial.value = await getSerialStatus()
 
   await nextTick()
   initTrendChart()

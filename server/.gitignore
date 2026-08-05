@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Database
+data/*.db
+data/*.db-journal
+
+# Logs
+*.log
+
+# Environment
+.env

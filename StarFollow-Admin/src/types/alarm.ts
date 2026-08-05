@@ -1,10 +1,19 @@
 /** 报警等级 */
 export type AlarmLevel = 'severe' | 'high' | 'normal'
 
-/** 报警类型 */
+/** 报警类型（文档 4.4/4.5） */
 export type AlarmType =
-  | 'unknown_device' | 'unauthorized' | 'license_expired'
-  | 'key_failed' | 'confirm_failed' | 'execute_failed' | 'suspected_replay'
+  | 'unknown_device'      // 未知设备
+  | 'unauthorized'        // 未授权
+  | 'license_expired'     // 过期
+  | 'lost_report'         // 挂失
+  | 'key_failed'          // 密钥失败
+  | 'suspected_replay'    // 疑似重放
+  | 'confirm_rejected'    // 确认拒绝/超时
+  | 'execute_failed'      // 执行失败
+
+/** 报警处理状态 */
+export type AlarmHandleStatus = 'unhandled' | 'handled' | 'ignored' | 'escalated'
 
 /** 报警记录 */
 export interface AlarmRecord {
@@ -16,7 +25,7 @@ export interface AlarmRecord {
   message: string
   operator: string
   time: string
-  handled: boolean
+  handleStatus: AlarmHandleStatus
   solution: string
 }
 
@@ -26,7 +35,7 @@ export interface AlarmQuery {
   pageSize: number
   level?: AlarmLevel | ''
   type?: AlarmType | ''
-  handleStatus?: 'unhandled' | 'handled' | ''
+  handleStatus?: AlarmHandleStatus | ''
 }
 
 /** 报警统计 */
@@ -50,10 +59,11 @@ export const ALARM_TYPES: { label: string; value: AlarmType }[] = [
   { label: '未知设备', value: 'unknown_device' },
   { label: '未授权', value: 'unauthorized' },
   { label: '许可过期', value: 'license_expired' },
+  { label: '挂失', value: 'lost_report' },
   { label: '密钥失败', value: 'key_failed' },
-  { label: '确认失败', value: 'confirm_failed' },
-  { label: '执行失败', value: 'execute_failed' },
   { label: '疑似重放', value: 'suspected_replay' },
+  { label: '确认拒绝/超时', value: 'confirm_rejected' },
+  { label: '执行失败', value: 'execute_failed' },
 ]
 
 /** 报警等级定义表 */
@@ -66,10 +76,11 @@ export const ALARM_LEVELS: { label: string; value: AlarmLevel }[] = [
 /** 报警处理方案 */
 export const ALARM_SOLUTIONS: Record<AlarmType, string> = {
   unknown_device: '确认设备身份，更新白名单后重新接入',
-  unauthorized: '检查卡片权限配置，联系管理员授权',
+  unauthorized: '检查卡片权限配置，按许可策略执行未授权处理',
   license_expired: '更新许可有效期，或重新签发许可',
+  lost_report: '卡片已挂失，立即拒绝并建议临时冻结相关许可',
   key_failed: '重新协商密钥对，检查 WS63 加密模块状态',
-  confirm_failed: '二次确认超时，建议重试或人工介入',
-  execute_failed: '检查检测端固件版本，进行远程重启后重试',
-  suspected_replay: '标记为可疑事件，建议临时冻结相关卡片',
+  suspected_replay: '挑战值或计数异常，标记可疑并临时封禁',
+  confirm_rejected: '二次确认被拒绝或超时，写入确认结果，由许可策略决定是否升级',
+  execute_failed: '权限已通过但闸机/门锁未执行，检查检测端并远程重启后重试',
 }

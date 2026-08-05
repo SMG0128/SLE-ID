@@ -5,8 +5,8 @@ const devicePool = ['正门检测端', '走廊检测端', '机房检测端', '�
 const operatorPool = ['系统自动', '系统自动', '系统自动', '张三', '李四']
 
 function levelForType(type: AlarmType): AlarmLevel {
-  if (type === 'suspected_replay' || type === 'key_failed') return 'severe'
-  if (type === 'unauthorized' || type === 'execute_failed') return 'high'
+  if (type === 'suspected_replay' || type === 'key_failed' || type === 'lost_report') return 'severe'
+  if (type === 'unauthorized' || type === 'execute_failed' || type === 'confirm_rejected') return 'high'
   return 'normal'
 }
 
@@ -18,7 +18,7 @@ export function mockAlarmList(query: AlarmQuery): AlarmListResponse {
   for (const at of ALARM_TYPES) {
     for (let i = 0; i < 2; i++) {
       const now = new Date()
-      now.setMinutes(now.getMinutes() - (id * 23 + i * 7))
+      now.setMinutes(now.getMinutes() - (id * 19 + i * 7))
       list.push({
         id: `ALM-${String(id++).padStart(6, '0')}`,
         level: levelForType(at.value),
@@ -28,7 +28,7 @@ export function mockAlarmList(query: AlarmQuery): AlarmListResponse {
         message: `${at.label}报警触发`,
         operator: operatorPool[Math.floor(Math.random() * operatorPool.length)],
         time: now.toLocaleString('zh-CN'),
-        handled: i === 0,
+        handleStatus: i === 0 ? 'unhandled' : 'handled',
         solution: ALARM_SOLUTIONS[at.value] || '待人工分析',
       })
     }
@@ -38,8 +38,7 @@ export function mockAlarmList(query: AlarmQuery): AlarmListResponse {
   let filtered = list
   if (query.level) filtered = filtered.filter(a => a.level === query.level)
   if (query.type) filtered = filtered.filter(a => a.type === query.type)
-  if (query.handleStatus === 'unhandled') filtered = filtered.filter(a => !a.handled)
-  if (query.handleStatus === 'handled') filtered = filtered.filter(a => a.handled)
+  if (query.handleStatus) filtered = filtered.filter(a => a.handleStatus === query.handleStatus)
 
   const pageSize = query.pageSize || 10
   const start = ((query.page || 1) - 1) * pageSize
@@ -50,7 +49,7 @@ export function mockAlarmList(query: AlarmQuery): AlarmListResponse {
       high: list.filter(a => a.level === 'high').length,
       normal: list.filter(a => a.level === 'normal').length,
       total: list.length,
-      unhandled: list.filter(a => !a.handled).length,
+      unhandled: list.filter(a => a.handleStatus === 'unhandled').length,
     },
     total: filtered.length,
     list: filtered.slice(start, start + pageSize),

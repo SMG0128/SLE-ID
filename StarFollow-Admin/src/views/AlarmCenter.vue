@@ -49,12 +49,18 @@
         <el-table-column prop="operator" label="操作人" width="100" />
         <el-table-column prop="time" label="时间" width="180" />
         <el-table-column label="状态" width="90">
-          <template #default="{ row }"><el-tag size="small" :type="row.handled ? 'success' : 'danger'">{{ row.handled ? '已处理' : '未处理' }}</el-tag></template>
+          <template #default="{ row }">
+            <el-tag size="small" :type="handleStatusTag(row.handleStatus)">{{ handleStatusLabel(row.handleStatus) }}</el-tag>
+          </template>
         </el-table-column>
-        <el-table-column label="操作" width="160" fixed="right">
+        <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
             <el-button size="small" @click="showDetail(row)">详情</el-button>
-            <el-button v-if="!row.handled" size="small" type="primary" @click="markHandled(row)">标记处理</el-button>
+            <template v-if="row.handleStatus === 'unhandled'">
+              <el-button size="small" type="primary" @click="setStatus(row, 'handled')">处理</el-button>
+              <el-button size="small" @click="setStatus(row, 'ignored')">忽略</el-button>
+              <el-button size="small" type="danger" @click="setStatus(row, 'escalated')">升级</el-button>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -86,7 +92,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getAlarmList, handleAlarm } from '@/api/alarm'
-import { ALARM_TYPES, ALARM_LEVELS, type AlarmRecord, type AlarmQuery, type AlarmStats, type AlarmLevel, type AlarmType } from '@/types/alarm'
+import { ALARM_TYPES, ALARM_LEVELS, type AlarmRecord, type AlarmQuery, type AlarmStats, type AlarmLevel, type AlarmType, type AlarmHandleStatus } from '@/types/alarm'
 
 const filter = reactive<AlarmQuery>({ page: 1, pageSize: 10, level: '', type: '', handleStatus: '' })
 const page = ref(1)
@@ -106,11 +112,11 @@ async function loadData() {
   loading.value = false
 }
 
-async function markHandled(row: AlarmRecord) {
+async function setStatus(row: AlarmRecord, status: AlarmHandleStatus) {
   await handleAlarm(row.id)
-  row.handled = true
-  stats.value.unhandled--
-  ElMessage.success('已标记处理')
+  row.handleStatus = status
+  if (status !== 'unhandled') stats.value.unhandled = Math.max(0, stats.value.unhandled - 1)
+  ElMessage.success(status === 'handled' ? '已标记处理' : status === 'ignored' ? '已忽略' : '已升级')
 }
 
 const dialogVisible = ref(false)
@@ -121,8 +127,16 @@ function levelLabel(l: AlarmLevel) { return ALARM_LEVELS.find(x => x.value === l
 function levelTag(l: AlarmLevel) { return l === 'severe' ? 'danger' : l === 'high' ? 'warning' : '' }
 function typeLabel(t: AlarmType) { return ALARM_TYPES.find(x => x.value === t)?.label || t }
 function typeTagColor(t: AlarmType) {
-  const m: Record<string, string> = { unknown_device: 'warning', unauthorized: 'danger', license_expired: 'warning', key_failed: 'danger', confirm_failed: 'info', execute_failed: 'danger', suspected_replay: 'danger' }
+  const m: Record<string, string> = { unknown_device: 'warning', unauthorized: 'danger', license_expired: 'warning', lost_report: 'danger', key_failed: 'danger', confirm_rejected: 'warning', execute_failed: 'danger', suspected_replay: 'danger' }
   return m[t] || 'info'
+}
+function handleStatusLabel(s: AlarmHandleStatus) {
+  const m: Record<AlarmHandleStatus, string> = { unhandled: '未处理', handled: '已处理', ignored: '已忽略', escalated: '已升级' }
+  return m[s]
+}
+function handleStatusTag(s: AlarmHandleStatus) {
+  const m: Record<AlarmHandleStatus, string> = { unhandled: 'danger', handled: 'success', ignored: 'info', escalated: 'warning' }
+  return m[s]
 }
 
 function search() { page.value = 1; loadData() }

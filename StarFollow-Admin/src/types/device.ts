@@ -25,3 +25,14 @@ export interface WS63Status {
   latency: number
   status: '正常' | '异常'
 }
+
+/** USB 串口状态（文档 4.2 USB 串口适配层） */
+export interface SerialStatus {
+  connected: boolean
+  port: string
+  baudRate: number
+  autoReconnect: boolean
+  lastFrameAt: string | null
+  frameCount: number
+  errorCount: number
+}

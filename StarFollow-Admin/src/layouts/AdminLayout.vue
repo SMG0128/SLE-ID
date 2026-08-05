@@ -37,7 +37,19 @@
         </el-menu-item>
         <el-menu-item index="/permission-manage">
           <el-icon><Key /></el-icon>
-          <template #title>许可管理</template>
+          <template #title>许可发布</template>
+        </el-menu-item>
+        <el-menu-item index="/invite-manage">
+          <el-icon><Tickets /></el-icon>
+          <template #title>邀请码管理</template>
+        </el-menu-item>
+        <el-menu-item index="/card-license-manage">
+          <el-icon><CreditCard /></el-icon>
+          <template #title>卡片/许可管理</template>
+        </el-menu-item>
+        <el-menu-item index="/system-settings">
+          <el-icon><Setting /></el-icon>
+          <template #title>系统设置</template>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -70,7 +82,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { HomeFilled, VideoCamera, Document, Bell, Monitor, Key, Fold, Expand } from '@element-plus/icons-vue'
+import { HomeFilled, VideoCamera, Document, Bell, Monitor, Key, Tickets, CreditCard, Setting, Fold, Expand } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const isCollapse = ref(false)

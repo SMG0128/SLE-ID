@@ -4,13 +4,14 @@ export type EventStatus = 'IDLE' | 'APPROACHING' | 'IN_ZONE' | 'COMPLETED' | 'CO
 /** 认证结果 */
 export type AuthResult = '' | '成功' | '失败'
 
-/** 事件日志记录 */
+/** 事件日志记录（文档 4.4：按人/卡片/检测点/时间筛选） */
 export interface EventLogItem {
   eventId: string
   time: string
   dateStr: string
   device: string
   cardId: string
+  owner: string
   result: '成功' | '失败' | '待定'
   status: string
 }
@@ -30,6 +31,8 @@ export interface EventQuery {
   page: number
   pageSize: number
   device?: string
+  cardId?: string
+  owner?: string
   result?: string
   dateStart?: string
   dateEnd?: string

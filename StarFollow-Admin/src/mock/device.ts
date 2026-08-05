@@ -1,4 +1,4 @@
-import type { Device, DeviceListResponse, WS63Status } from '@/types/device'
+import type { Device, DeviceListResponse, WS63Status, SerialStatus } from '@/types/device'
 
 const devices: Device[] = [
   { id: 'DEV-001', name: '正门检测端', location: '正门大厅', status: '在线', firmware: 'v3.2.1', heartbeat: 5, usbConnected: true, policyVersion: 'POL-2.4', uptime: '15天' },
@@ -17,4 +17,9 @@ export function mockDeviceList(): DeviceListResponse {
 /** 获取 WS63 通信模块状态 */
 export function mockWS63Status(): WS63Status {
   return { protocol: 'WS63 v2.4', band: '2.4GHz', nodes: 6, latency: 12, status: '正常' }
+}
+
+/** 获取 USB 串口状态 */
+export function mockSerialStatus(): SerialStatus {
+  return { connected: true, port: 'COM3', baudRate: 115200, autoReconnect: true, lastFrameAt: '2026-08-05 16:58:12', frameCount: 48213, errorCount: 3 }
 }

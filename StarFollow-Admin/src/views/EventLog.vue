@@ -11,6 +11,12 @@
             <el-option v-for="d in deviceOptions" :key="d" :label="d" :value="d" />
           </el-select>
         </el-form-item>
+        <el-form-item label="持有人">
+          <el-input v-model="filter.owner" placeholder="按人筛选" clearable style="width:120px" />
+        </el-form-item>
+        <el-form-item label="卡片ID">
+          <el-input v-model="filter.cardId" placeholder="按卡片筛选" clearable style="width:140px" />
+        </el-form-item>
         <el-form-item label="结果">
           <el-select v-model="filter.result" placeholder="全部" clearable style="width:120px">
             <el-option label="成功" value="成功" />
@@ -32,6 +38,7 @@
         <el-table-column prop="time" label="时间" width="180" />
         <el-table-column prop="device" label="检测端" width="140" />
         <el-table-column prop="cardId" label="匿名卡ID" width="150" />
+        <el-table-column prop="owner" label="持有人" width="90" />
         <el-table-column label="结果" width="100">
           <template #default="{ row }">
             <el-tag size="small" :type="row.result === '成功' ? 'success' : row.result === '失败' ? 'danger' : 'info'">{{ row.result }}</el-tag>
@@ -56,6 +63,8 @@ const deviceOptions = ['正门检测端', '走廊检测端', '机房检测端', 
 const filter = reactive({
   dateRange: null as [string, string] | null,
   device: '',
+  owner: '',
+  cardId: '',
   result: '',
 })
 const page = ref(1)
@@ -70,6 +79,8 @@ async function loadData() {
     page: page.value,
     pageSize: pageSize.value,
     device: filter.device || undefined,
+    owner: filter.owner || undefined,
+    cardId: filter.cardId || undefined,
     result: filter.result || undefined,
     dateStart: filter.dateRange?.[0],
     dateEnd: filter.dateRange?.[1],
@@ -81,7 +92,7 @@ async function loadData() {
 }
 
 function search() { page.value = 1; loadData() }
-function reset() { filter.dateRange = null; filter.device = ''; filter.result = ''; page.value = 1; loadData() }
+function reset() { filter.dateRange = null; filter.device = ''; filter.owner = ''; filter.cardId = ''; filter.result = ''; page.value = 1; loadData() }
 
 onMounted(loadData)
 </script>

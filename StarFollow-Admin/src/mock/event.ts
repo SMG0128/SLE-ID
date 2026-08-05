@@ -3,6 +3,7 @@ import { STATUS_ORDER } from '@/types/event'
 
 const devicePool = ['正门检测端', '走廊检测端', '机房检测端', '车库检测端', '会议室检测端', '仓库检测端']
 const cardPool = Array.from({ length: 20 }, (_, i) => `ANON-${String(i + 1).padStart(4, '0')}`)
+const ownerPool = ['张三', '李四', '王五', '赵六', '孙七', '周八']
 const resultPool: EventLogItem['result'][] = ['成功', '成功', '成功', '成功', '失败', '待定']
 const statusPool = ['待命中', '接近中', '区域内', '已完成', '冷却中', '已拒绝']
 
@@ -24,14 +25,17 @@ export function mockEventList(query: EventQuery): EventListResponse {
       dateStr: date.toISOString().slice(0, 10),
       device: rand(devicePool),
       cardId: rand(cardPool),
+      owner: rand(ownerPool),
       result: rand(resultPool),
       status: rand(statusPool),
     })
   }
 
-  // 筛选
+  // 筛选（文档 4.4：按人/卡片/检测点/时间）
   let filtered = list
   if (query.device) filtered = filtered.filter(i => i.device === query.device)
+  if (query.cardId) filtered = filtered.filter(i => i.cardId === query.cardId)
+  if (query.owner) filtered = filtered.filter(i => i.owner === query.owner)
   if (query.result) filtered = filtered.filter(i => i.result === query.result)
   if (query.dateStart) filtered = filtered.filter(i => i.dateStr >= query.dateStart!)
   if (query.dateEnd) filtered = filtered.filter(i => i.dateStr <= query.dateEnd!)
