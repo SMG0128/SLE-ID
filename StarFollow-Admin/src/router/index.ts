@@ -43,12 +43,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/PermissionManage.vue'),
         meta: { title: '许可管理' },
       },
-      {
-        path: 'invite-code',
-        name: 'InviteCode',
-        component: () => import('@/views/InviteManage.vue'),
-        meta: { title: '邀请码' },
-      },
     ],
   },
 ]

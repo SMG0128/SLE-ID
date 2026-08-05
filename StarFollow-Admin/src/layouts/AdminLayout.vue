@@ -39,10 +39,6 @@
           <el-icon><Key /></el-icon>
           <template #title>许可管理</template>
         </el-menu-item>
-        <el-menu-item index="/invite-code">
-          <el-icon><Tickets /></el-icon>
-          <template #title>邀请码</template>
-        </el-menu-item>
       </el-menu>
     </el-aside>
 
@@ -74,7 +70,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { HomeFilled, VideoCamera, Document, Bell, Monitor, Key, Tickets, Fold, Expand } from '@element-plus/icons-vue'
+import { HomeFilled, VideoCamera, Document, Bell, Monitor, Key, Fold, Expand } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const isCollapse = ref(false)
