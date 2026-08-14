@@ -1,0 +1,21 @@
+# DevEco Studio and local tooling
+.idea/
+.claude/
+*.iml
+local.properties
+
+# Hvigor and HarmonyOS generated output
+.hvigor/
+build/
+**/build/
+oh_modules/
+**/oh_modules/
+
+# Local signing material and credentials
+*.cer
+*.p7b
+*.p12
+*.pem
+*.key
+*.keystore
+*.jks

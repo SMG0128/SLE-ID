@@ -60,18 +60,26 @@ entry/src/main/ets/
 ## 开发环境
 
 ### 构建工具
-使用 **DevEco Studio** 和 **hvigor** 构建系统。
 
-```bash
-# 构建 HAP 包
-hvigor assembleHap
+项目使用 **DevEco Studio 自带的 Hvigor**，不维护单独的自定义包装器或
+Hvigor JAR。首次检出后先安装锁定依赖，再执行干净的调试构建：
 
-# 安装依赖
+```powershell
 ohpm install
+
+& '<DevEco Studio>\tools\hvigor\bin\hvigorw.bat' --no-daemon clean
+& '<DevEco Studio>\tools\hvigor\bin\hvigorw.bat' --no-daemon `
+  --mode module -p product=default -p module=entry@default `
+  -p buildMode=debug assembleHap
 ```
+
+仓库默认生成未签名 HAP，确保构建配置不依赖个人证书或密码。需要安装到真机时，
+请在 DevEco Studio 中配置个人本地签名；不得提交 IDE 写入的签名配置或证书材料。
 
 ### 测试
 目标框架：`@ohos/hypium` 1.0.19
+
+当前 `entry/src/ohosTest` 为空，尚无可执行测试用例。
 
 ### 技术栈
 

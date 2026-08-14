@@ -34,7 +34,18 @@
         "orientation": "portrait"
       }
     ],
-    "requestPermissions": [],
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.ACCESS_NEARLINK",
+        "reason": "$string:nearlink_permission_reason",
+        "usedScene": {
+          "abilities": [
+            "EntryAbility"
+          ],
+          "when": "inuse"
+        }
+      }
+    ],
     "metadata": []
   }
 }

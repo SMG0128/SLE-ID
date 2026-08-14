@@ -7,6 +7,10 @@
     {
       "name": "EntryAbility_desc",
       "value": "SleKey Entry Ability"
+    },
+    {
+      "name": "nearlink_permission_reason",
+      "value": "用于在应用内扫描并连接附近的 SLEKEY-A 星闪设备"
     }
   ]
 }

@@ -4,11 +4,13 @@ import { window } from '@kit.ArkUI'
 import { notificationManager } from '@kit.NotificationKit'
 import { ImmersiveLightEffect } from '../common/ImmersiveEffect'
 import { VerificationRequestService } from '../services/VerificationRequestService'
+import { NearLinkConnectionService } from '../services/NearLinkConnectionService'
 
 export default class EntryAbility extends UIAbility {
   private immersiveEffect: ImmersiveLightEffect = ImmersiveLightEffect.getInstance()
 
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    NearLinkConnectionService.getInstance().setContext(this.context)
     AppStorage.setOrCreate<boolean>('verificationPending', false)
     AppStorage.setOrCreate<string>('verificationCardId', '2')
     AppStorage.setOrCreate<string>('verificationRandomCode', '')
@@ -17,6 +19,9 @@ export default class EntryAbility extends UIAbility {
   }
 
   onDestroy(): void {
+    NearLinkConnectionService.getInstance().dispose().catch(() => {
+      hilog.warn(0x0000, 'SleKey', 'NearLink cleanup failed.')
+    })
     hilog.info(0x0000, 'SleKey', 'Ability onDestroy')
   }
 
