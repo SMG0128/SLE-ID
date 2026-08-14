@@ -9,7 +9,13 @@ import { MockSettingsPage } from './MockSettingsPage'
 import { PhysicalCardManagerPage } from './PhysicalCardManagerPage'
 import { CardPreview } from '../components/CardPreview'
 import { DigitalCard, DigitalCardStatus } from '../models/DigitalCard'
-import { CredentialBindingStatus } from '../models/Credential'
+import {
+  CredentialBindingStatus,
+  CredentialCondition
+} from '../models/Credential'
+import { createLocalSyncState } from '../models/SyncState'
+import { ConfirmationRequest } from '../models/ConfirmationRequest'
+import { ConfirmationStore } from '../stores/ConfirmationStore'
 import {
   AuthorizationAlertPolicy,
   AuthorizationUsageMode
@@ -39,8 +45,10 @@ struct Index {
   @State slideProgress: number = 0
   @StorageLink('verificationPending') verificationPending: boolean = false
   @StorageLink('verificationCardId') verificationCardId: string = '2'
+  @StorageLink('verificationRandomCode') verificationRandomCode: string = ''
   @State selectedCardId: string = '2'
   @State cardStore: CardStore = CardStore.getInstance()
+  @State confirmationStore: ConfirmationStore = ConfirmationStore.getInstance()
   @State windowWidth: number = 0
   @State invitationCode: string = ''
   @State invitationState: InvitationFlowState = InvitationFlowState.IDLE
@@ -372,12 +380,26 @@ struct Index {
   }
 
   private approveVerification(): void {
+    const card: DigitalCard = this.verificationCard()
+    const request: ConfirmationRequest =
+      this.confirmationStore.receiveLocalMockRequest(
+        card.id,
+        card.permissionId,
+        this.verificationRandomCode
+      )
+    this.confirmationStore.approveLocalMock(request.requestId)
+    if (!this.confirmationStore.hasAuthoritativeLocalResult(request.requestId)) {
+      this.slideProgress = 0
+      return
+    }
+    // Dismissal follows the local mock acknowledgement; it does not create it.
     this.verificationPending = false
     this.showVerificationDialog = false
     this.slideProgress = 0
     try {
       this.getUIContext().getPromptAction().showToast({
-        message: this.language === 'zh' ? '已同意二次验证' : 'Verification approved'
+        message: this.language === 'zh' ? '本地 Mock 已记录同意结果' :
+          'Approval recorded by the local mock'
       })
     } catch (error) {
       console.error(`Unable to show verification result: ${JSON.stringify(error)}`)
@@ -802,22 +824,24 @@ struct Index {
       id: 'invitation-preview',
       name: this.invitationPreview.cardName,
       issuer: this.invitationPreview.issuerName,
+      cardAnonId: 'PREVIEW-0000-0000',
       anonymousNumber: 'PREVIEW 0000 0000',
       nickname: this.invitationPreview.cardName,
       detail: this.invitationPreview.cardDescription,
       category: this.invitationPreview.category,
       status: DigitalCardStatus.ACTIVE,
       visualStyle: this.invitationPreview.cardAppearance,
-      authorizationId: this.invitationPreview.authorizationId,
+      permissionId: this.invitationPreview.permissionId,
       credentialId: '',
       physicalCardId: '',
       credentialBindingStatus: CredentialBindingStatus.NOT_WRITTEN,
-      adminConfirmationRequired: this.invitationPreview.adminConfirmationRequired,
+      credentialCondition: CredentialCondition.ACTIVE,
+      adminConfirmRequired: this.invitationPreview.adminConfirmRequired,
       userConfirmationEnabled: false,
       allowTemporaryPass: this.invitationPreview.phoneSubstituteAllowed,
       validFrom: this.invitationPreview.validFrom,
       validUntil: this.invitationPreview.validUntil,
-      lastSyncedAt: ''
+      syncState: createLocalSyncState('')
     }
   }
 
@@ -852,7 +876,7 @@ struct Index {
   }
 
   private invitationConfirmationText(): string {
-    if (this.invitationPreview && this.invitationPreview.adminConfirmationRequired) {
+    if (this.invitationPreview && this.invitationPreview.adminConfirmRequired) {
       return this.language === 'zh' ? '管理方要求二次确认' : 'Required by administrator'
     }
     return this.language === 'zh' ? '可由用户自行开启' : 'Optional'

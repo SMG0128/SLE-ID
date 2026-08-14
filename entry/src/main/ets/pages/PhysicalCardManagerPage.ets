@@ -165,7 +165,7 @@ export struct PhysicalCardManagerPage {
             .fontWeight(Theme.FONT_WEIGHT_SEMIBOLD)
             .fontColor(Theme.ON_SURFACE)
 
-          Text(card.anonymousIdentifier)
+          Text(card.cardAnonId)
             .fontSize(Theme.LABEL_SM_FONT_SIZE)
             .fontColor(Theme.ON_SURFACE_VARIANT)
             .margin({ top: 2 })
@@ -304,7 +304,7 @@ export struct PhysicalCardManagerPage {
                     .fontSize(Theme.BODY_MD_FONT_SIZE)
                     .fontWeight(Theme.FONT_WEIGHT_SEMIBOLD)
                     .fontColor(Theme.ON_SURFACE)
-                  Text(`${card.anonymousIdentifier} · ${card.usedCapacity}/${card.totalCapacity}`)
+                  Text(`${card.cardAnonId} · ${card.usedCapacity}/${card.totalCapacity}`)
                     .fontSize(Theme.LABEL_SM_FONT_SIZE)
                     .fontColor(Theme.ON_SURFACE_VARIANT)
                     .margin({ top: 2 })
@@ -495,9 +495,9 @@ export struct PhysicalCardManagerPage {
     if (!credential) {
       return this.language === 'zh' ? '未知数字许可' : 'Unknown authorization'
     }
-    let name: string = credential.authorizationId
+    let name: string = credential.permissionId
     this.cardStore.cards.forEach((card: DigitalCard) => {
-      if (card.authorizationId === credential.authorizationId) {
+      if (card.permissionId === credential.permissionId) {
         name = card.nickname.length > 0 ? card.nickname : card.name
       }
     })

@@ -5,6 +5,12 @@ import {
   AuthorizationAlertPolicy,
   AuthorizationUsageMode
 } from './Authorization'
+import { OperationReceipt } from './Operation'
+import {
+  OrganizationId,
+  PermissionId,
+  PolicyVersion
+} from './DomainIdentifiers'
 
 export enum InvitationFlowState {
   IDLE = 'idle',
@@ -38,8 +44,8 @@ export enum InvitationFailureReason {
 }
 
 export interface InvitationAuthorizationPreview {
-  authorizationId: string
-  issuerId: string
+  permissionId: PermissionId
+  organizationId: OrganizationId
   issuerName: string
   cardName: string
   cardDescription: string
@@ -48,7 +54,8 @@ export interface InvitationAuthorizationPreview {
   validUntil: string
   usageMode: AuthorizationUsageMode
   usageLimit: number
-  adminConfirmationRequired: boolean
+  readonly adminConfirmRequired: boolean
+  policyVersion: PolicyVersion
   phoneSubstituteAllowed: boolean
   alertPolicy: AuthorizationAlertPolicy
   recordEvent: boolean
@@ -76,6 +83,7 @@ export interface InvitationPreviewResult {
 export interface InvitationRedemptionResult {
   state: InvitationFlowState
   reason: InvitationFailureReason
+  operation: OperationReceipt
   preview: InvitationAuthorizationPreview | null
   authorization: Authorization | null
   digitalCard: DigitalCard | null

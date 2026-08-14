@@ -1,6 +1,10 @@
 import * as Theme from '../common/Theme'
 import { DigitalCard } from '../models/DigitalCard'
-import { Credential, CredentialBindingStatus } from '../models/Credential'
+import {
+  Credential,
+  CredentialBindingStatus,
+  CredentialCondition
+} from '../models/Credential'
 import {
   PhysicalCard,
   PhysicalCardConnectionState,
@@ -722,7 +726,7 @@ export struct CardDetailPage {
           .fontWeight(Theme.FONT_WEIGHT_SEMIBOLD)
           .fontColor(Theme.ON_SURFACE)
           .margin({ top: 2 })
-        Text(card.anonymousIdentifier)
+        Text(card.cardAnonId)
           .fontSize(Theme.LABEL_SM_FONT_SIZE)
           .fontColor(Theme.ON_SURFACE_VARIANT)
           .margin({ top: 2 })
@@ -840,7 +844,7 @@ export struct CardDetailPage {
               .fontWeight(Theme.FONT_WEIGHT_REGULAR)
               .fontColor(Theme.ON_SURFACE)
 
-            Text(this.currentCard().adminConfirmationRequired ?
+            Text(this.currentCard().adminConfirmRequired ?
               (this.language === 'zh' ? '管理方要求二次确认' : 'Required by administrator') :
               (this.language === 'zh' ? '需要二次验证' : 'Secondary validation required'))
               .fontSize(Theme.LABEL_SM_FONT_SIZE)
@@ -859,7 +863,7 @@ export struct CardDetailPage {
           .switchPointColor(Color.White)
           .width(44)
           .height(24)
-          .enabled(!this.currentCard().adminConfirmationRequired)
+          .enabled(!this.currentCard().adminConfirmRequired)
           .onChange((isOn: boolean) => {
             this.updateTwoFactor(isOn)
           })
@@ -1078,7 +1082,7 @@ export struct CardDetailPage {
   }
 
   private isWriteBusy(): boolean {
-    return this.cardStore.activeWriteStatus === CredentialBindingStatus.CONNECTING ||
+    return this.cardStore.connectionState === PhysicalCardConnectionState.CONNECTING ||
       this.cardStore.activeWriteStatus === CredentialBindingStatus.WRITING ||
       this.cardStore.activeWriteStatus === CredentialBindingStatus.VERIFYING
   }
@@ -1201,10 +1205,11 @@ export struct CardDetailPage {
     if (status === CredentialBindingStatus.WRITE_FAILED) {
       return this.language === 'zh' ? '写入失败' : 'Write failed'
     }
-    if (status === CredentialBindingStatus.UPDATE_REQUIRED) {
+    if (this.currentCard().credentialCondition ===
+      CredentialCondition.UPDATE_REQUIRED) {
       return this.language === 'zh' ? '凭证需要更新' : 'Credential update required'
     }
-    if (status === CredentialBindingStatus.REMOVED) {
+    if (this.currentCard().credentialCondition === CredentialCondition.REMOVED) {
       return this.language === 'zh' ? '凭证已从实体卡删除' : 'Credential removed'
     }
     return this.language === 'zh' ? '尚未写入实体卡' : 'Not written to a physical card'
@@ -1231,7 +1236,7 @@ export struct CardDetailPage {
   private boundPhysicalCardIdentifier(): string {
     const card: PhysicalCard | null =
       this.cardStore.getPhysicalCard(this.currentCard().physicalCardId)
-    return card ? card.anonymousIdentifier : '****'
+    return card ? card.cardAnonId : '****'
   }
 
   private boundCredential(): Credential | null {

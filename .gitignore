@@ -6,6 +6,7 @@ local.properties
 
 # Hvigor and HarmonyOS generated output
 .hvigor/
+**/.test/
 build/
 **/build/
 oh_modules/

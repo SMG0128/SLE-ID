@@ -30,6 +30,17 @@ import { InvitationService } from '../services/InvitationService'
 import { PhysicalCardService } from '../services/PhysicalCardService'
 import { CredentialService } from '../services/CredentialService'
 import { MockDataSource } from '../mock/MockDataSource'
+import {
+  applyUserConfirmationPreference,
+  ConfirmationPolicy,
+  finalConfirmRequired
+} from '../models/ConfirmationPolicy'
+import {
+  createPendingOperation,
+  OperationAuthority,
+  OperationReceipt,
+  OperationState
+} from '../models/Operation'
 
 @Observed
 export class CardStore {
@@ -51,6 +62,15 @@ export class CardStore {
     PhysicalCardFailureReason.NONE
   isLoading: boolean = false
   errorMessage: string = ''
+  lastCardOperation: OperationReceipt = {
+    operationId: '',
+    state: OperationState.IDLE,
+    authority: OperationAuthority.NONE,
+    verificationRequired: false,
+    receiptId: '',
+    errorCode: '',
+    updatedAt: ''
+  }
 
   private cardService: DigitalCardService
   private authorizationService: AuthorizationService
@@ -147,13 +167,16 @@ export class CardStore {
   }
 
   requiresConfirmation(card: DigitalCard): boolean {
-    return card.adminConfirmationRequired || card.userConfirmationEnabled
+    return finalConfirmRequired(
+      card.adminConfirmRequired,
+      card.userConfirmationEnabled
+    )
   }
 
   hasAuthorization(authorizationId: string): boolean {
     let found: boolean = false
     this.authorizations.forEach((authorization: Authorization) => {
-      if (authorization.id === authorizationId) {
+      if (authorization.permissionId === authorizationId) {
         found = true
       }
     })
@@ -163,7 +186,7 @@ export class CardStore {
   getAuthorization(authorizationId: string): Authorization | null {
     let result: Authorization | null = null
     this.authorizations.forEach((authorization: Authorization) => {
-      if (authorization.id === authorizationId) {
+      if (authorization.permissionId === authorizationId) {
         result = authorization
       }
     })
@@ -206,15 +229,10 @@ export class CardStore {
       return
     }
     this.discoveryState = PhysicalCardDiscoveryState.DISCOVERING
-    this.activeWriteStatus = CredentialBindingStatus.DISCOVERING
     this.discoveredPhysicalCards = []
     this.physicalCardFailureReason = PhysicalCardFailureReason.NONE
     this.physicalCardService.startDiscovery((update: PhysicalCardDiscoveryUpdate) => {
       this.discoveryState = update.state
-      if (update.state !== PhysicalCardDiscoveryState.DISCOVERING &&
-        this.activeWriteStatus === CredentialBindingStatus.DISCOVERING) {
-        this.activeWriteStatus = CredentialBindingStatus.NOT_WRITTEN
-      }
       if (update.state === PhysicalCardDiscoveryState.DISCOVERED) {
         this.discoveredPhysicalCards =
           this.deduplicatePhysicalCards(update.cards)
@@ -230,16 +248,12 @@ export class CardStore {
   stopPhysicalCardDiscovery(): void {
     this.physicalCardService.stopDiscovery()
     this.discoveryState = PhysicalCardDiscoveryState.STOPPED
-    if (this.activeWriteStatus === CredentialBindingStatus.DISCOVERING) {
-      this.activeWriteStatus = CredentialBindingStatus.NOT_WRITTEN
-    }
   }
 
   async connectPhysicalCard(
     physicalCardId: string
   ): Promise<PhysicalCardConnectionResult> {
     this.connectionState = PhysicalCardConnectionState.CONNECTING
-    this.activeWriteStatus = CredentialBindingStatus.CONNECTING
     this.connectedPhysicalCardId = physicalCardId
     this.physicalCardFailureReason = PhysicalCardFailureReason.NONE
     const result: PhysicalCardConnectionResult =
@@ -311,7 +325,7 @@ export class CardStore {
     }
 
     const request: CredentialWriteRequest = {
-      authorizationId: digitalCard.authorizationId,
+      permissionId: digitalCard.permissionId,
       digitalCardId: digitalCard.id,
       physicalCardId: this.primaryPhysicalCard.physicalCardId
     }
@@ -346,7 +360,7 @@ export class CardStore {
       }
     }
     if (result.credential &&
-      result.credential.bindingStatus === CredentialBindingStatus.WRITTEN) {
+      result.credential.bindingStatus === CredentialBindingStatus.ACTIVE) {
       this.replaceCredential(result.credential)
     }
     return result
@@ -404,10 +418,19 @@ export class CardStore {
       if (!result.authorization || !result.digitalCard) {
         return this.invitationRequestErrorResult()
       }
-      if (this.hasAuthorization(result.authorization.id)) {
+      if (this.hasAuthorization(result.authorization.permissionId)) {
         return {
           state: InvitationFlowState.ALREADY_BOUND,
           reason: InvitationFailureReason.ALREADY_BOUND,
+          operation: {
+            operationId: result.operation.operationId,
+            state: OperationState.FAILED,
+            authority: OperationAuthority.LOCAL,
+            verificationRequired: false,
+            receiptId: '',
+            errorCode: InvitationFailureReason.ALREADY_BOUND,
+            updatedAt: new Date().toISOString()
+          },
           preview: result.preview,
           authorization: null,
           digitalCard: null
@@ -466,10 +489,13 @@ export class CardStore {
     if (!card) {
       return
     }
-    if (card.adminConfirmationRequired && !isEnabled) {
-      return
+    const currentPolicy: ConfirmationPolicy = {
+      adminConfirmRequired: card.adminConfirmRequired,
+      userConfirmEnabled: card.userConfirmationEnabled
     }
-    card.userConfirmationEnabled = isEnabled
+    const nextPolicy: ConfirmationPolicy =
+      applyUserConfirmationPreference(currentPolicy, isEnabled)
+    card.userConfirmationEnabled = nextPolicy.userConfirmEnabled
     this.publishAndPersist(card)
   }
 
@@ -480,15 +506,51 @@ export class CardStore {
 
   private publishAndPersist(card: DigitalCard): void {
     this.cards = this.cards.slice()
-    this.cardService.saveDigitalCard(card).catch(() => {
+    const operationId: string = `card-save-${card.id}-${Date.now()}`
+    this.lastCardOperation = createPendingOperation(
+      operationId,
+      OperationAuthority.LOCAL,
+      false,
+      new Date().toISOString()
+    )
+    this.cardService.saveDigitalCard(card).then(() => {
+      this.lastCardOperation = {
+        operationId: operationId,
+        state: OperationState.ACKNOWLEDGED,
+        authority: OperationAuthority.LOCAL,
+        verificationRequired: false,
+        receiptId: `local-${operationId}`,
+        errorCode: '',
+        updatedAt: new Date().toISOString()
+      }
+    }).catch(() => {
       this.errorMessage = 'Unable to save card'
+      this.lastCardOperation = {
+        operationId: operationId,
+        state: OperationState.FAILED,
+        authority: OperationAuthority.LOCAL,
+        verificationRequired: false,
+        receiptId: '',
+        errorCode: 'PERSISTENCE_FAILED',
+        updatedAt: new Date().toISOString()
+      }
     })
   }
 
   private invitationRequestErrorResult(): InvitationRedemptionResult {
+    const timestamp: string = new Date().toISOString()
     return {
       state: InvitationFlowState.REQUEST_ERROR,
       reason: InvitationFailureReason.REQUEST_ERROR,
+      operation: {
+        operationId: `invite-redeem-${timestamp}`,
+        state: OperationState.FAILED,
+        authority: OperationAuthority.LOCAL,
+        verificationRequired: false,
+        receiptId: '',
+        errorCode: InvitationFailureReason.REQUEST_ERROR,
+        updatedAt: timestamp
+      },
       preview: null,
       authorization: null,
       digitalCard: null
@@ -498,9 +560,19 @@ export class CardStore {
   private physicalWriteErrorResult(
     reason: PhysicalCardFailureReason
   ): CredentialWriteResult {
+    const timestamp: string = new Date().toISOString()
     return {
       status: CredentialBindingStatus.WRITE_FAILED,
       reason: reason,
+      operation: {
+        operationId: `credential-write-${timestamp}`,
+        state: OperationState.FAILED,
+        authority: OperationAuthority.PHYSICAL_CARD,
+        verificationRequired: true,
+        receiptId: '',
+        errorCode: reason,
+        updatedAt: timestamp
+      },
       credential: null,
       physicalCard: null,
       digitalCard: null

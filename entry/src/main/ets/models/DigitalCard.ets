@@ -1,4 +1,9 @@
-import { CredentialBindingStatus } from './Credential'
+import {
+  CredentialBindingStatus,
+  CredentialCondition
+} from './Credential'
+import { CardAnonId, PermissionId } from './DomainIdentifiers'
+import { SyncState } from './SyncState'
 
 export enum DigitalCardStatus {
   UNACTIVATED = 'unactivated',
@@ -21,20 +26,22 @@ export interface DigitalCard {
   id: string
   name: string
   issuer: string
+  cardAnonId: CardAnonId
   anonymousNumber: string
   nickname: string
   detail: string
   category: string
   status: DigitalCardStatus
   visualStyle: DigitalCardVisualStyle
-  authorizationId: string
+  permissionId: PermissionId
   credentialId: string
   physicalCardId: string
   credentialBindingStatus: CredentialBindingStatus
-  adminConfirmationRequired: boolean
+  credentialCondition: CredentialCondition
+  readonly adminConfirmRequired: boolean
   userConfirmationEnabled: boolean
   allowTemporaryPass: boolean
   validFrom: string
   validUntil: string
-  lastSyncedAt: string
+  syncState: SyncState
 }

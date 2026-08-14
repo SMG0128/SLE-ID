@@ -21,6 +21,7 @@ import {
 import {
   Credential,
   CredentialBindingStatus,
+  CredentialCondition,
   CredentialPolicyFlags
 } from '../models/Credential'
 import {
@@ -35,8 +36,11 @@ import {
   PrimaryPhysicalCardBindingResult
 } from '../models/PhysicalCardOperation'
 import {
+  cloneConfirmationRequest,
   ConfirmationRequest,
-  ConfirmationRequestStatus
+  ConfirmationRequestStatus,
+  ConfirmationTransitionResult,
+  transitionConfirmationRequest
 } from '../models/ConfirmationRequest'
 import {
   InvitationAuthorizationPreview,
@@ -55,12 +59,19 @@ import { ConfirmationService } from '../services/ConfirmationService'
 import { InvitationService } from '../services/InvitationService'
 import { MockPersistenceService } from '../services/MockPersistenceService'
 import { MockAppStoragePersistence } from './MockAppStoragePersistence'
+import {
+  OperationAuthority,
+  OperationReceipt,
+  OperationState
+} from '../models/Operation'
+import { createLocalSyncState } from '../models/SyncState'
 
 interface MockDigitalCardBindingState {
   digitalCardId: string
   credentialId: string
   physicalCardId: string
   credentialBindingStatus: CredentialBindingStatus
+  credentialCondition: CredentialCondition
 }
 
 interface MockPhysicalCardPersistenceState {
@@ -92,72 +103,78 @@ export class MockDataSource implements
       id: '1',
       name: 'Identity Card',
       issuer: 'SleKey Identity Services',
+      cardAnonId: '882011047312',
       anonymousNumber: '8820 1104 7312',
       nickname: 'My Identity',
       detail: 'Digital identification',
       category: 'Identity',
       status: DigitalCardStatus.ACTIVE,
       visualStyle: DigitalCardVisualStyle.IDENTITY,
-      authorizationId: 'authorization-identity',
+      permissionId: 'authorization-identity',
       credentialId: 'credential-identity',
       physicalCardId: 'ws63-normal',
-      credentialBindingStatus: CredentialBindingStatus.WRITTEN,
-      adminConfirmationRequired: false,
+      credentialBindingStatus: CredentialBindingStatus.ACTIVE,
+      credentialCondition: CredentialCondition.ACTIVE,
+      adminConfirmRequired: false,
       userConfirmationEnabled: true,
       allowTemporaryPass: true,
       validFrom: '2026-01-01T00:00:00+08:00',
       validUntil: '2027-01-01T00:00:00+08:00',
-      lastSyncedAt: '2026-07-26T20:00:00+08:00'
+      syncState: createLocalSyncState('2026-07-26T20:00:00+08:00')
     },
     {
       id: '2',
       name: 'MTR Ticket',
       issuer: 'Hong Kong Transport',
+      cardAnonId: '002145214422',
       anonymousNumber: '0021 4521 4422',
       nickname: 'Metro',
       detail: 'Ticket pass for MTR',
       category: 'Traffic',
       status: DigitalCardStatus.ACTIVE,
       visualStyle: DigitalCardVisualStyle.TRANSIT,
-      authorizationId: 'authorization-transit',
+      permissionId: 'authorization-transit',
       credentialId: 'credential-transit',
       physicalCardId: 'ws63-normal',
-      credentialBindingStatus: CredentialBindingStatus.WRITTEN,
-      adminConfirmationRequired: true,
+      credentialBindingStatus: CredentialBindingStatus.ACTIVE,
+      credentialCondition: CredentialCondition.ACTIVE,
+      adminConfirmRequired: true,
       userConfirmationEnabled: false,
       allowTemporaryPass: true,
       validFrom: '2026-01-01T00:00:00+08:00',
       validUntil: '2026-12-31T23:59:59+08:00',
-      lastSyncedAt: '2026-07-26T20:00:00+08:00'
+      syncState: createLocalSyncState('2026-07-26T20:00:00+08:00')
     },
     {
       id: '3',
       name: 'Access Key',
       issuer: 'SleKey Workplace',
+      cardAnonId: '410876210096',
       anonymousNumber: '4108 7621 0096',
       nickname: 'Office',
       detail: 'Smart office entry',
       category: 'Access',
       status: DigitalCardStatus.ACTIVE,
       visualStyle: DigitalCardVisualStyle.ACCESS,
-      authorizationId: 'authorization-access',
+      permissionId: 'authorization-access',
       credentialId: '',
       physicalCardId: '',
       credentialBindingStatus: CredentialBindingStatus.NOT_WRITTEN,
-      adminConfirmationRequired: false,
+      credentialCondition: CredentialCondition.ACTIVE,
+      adminConfirmRequired: false,
       userConfirmationEnabled: false,
       allowTemporaryPass: false,
       validFrom: '2026-01-01T00:00:00+08:00',
       validUntil: '2027-01-01T00:00:00+08:00',
-      lastSyncedAt: '2026-07-26T20:00:00+08:00'
+      syncState: createLocalSyncState('2026-07-26T20:00:00+08:00')
     }
   ]
 
   private authorizations: Authorization[] = [
     {
-      id: 'authorization-identity',
+      permissionId: 'authorization-identity',
       digitalCardId: '1',
-      issuerId: 'issuer-slekey-identity',
+      organizationId: 'issuer-slekey-identity',
       name: 'Digital Identity',
       issuer: 'SleKey Identity Services',
       status: AuthorizationStatus.ACTIVE,
@@ -167,7 +184,7 @@ export class MockDataSource implements
       usageMode: AuthorizationUsageMode.UNLIMITED,
       usageLimit: 0,
       remainingUses: 0,
-      adminConfirmationRequired: false,
+      adminConfirmRequired: false,
       phoneSubstituteAllowed: true,
       alertPolicy: AuthorizationAlertPolicy.NOTIFY_ON_USE,
       recordEvent: true,
@@ -176,12 +193,13 @@ export class MockDataSource implements
       alertLevel: AuthorizationAlertLevel.WARNING,
       offlineAllowed: true,
       directionDetection: false,
-      lastSyncedAt: '2026-07-26T20:00:00+08:00'
+      policyVersion: 'mock-policy-v1',
+      syncState: createLocalSyncState('2026-07-26T20:00:00+08:00')
     },
     {
-      id: 'authorization-transit',
+      permissionId: 'authorization-transit',
       digitalCardId: '2',
-      issuerId: 'issuer-hk-transport',
+      organizationId: 'issuer-hk-transport',
       name: 'MTR Access',
       issuer: 'Hong Kong Transport',
       status: AuthorizationStatus.ACTIVE,
@@ -191,7 +209,7 @@ export class MockDataSource implements
       usageMode: AuthorizationUsageMode.UNLIMITED,
       usageLimit: 0,
       remainingUses: 0,
-      adminConfirmationRequired: true,
+      adminConfirmRequired: true,
       phoneSubstituteAllowed: true,
       alertPolicy: AuthorizationAlertPolicy.HIGH_ATTENTION,
       recordEvent: true,
@@ -200,12 +218,13 @@ export class MockDataSource implements
       alertLevel: AuthorizationAlertLevel.CRITICAL,
       offlineAllowed: false,
       directionDetection: true,
-      lastSyncedAt: '2026-07-26T20:00:00+08:00'
+      policyVersion: 'mock-policy-v1',
+      syncState: createLocalSyncState('2026-07-26T20:00:00+08:00')
     },
     {
-      id: 'authorization-access',
+      permissionId: 'authorization-access',
       digitalCardId: '3',
-      issuerId: 'issuer-slekey-workplace',
+      organizationId: 'issuer-slekey-workplace',
       name: 'Office Access',
       issuer: 'SleKey Workplace',
       status: AuthorizationStatus.ACTIVE,
@@ -215,7 +234,7 @@ export class MockDataSource implements
       usageMode: AuthorizationUsageMode.UNLIMITED,
       usageLimit: 0,
       remainingUses: 0,
-      adminConfirmationRequired: false,
+      adminConfirmRequired: false,
       phoneSubstituteAllowed: false,
       alertPolicy: AuthorizationAlertPolicy.DEFAULT,
       recordEvent: true,
@@ -224,14 +243,15 @@ export class MockDataSource implements
       alertLevel: AuthorizationAlertLevel.INFO,
       offlineAllowed: true,
       directionDetection: false,
-      lastSyncedAt: '2026-07-26T20:00:00+08:00'
+      policyVersion: 'mock-policy-v1',
+      syncState: createLocalSyncState('2026-07-26T20:00:00+08:00')
     }
   ]
 
   private physicalCards: PhysicalCard[] = [
     {
       physicalCardId: 'ws63-normal',
-      anonymousIdentifier: 'MOCK-WS63-****-1001',
+      cardAnonId: 'MOCK-WS63-****-1001',
       displayName: 'Daily WS63',
       hardwareVersion: 'WS63-MOCK-HW-A1',
       firmwareVersion: 'MOCK-FW-2.1.0',
@@ -246,7 +266,7 @@ export class MockDataSource implements
     },
     {
       physicalCardId: 'ws63-full',
-      anonymousIdentifier: 'MOCK-WS63-****-2002',
+      cardAnonId: 'MOCK-WS63-****-2002',
       displayName: 'Full WS63',
       hardwareVersion: 'WS63-MOCK-HW-A1',
       firmwareVersion: 'MOCK-FW-2.0.4',
@@ -261,7 +281,7 @@ export class MockDataSource implements
     },
     {
       physicalCardId: 'ws63-connect-error',
-      anonymousIdentifier: 'MOCK-WS63-****-3003',
+      cardAnonId: 'MOCK-WS63-****-3003',
       displayName: 'Connection Error WS63',
       hardwareVersion: 'WS63-MOCK-HW-B1',
       firmwareVersion: 'MOCK-FW-1.9.0',
@@ -276,7 +296,7 @@ export class MockDataSource implements
     },
     {
       physicalCardId: 'ws63-write-error',
-      anonymousIdentifier: 'MOCK-WS63-****-4004',
+      cardAnonId: 'MOCK-WS63-****-4004',
       displayName: 'Write Error WS63',
       hardwareVersion: 'WS63-MOCK-HW-B1',
       firmwareVersion: 'MOCK-FW-1.9.1',
@@ -291,7 +311,7 @@ export class MockDataSource implements
     },
     {
       physicalCardId: 'ws63-verify-error',
-      anonymousIdentifier: 'MOCK-WS63-****-5005',
+      cardAnonId: 'MOCK-WS63-****-5005',
       displayName: 'Verification Error WS63',
       hardwareVersion: 'WS63-MOCK-HW-B1',
       firmwareVersion: 'MOCK-FW-1.9.1',
@@ -306,7 +326,7 @@ export class MockDataSource implements
     },
     {
       physicalCardId: 'ws63-offline-error',
-      anonymousIdentifier: 'MOCK-WS63-****-6006',
+      cardAnonId: 'MOCK-WS63-****-6006',
       displayName: 'Offline During Write WS63',
       hardwareVersion: 'WS63-MOCK-HW-B1',
       firmwareVersion: 'MOCK-FW-1.9.1',
@@ -324,16 +344,17 @@ export class MockDataSource implements
   private credentials: Credential[] = [
     {
       credentialId: 'credential-identity',
-      authorizationId: 'authorization-identity',
-      issuerId: 'issuer-slekey-identity',
+      permissionId: 'authorization-identity',
+      organizationId: 'issuer-slekey-identity',
       physicalCardId: 'ws63-normal',
       protocolVersion: 'SLEKEY-MOCK-1',
       credentialVersion: 1,
+      policyVersion: 'mock-policy-v1',
       permissionScopeDigest: 'mock-digest-identity',
       policyFlags: {
         recordEvent: true,
         allowExecution: true,
-        adminConfirmationRequired: false,
+        adminConfirmRequired: false,
         alertOnUnauthorized: true,
         alertLevel: AuthorizationAlertLevel.WARNING,
         offlineAllowed: true,
@@ -345,22 +366,24 @@ export class MockDataSource implements
       keyVersion: 1,
       mockAuthenticationMaterial: 'MOCK-ONLY-AUTH-IDENTITY',
       integrityCheck: 'mock-integrity-identity',
-      bindingStatus: CredentialBindingStatus.WRITTEN,
+      bindingStatus: CredentialBindingStatus.ACTIVE,
+      condition: CredentialCondition.ACTIVE,
       writtenAt: '2026-07-10T12:00:00+08:00',
       verifiedAt: '2026-07-10T12:00:01+08:00'
     },
     {
       credentialId: 'credential-transit',
-      authorizationId: 'authorization-transit',
-      issuerId: 'issuer-hk-transport',
+      permissionId: 'authorization-transit',
+      organizationId: 'issuer-hk-transport',
       physicalCardId: 'ws63-normal',
       protocolVersion: 'SLEKEY-MOCK-1',
       credentialVersion: 1,
+      policyVersion: 'mock-policy-v1',
       permissionScopeDigest: 'mock-digest-transit',
       policyFlags: {
         recordEvent: true,
         allowExecution: true,
-        adminConfirmationRequired: true,
+        adminConfirmRequired: true,
         alertOnUnauthorized: true,
         alertLevel: AuthorizationAlertLevel.CRITICAL,
         offlineAllowed: false,
@@ -372,7 +395,8 @@ export class MockDataSource implements
       keyVersion: 1,
       mockAuthenticationMaterial: 'MOCK-ONLY-AUTH-TRANSIT',
       integrityCheck: 'mock-integrity-transit',
-      bindingStatus: CredentialBindingStatus.WRITTEN,
+      bindingStatus: CredentialBindingStatus.ACTIVE,
+      condition: CredentialCondition.ACTIVE,
       writtenAt: '2026-07-10T12:00:00+08:00',
       verifiedAt: '2026-07-10T12:00:01+08:00'
     }
@@ -385,8 +409,8 @@ export class MockDataSource implements
       code: 'SLE-DEMO-2026',
       status: InvitationMockStatus.AVAILABLE,
       preview: {
-        authorizationId: 'authorization-visitor-demo',
-        issuerId: 'issuer-slekey-visitor',
+        permissionId: 'authorization-visitor-demo',
+        organizationId: 'issuer-slekey-visitor',
         issuerName: 'SleKey Visitor Services',
         cardName: 'Visitor Pass',
         cardDescription: 'Temporary visitor access authorization',
@@ -395,7 +419,8 @@ export class MockDataSource implements
         validUntil: '2026-12-31T23:59:59+08:00',
         usageMode: AuthorizationUsageMode.LIMITED,
         usageLimit: 20,
-        adminConfirmationRequired: true,
+        adminConfirmRequired: true,
+        policyVersion: 'mock-policy-v1',
         phoneSubstituteAllowed: true,
         alertPolicy: AuthorizationAlertPolicy.HIGH_ATTENTION,
         recordEvent: true,
@@ -412,8 +437,8 @@ export class MockDataSource implements
       code: 'SLE-LAB2-2026',
       status: InvitationMockStatus.AVAILABLE,
       preview: {
-        authorizationId: 'authorization-lab-demo',
-        issuerId: 'issuer-slekey-lab',
+        permissionId: 'authorization-lab-demo',
+        organizationId: 'issuer-slekey-lab',
         issuerName: 'SleKey Lab Services',
         cardName: 'Lab Access',
         cardDescription: 'Second Mock authorization for multi-credential tests',
@@ -422,7 +447,8 @@ export class MockDataSource implements
         validUntil: '2027-07-26T00:00:00+08:00',
         usageMode: AuthorizationUsageMode.UNLIMITED,
         usageLimit: 0,
-        adminConfirmationRequired: false,
+        adminConfirmRequired: false,
+        policyVersion: 'mock-policy-v1',
         phoneSubstituteAllowed: false,
         alertPolicy: AuthorizationAlertPolicy.NOTIFY_ON_USE,
         recordEvent: true,
@@ -439,8 +465,8 @@ export class MockDataSource implements
       code: 'SLE-EXPD-2026',
       status: InvitationMockStatus.EXPIRED,
       preview: {
-        authorizationId: 'authorization-expired-demo',
-        issuerId: 'issuer-slekey-event',
+        permissionId: 'authorization-expired-demo',
+        organizationId: 'issuer-slekey-event',
         issuerName: 'SleKey Event Services',
         cardName: 'Expired Event Pass',
         cardDescription: 'Expired event authorization',
@@ -449,7 +475,8 @@ export class MockDataSource implements
         validUntil: '2025-12-31T23:59:59+08:00',
         usageMode: AuthorizationUsageMode.LIMITED,
         usageLimit: 1,
-        adminConfirmationRequired: false,
+        adminConfirmRequired: false,
+        policyVersion: 'mock-policy-v1',
         phoneSubstituteAllowed: false,
         alertPolicy: AuthorizationAlertPolicy.DEFAULT,
         recordEvent: true,
@@ -466,8 +493,8 @@ export class MockDataSource implements
       code: 'SLE-USED-2026',
       status: InvitationMockStatus.USED,
       preview: {
-        authorizationId: 'authorization-used-demo',
-        issuerId: 'issuer-slekey-demo',
+        permissionId: 'authorization-used-demo',
+        organizationId: 'issuer-slekey-demo',
         issuerName: 'SleKey Demo Services',
         cardName: 'Used Invitation Pass',
         cardDescription: 'Invitation already consumed by another redemption',
@@ -476,7 +503,8 @@ export class MockDataSource implements
         validUntil: '2027-01-01T00:00:00+08:00',
         usageMode: AuthorizationUsageMode.UNLIMITED,
         usageLimit: 0,
-        adminConfirmationRequired: false,
+        adminConfirmRequired: false,
+        policyVersion: 'mock-policy-v1',
         phoneSubstituteAllowed: true,
         alertPolicy: AuthorizationAlertPolicy.NOTIFY_ON_USE,
         recordEvent: true,
@@ -493,8 +521,8 @@ export class MockDataSource implements
       code: 'SLE-BOND-2026',
       status: InvitationMockStatus.AVAILABLE,
       preview: {
-        authorizationId: 'authorization-identity',
-        issuerId: 'issuer-slekey-identity',
+        permissionId: 'authorization-identity',
+        organizationId: 'issuer-slekey-identity',
         issuerName: 'SleKey Identity Services',
         cardName: 'Identity Card',
         cardDescription: 'Authorization already present in the wallet',
@@ -503,7 +531,8 @@ export class MockDataSource implements
         validUntil: '2027-01-01T00:00:00+08:00',
         usageMode: AuthorizationUsageMode.UNLIMITED,
         usageLimit: 0,
-        adminConfirmationRequired: false,
+        adminConfirmRequired: false,
+        policyVersion: 'mock-policy-v1',
         phoneSubstituteAllowed: true,
         alertPolicy: AuthorizationAlertPolicy.NOTIFY_ON_USE,
         recordEvent: true,
@@ -520,8 +549,8 @@ export class MockDataSource implements
       code: 'SLE-FAIL-2026',
       status: InvitationMockStatus.REQUEST_ERROR,
       preview: {
-        authorizationId: 'authorization-error-demo',
-        issuerId: 'issuer-slekey-error',
+        permissionId: 'authorization-error-demo',
+        organizationId: 'issuer-slekey-error',
         issuerName: 'SleKey Error Simulation',
         cardName: 'Unavailable Pass',
         cardDescription: 'Mock request error simulation',
@@ -530,7 +559,8 @@ export class MockDataSource implements
         validUntil: '2027-01-01T00:00:00+08:00',
         usageMode: AuthorizationUsageMode.UNLIMITED,
         usageLimit: 0,
-        adminConfirmationRequired: false,
+        adminConfirmRequired: false,
+        policyVersion: 'mock-policy-v1',
         phoneSubstituteAllowed: false,
         alertPolicy: AuthorizationAlertPolicy.DEFAULT,
         recordEvent: false,
@@ -630,7 +660,7 @@ export class MockDataSource implements
   async getAuthorization(authorizationId: string): Promise<Authorization | null> {
     let result: Authorization | null = null
     this.authorizations.forEach((authorization: Authorization) => {
-      if (authorization.id === authorizationId) {
+      if (authorization.permissionId === authorizationId) {
         result = authorization
       }
     })
@@ -664,12 +694,13 @@ export class MockDataSource implements
     nextDigitalCards.forEach((digitalCard: DigitalCard) => {
       if (digitalCard.physicalCardId === physicalCardId &&
         digitalCard.credentialId.length > 0) {
-        digitalCard.credentialBindingStatus = CredentialBindingStatus.WRITTEN
+        digitalCard.credentialBindingStatus = CredentialBindingStatus.ACTIVE
+        digitalCard.credentialCondition = CredentialCondition.ACTIVE
       } else if (digitalCard.physicalCardId === this.primaryPhysicalCardId &&
         this.primaryPhysicalCardId !== physicalCardId &&
         digitalCard.credentialBindingStatus === CredentialBindingStatus.WRITTEN) {
-        digitalCard.credentialBindingStatus =
-          CredentialBindingStatus.UPDATE_REQUIRED
+        digitalCard.credentialBindingStatus = CredentialBindingStatus.NOT_WRITTEN
+        digitalCard.credentialCondition = CredentialCondition.UPDATE_REQUIRED
       }
     })
     try {
@@ -846,8 +877,8 @@ export class MockDataSource implements
     authorization: Authorization,
     physicalCardId: string
   ): Credential | null {
-    if (authorization.id.length === 0 ||
-      authorization.issuerId.length === 0 ||
+    if (authorization.permissionId.length === 0 ||
+      authorization.organizationId.length === 0 ||
       authorization.scopes.length === 0 ||
       physicalCardId.length === 0) {
       return null
@@ -857,7 +888,7 @@ export class MockDataSource implements
     const policyFlags: CredentialPolicyFlags = {
       recordEvent: authorization.recordEvent,
       allowExecution: authorization.allowExecution,
-      adminConfirmationRequired: authorization.adminConfirmationRequired,
+      adminConfirmRequired: authorization.adminConfirmRequired,
       alertOnUnauthorized: authorization.alertOnUnauthorized,
       alertLevel: authorization.alertLevel,
       offlineAllowed: authorization.offlineAllowed,
@@ -865,21 +896,23 @@ export class MockDataSource implements
       directionDetection: authorization.directionDetection
     }
     const credential: Credential = {
-      credentialId: `credential-${authorization.id}-${physicalCardId}`,
-      authorizationId: authorization.id,
-      issuerId: authorization.issuerId,
+      credentialId: `credential-${authorization.permissionId}-${physicalCardId}`,
+      permissionId: authorization.permissionId,
+      organizationId: authorization.organizationId,
       physicalCardId: physicalCardId,
       protocolVersion: 'SLEKEY-MOCK-1',
       credentialVersion: 1,
+      policyVersion: authorization.policyVersion,
       permissionScopeDigest: permissionScopeDigest,
       policyFlags: policyFlags,
       validFrom: authorization.validFrom,
       validUntil: authorization.validUntil,
       keyVersion: 1,
       mockAuthenticationMaterial:
-        `MOCK-ONLY-AUTH-${this.mockDigest(authorization.id).slice(-8)}`,
+        `MOCK-ONLY-AUTH-${this.mockDigest(authorization.permissionId).slice(-8)}`,
       integrityCheck: '',
       bindingStatus: CredentialBindingStatus.WRITING,
+      condition: CredentialCondition.ACTIVE,
       writtenAt: '',
       verifiedAt: ''
     }
@@ -893,7 +926,7 @@ export class MockDataSource implements
     physicalCardId: string
   ): boolean {
     if (credential.credentialId.length === 0 ||
-      credential.authorizationId !== authorization.id ||
+      credential.permissionId !== authorization.permissionId ||
       credential.physicalCardId !== physicalCardId ||
       credential.credentialVersion !== 1) {
       return false
@@ -927,7 +960,7 @@ export class MockDataSource implements
       const physicalCard: PhysicalCard | null =
         this.findPhysicalCard(request.physicalCardId)
       const authorization: Authorization | null =
-        this.findAuthorization(request.authorizationId)
+        this.findAuthorization(request.permissionId)
       const digitalCard: DigitalCard | null =
         this.findDigitalCard(request.digitalCardId)
       if (!physicalCard || !authorization || !digitalCard) {
@@ -957,9 +990,9 @@ export class MockDataSource implements
           digitalCard
         )
       }
-      if (this.hasWrittenAuthorization(physicalCard, authorization.id)) {
+      if (this.hasWrittenAuthorization(physicalCard, authorization.permissionId)) {
         return this.createWriteResult(
-          CredentialBindingStatus.WRITTEN,
+          CredentialBindingStatus.ACTIVE,
           PhysicalCardFailureReason.ALREADY_WRITTEN,
           null,
           physicalCard,
@@ -1045,7 +1078,7 @@ export class MockDataSource implements
       }
 
       const timestamp: string = this.mockNow()
-      credential.bindingStatus = CredentialBindingStatus.WRITTEN
+      credential.bindingStatus = CredentialBindingStatus.ACTIVE
       credential.writtenAt = timestamp
       credential.verifiedAt = timestamp
 
@@ -1077,7 +1110,8 @@ export class MockDataSource implements
       nextCredentials.push(this.cloneCredential(credential))
       nextDigitalCard.credentialId = credential.credentialId
       nextDigitalCard.physicalCardId = physicalCard.physicalCardId
-      nextDigitalCard.credentialBindingStatus = CredentialBindingStatus.WRITTEN
+      nextDigitalCard.credentialBindingStatus = CredentialBindingStatus.ACTIVE
+      nextDigitalCard.credentialCondition = CredentialCondition.ACTIVE
 
       try {
         this.persistenceService.savePhysicalCardState(
@@ -1101,7 +1135,7 @@ export class MockDataSource implements
       this.credentials = nextCredentials
       this.digitalCards = nextDigitalCards
       return this.createWriteResult(
-        CredentialBindingStatus.WRITTEN,
+        CredentialBindingStatus.ACTIVE,
         PhysicalCardFailureReason.NONE,
         credential,
         nextPhysicalCard,
@@ -1141,7 +1175,7 @@ export class MockDataSource implements
     const physicalCard: PhysicalCard | null =
       this.findPhysicalCard(credential.physicalCardId)
     const digitalCard: DigitalCard | null =
-      this.findDigitalCardByAuthorization(credential.authorizationId)
+      this.findDigitalCardByAuthorization(credential.permissionId)
     if (!physicalCard ||
       physicalCard.physicalCardId !== this.primaryPhysicalCardId) {
       return this.createRemovalResult(
@@ -1184,7 +1218,8 @@ export class MockDataSource implements
     if (nextDigitalCard) {
       nextDigitalCard.credentialId = ''
       nextDigitalCard.physicalCardId = ''
-      nextDigitalCard.credentialBindingStatus = CredentialBindingStatus.REMOVED
+      nextDigitalCard.credentialBindingStatus = CredentialBindingStatus.NOT_WRITTEN
+      nextDigitalCard.credentialCondition = CredentialCondition.REMOVED
     }
 
     try {
@@ -1218,14 +1253,18 @@ export class MockDataSource implements
   }
 
   async listConfirmationRequests(): Promise<ConfirmationRequest[]> {
-    return this.confirmationRequests.slice()
+    const result: ConfirmationRequest[] = []
+    this.confirmationRequests.forEach((request: ConfirmationRequest) => {
+      result.push(cloneConfirmationRequest(request))
+    })
+    return result
   }
 
   async getConfirmationRequest(requestId: string): Promise<ConfirmationRequest | null> {
     let result: ConfirmationRequest | null = null
     this.confirmationRequests.forEach((request: ConfirmationRequest) => {
-      if (request.id === requestId) {
-        result = request
+      if (request.requestId === requestId) {
+        result = cloneConfirmationRequest(request)
       }
     })
     return result
@@ -1237,17 +1276,27 @@ export class MockDataSource implements
   ): Promise<ConfirmationRequest> {
     let requestIndex: number = -1
     this.confirmationRequests.forEach((request: ConfirmationRequest, index: number) => {
-      if (request.id === requestId) {
+      if (request.requestId === requestId) {
         requestIndex = index
       }
     })
     if (requestIndex < 0) {
       throw new Error('Mock confirmation request not found')
     }
-    this.confirmationRequests[requestIndex].status = status
-    this.confirmationRequests[requestIndex].resolvedAt = '2026-07-26T20:00:00+08:00'
+    const transition: ConfirmationTransitionResult =
+      transitionConfirmationRequest(
+        this.confirmationRequests[requestIndex],
+        status,
+        this.mockNow()
+      )
+    this.confirmationRequests[requestIndex] = transition.request
     this.confirmationRequests = this.confirmationRequests.slice()
-    return this.confirmationRequests[requestIndex]
+    return cloneConfirmationRequest(this.confirmationRequests[requestIndex])
+  }
+
+  addConfirmationRequestForTesting(request: ConfirmationRequest): void {
+    this.confirmationRequests.push(cloneConfirmationRequest(request))
+    this.confirmationRequests = this.confirmationRequests.slice()
   }
 
   validateInvitationFormat(code: string): boolean {
@@ -1297,7 +1346,7 @@ export class MockDataSource implements
       )
     }
 
-    if (this.hasAuthorization(invitation.preview.authorizationId)) {
+    if (this.hasAuthorization(invitation.preview.permissionId)) {
       return this.createRedemptionResult(
         InvitationFlowState.ALREADY_BOUND,
         InvitationFailureReason.ALREADY_BOUND,
@@ -1389,7 +1438,7 @@ export class MockDataSource implements
         invitation.preview
       )
     }
-    if (this.hasAuthorization(invitation.preview.authorizationId)) {
+    if (this.hasAuthorization(invitation.preview.permissionId)) {
       return this.createPreviewResult(
         InvitationFlowState.ALREADY_BOUND,
         InvitationFailureReason.ALREADY_BOUND,
@@ -1411,7 +1460,7 @@ export class MockDataSource implements
         return
       }
       invitation.status = InvitationMockStatus.USED
-      if (this.hasAuthorization(invitation.preview.authorizationId)) {
+      if (this.hasAuthorization(invitation.preview.permissionId)) {
         return
       }
       this.authorizations.push(this.createAuthorization(invitation.preview))
@@ -1422,21 +1471,21 @@ export class MockDataSource implements
   }
 
   private createAuthorization(preview: InvitationAuthorizationPreview): Authorization {
-    const digitalCardId: string = `digital-${preview.authorizationId}`
+    const digitalCardId: string = `digital-${preview.permissionId}`
     return {
-      id: preview.authorizationId,
+      permissionId: preview.permissionId,
       digitalCardId: digitalCardId,
-      issuerId: preview.issuerId,
+      organizationId: preview.organizationId,
       name: preview.cardName,
       issuer: preview.issuerName,
-      status: AuthorizationStatus.ACTIVE,
+      status: AuthorizationStatus.BOUND,
       scopes: preview.permissionScope.slice(),
       validFrom: preview.validFrom,
       validUntil: preview.validUntil,
       usageMode: preview.usageMode,
       usageLimit: preview.usageLimit,
       remainingUses: preview.usageLimit,
-      adminConfirmationRequired: preview.adminConfirmationRequired,
+      adminConfirmRequired: preview.adminConfirmRequired,
       phoneSubstituteAllowed: preview.phoneSubstituteAllowed,
       alertPolicy: preview.alertPolicy,
       recordEvent: preview.recordEvent,
@@ -1445,31 +1494,34 @@ export class MockDataSource implements
       alertLevel: preview.alertLevel,
       offlineAllowed: preview.offlineAllowed,
       directionDetection: preview.directionDetection,
-      lastSyncedAt: '2026-07-26T20:00:00+08:00'
+      policyVersion: preview.policyVersion,
+      syncState: createLocalSyncState('2026-07-26T20:00:00+08:00')
     }
   }
 
   private createDigitalCard(preview: InvitationAuthorizationPreview): DigitalCard {
     return {
-      id: `digital-${preview.authorizationId}`,
+      id: `digital-${preview.permissionId}`,
       name: preview.cardName,
       issuer: preview.issuerName,
-      anonymousNumber: `MOCK 0000 ${preview.authorizationId.slice(-4).toUpperCase()}`,
+      cardAnonId: `MOCK-${preview.permissionId.slice(-8).toUpperCase()}`,
+      anonymousNumber: `MOCK 0000 ${preview.permissionId.slice(-4).toUpperCase()}`,
       nickname: preview.cardName,
       detail: preview.cardDescription,
       category: preview.category,
       status: DigitalCardStatus.ACTIVE,
       visualStyle: preview.cardAppearance,
-      authorizationId: preview.authorizationId,
+      permissionId: preview.permissionId,
       credentialId: '',
       physicalCardId: '',
       credentialBindingStatus: CredentialBindingStatus.NOT_WRITTEN,
-      adminConfirmationRequired: preview.adminConfirmationRequired,
+      credentialCondition: CredentialCondition.ACTIVE,
+      adminConfirmRequired: preview.adminConfirmRequired,
       userConfirmationEnabled: false,
       allowTemporaryPass: preview.phoneSubstituteAllowed,
       validFrom: preview.validFrom,
       validUntil: preview.validUntil,
-      lastSyncedAt: '2026-07-26T20:00:00+08:00'
+      syncState: createLocalSyncState('2026-07-26T20:00:00+08:00')
     }
   }
 
@@ -1492,9 +1544,17 @@ export class MockDataSource implements
     authorization: Authorization | null,
     digitalCard: DigitalCard | null
   ): InvitationRedemptionResult {
+    const succeeded: boolean = state === InvitationFlowState.SUCCESS
     return {
       state: state,
       reason: reason,
+      operation: this.createOperationReceipt(
+        'invite-redeem',
+        succeeded,
+        OperationAuthority.LOCAL,
+        false,
+        reason
+      ),
       preview: preview,
       authorization: authorization,
       digitalCard: digitalCard
@@ -1514,7 +1574,7 @@ export class MockDataSource implements
   private hasAuthorization(authorizationId: string): boolean {
     let found: boolean = false
     this.authorizations.forEach((authorization: Authorization) => {
-      if (authorization.id === authorizationId) {
+      if (authorization.permissionId === authorizationId) {
         found = true
       }
     })
@@ -1564,9 +1624,20 @@ export class MockDataSource implements
     physicalCard: PhysicalCard | null,
     digitalCard: DigitalCard | null
   ): CredentialWriteResult {
+    const succeeded: boolean =
+      status === CredentialBindingStatus.ACTIVE &&
+      (reason === PhysicalCardFailureReason.NONE ||
+        reason === PhysicalCardFailureReason.ALREADY_WRITTEN)
     return {
       status: status,
       reason: reason,
+      operation: this.createOperationReceipt(
+        'credential-write',
+        succeeded,
+        OperationAuthority.PHYSICAL_CARD,
+        true,
+        reason
+      ),
       credential: credential ? this.cloneCredential(credential) : null,
       physicalCard: physicalCard ? this.clonePhysicalCard(physicalCard) : null,
       digitalCard: digitalCard ? this.cloneCard(digitalCard) : null
@@ -1583,9 +1654,37 @@ export class MockDataSource implements
     return {
       success: success,
       reason: reason,
+      operation: this.createOperationReceipt(
+        'credential-remove',
+        success,
+        OperationAuthority.PHYSICAL_CARD,
+        false,
+        reason
+      ),
       credentialId: credentialId,
       physicalCard: physicalCard ? this.clonePhysicalCard(physicalCard) : null,
       digitalCard: digitalCard ? this.cloneCard(digitalCard) : null
+    }
+  }
+
+  private createOperationReceipt(
+    operationType: string,
+    succeeded: boolean,
+    authority: OperationAuthority,
+    verificationRequired: boolean,
+    reason: PhysicalCardFailureReason | InvitationFailureReason
+  ): OperationReceipt {
+    const timestamp: string = this.mockNow()
+    return {
+      operationId: `${operationType}-${timestamp}-${this.writeOperationId}`,
+      state: succeeded ?
+        (verificationRequired ? OperationState.VERIFIED :
+          OperationState.ACKNOWLEDGED) : OperationState.FAILED,
+      authority: authority,
+      verificationRequired: verificationRequired,
+      receiptId: succeeded ? `mock-receipt-${operationType}-${timestamp}` : '',
+      errorCode: succeeded ? '' : reason.toString(),
+      updatedAt: timestamp
     }
   }
 
@@ -1661,7 +1760,7 @@ export class MockDataSource implements
     physicalCard.credentialIds.forEach((credentialId: string) => {
       const credential: Credential | null = this.findCredential(credentialId)
       if (credential &&
-        credential.authorizationId === authorizationId &&
+        credential.permissionId === authorizationId &&
         credential.bindingStatus === CredentialBindingStatus.WRITTEN) {
         found = true
       }
@@ -1703,7 +1802,7 @@ export class MockDataSource implements
   private findAuthorization(authorizationId: string): Authorization | null {
     let result: Authorization | null = null
     this.authorizations.forEach((authorization: Authorization) => {
-      if (authorization.id === authorizationId) {
+      if (authorization.permissionId === authorizationId) {
         result = authorization
       }
     })
@@ -1719,7 +1818,7 @@ export class MockDataSource implements
   ): DigitalCard | null {
     let result: DigitalCard | null = null
     this.digitalCards.forEach((card: DigitalCard) => {
-      if (card.authorizationId === authorizationId) {
+      if (card.permissionId === authorizationId) {
         result = card
       }
     })
@@ -1750,12 +1849,12 @@ export class MockDataSource implements
   private createCredentialIntegrityCheck(credential: Credential): string {
     const policy: CredentialPolicyFlags = credential.policyFlags
     const value: string =
-      `${credential.credentialId}|${credential.authorizationId}|` +
+      `${credential.credentialId}|${credential.permissionId}|` +
       `${credential.physicalCardId}|${credential.credentialVersion}|` +
       `${credential.permissionScopeDigest}|${credential.validFrom}|` +
       `${credential.validUntil}|${credential.keyVersion}|` +
       `${policy.recordEvent}|${policy.allowExecution}|` +
-      `${policy.adminConfirmationRequired}|${policy.alertOnUnauthorized}|` +
+      `${policy.adminConfirmRequired}|${policy.alertOnUnauthorized}|` +
       `${policy.alertLevel}|${policy.offlineAllowed}|` +
       `${policy.phoneSubstituteAllowed}|${policy.directionDetection}`
     return `mock-integrity-${this.mockDigest(value)}`
@@ -1783,7 +1882,8 @@ export class MockDataSource implements
         digitalCardId: card.id,
         credentialId: card.credentialId,
         physicalCardId: card.physicalCardId,
-        credentialBindingStatus: card.credentialBindingStatus
+        credentialBindingStatus: card.credentialBindingStatus,
+        credentialCondition: card.credentialCondition
       })
     })
     const state: MockPhysicalCardPersistenceState = {
@@ -1821,6 +1921,8 @@ export class MockDataSource implements
         card.credentialId = binding.credentialId
         card.physicalCardId = binding.physicalCardId
         card.credentialBindingStatus = binding.credentialBindingStatus
+        card.credentialCondition = binding.credentialCondition ||
+          CredentialCondition.ACTIVE
       })
       this.digitalCards = this.cloneCards(this.digitalCards)
     } catch (error) {
@@ -1839,7 +1941,7 @@ export class MockDataSource implements
   private clonePhysicalCard(card: PhysicalCard): PhysicalCard {
     return {
       physicalCardId: card.physicalCardId,
-      anonymousIdentifier: card.anonymousIdentifier,
+      cardAnonId: card.cardAnonId,
       displayName: card.displayName,
       hardwareVersion: card.hardwareVersion,
       firmwareVersion: card.firmwareVersion,
@@ -1865,17 +1967,18 @@ export class MockDataSource implements
   private cloneCredential(credential: Credential): Credential {
     return {
       credentialId: credential.credentialId,
-      authorizationId: credential.authorizationId,
-      issuerId: credential.issuerId,
+      permissionId: credential.permissionId,
+      organizationId: credential.organizationId,
       physicalCardId: credential.physicalCardId,
       protocolVersion: credential.protocolVersion,
       credentialVersion: credential.credentialVersion,
+      policyVersion: credential.policyVersion,
       permissionScopeDigest: credential.permissionScopeDigest,
       policyFlags: {
         recordEvent: credential.policyFlags.recordEvent,
         allowExecution: credential.policyFlags.allowExecution,
-        adminConfirmationRequired:
-          credential.policyFlags.adminConfirmationRequired,
+        adminConfirmRequired:
+          credential.policyFlags.adminConfirmRequired,
         alertOnUnauthorized: credential.policyFlags.alertOnUnauthorized,
         alertLevel: credential.policyFlags.alertLevel,
         offlineAllowed: credential.policyFlags.offlineAllowed,
@@ -1889,6 +1992,7 @@ export class MockDataSource implements
       mockAuthenticationMaterial: credential.mockAuthenticationMaterial,
       integrityCheck: credential.integrityCheck,
       bindingStatus: credential.bindingStatus,
+      condition: credential.condition,
       writtenAt: credential.writtenAt,
       verifiedAt: credential.verifiedAt
     }
@@ -1907,22 +2011,28 @@ export class MockDataSource implements
       id: card.id,
       name: card.name,
       issuer: card.issuer,
+      cardAnonId: card.cardAnonId,
       anonymousNumber: card.anonymousNumber,
       nickname: card.nickname,
       detail: card.detail,
       category: card.category,
       status: card.status,
       visualStyle: card.visualStyle,
-      authorizationId: card.authorizationId,
+      permissionId: card.permissionId,
       credentialId: card.credentialId,
       physicalCardId: card.physicalCardId,
       credentialBindingStatus: card.credentialBindingStatus,
-      adminConfirmationRequired: card.adminConfirmationRequired,
+      credentialCondition: card.credentialCondition,
+      adminConfirmRequired: card.adminConfirmRequired,
       userConfirmationEnabled: card.userConfirmationEnabled,
       allowTemporaryPass: card.allowTemporaryPass,
       validFrom: card.validFrom,
       validUntil: card.validUntil,
-      lastSyncedAt: card.lastSyncedAt
+      syncState: {
+        serverRevision: card.syncState.serverRevision,
+        lastSyncAt: card.syncState.lastSyncAt,
+        pendingOperations: card.syncState.pendingOperations.slice()
+      }
     }
   }
 }

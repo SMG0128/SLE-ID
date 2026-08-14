@@ -73,13 +73,28 @@ ohpm install
   -p buildMode=debug assembleHap
 ```
 
+### Domain contract tests
+
+The Phase 0C host-side Hypium tests are under `entry/src/test` and require no
+device or emulator:
+
+```powershell
+& '<DevEco Studio>\tools\hvigor\bin\hvigorw.bat' --no-daemon `
+  --mode module -p product=default -p module=entry@default `
+  -p buildMode=debug test
+```
+
+Generated local-test output is written under `entry/.test/` and is ignored by
+Git.
+
 仓库默认生成未签名 HAP，确保构建配置不依赖个人证书或密码。需要安装到真机时，
 请在 DevEco Studio 中配置个人本地签名；不得提交 IDE 写入的签名配置或证书材料。
 
 ### 测试
 目标框架：`@ohos/hypium` 1.0.19
 
-当前 `entry/src/ohosTest` 为空，尚无可执行测试用例。
+`entry/src/test` 包含可在宿主机运行的领域契约测试。`entry/src/ohosTest`
+仍为空，因为 Phase 0C 不需要设备测试运行器。
 
 ### 技术栈
 

@@ -1,3 +1,5 @@
+import { CardAnonId } from './DomainIdentifiers'
+
 export enum PhysicalCardStatus {
   AVAILABLE = 'available',
   CAPACITY_FULL = 'capacityFull',
@@ -41,7 +43,7 @@ export enum MockDiscoveryScenario {
 
 export interface PhysicalCard {
   physicalCardId: string
-  anonymousIdentifier: string
+  cardAnonId: CardAnonId
   displayName: string
   hardwareVersion: string
   firmwareVersion: string

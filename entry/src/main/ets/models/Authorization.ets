@@ -1,11 +1,18 @@
+import {
+  OrganizationId,
+  PermissionId,
+  PolicyVersion
+} from './DomainIdentifiers'
+import { SyncState } from './SyncState'
+
 export enum AuthorizationStatus {
-  PENDING = 'pending',
+  DRAFT = 'draft',
+  INVITED = 'invited',
+  BOUND = 'bound',
   ACTIVE = 'active',
-  FROZEN = 'frozen',
   EXPIRED = 'expired',
   REVOKED = 'revoked',
-  LOST = 'lost',
-  CANCELLED = 'cancelled'
+  USAGE_EXHAUSTED = 'usageExhausted'
 }
 
 export enum AuthorizationUsageMode {
@@ -27,9 +34,9 @@ export enum AuthorizationAlertLevel {
 }
 
 export interface Authorization {
-  id: string
+  permissionId: PermissionId
   digitalCardId: string
-  issuerId: string
+  organizationId: OrganizationId
   name: string
   issuer: string
   status: AuthorizationStatus
@@ -39,7 +46,7 @@ export interface Authorization {
   usageMode: AuthorizationUsageMode
   usageLimit: number
   remainingUses: number
-  adminConfirmationRequired: boolean
+  readonly adminConfirmRequired: boolean
   phoneSubstituteAllowed: boolean
   alertPolicy: AuthorizationAlertPolicy
   recordEvent: boolean
@@ -48,5 +55,6 @@ export interface Authorization {
   alertLevel: AuthorizationAlertLevel
   offlineAllowed: boolean
   directionDetection: boolean
-  lastSyncedAt: string
+  policyVersion: PolicyVersion
+  syncState: SyncState
 }

@@ -1,6 +1,9 @@
 import * as Theme from '../common/Theme'
 import { DigitalCard, DigitalCardStatus } from '../models/DigitalCard'
-import { CredentialBindingStatus } from '../models/Credential'
+import {
+  CredentialBindingStatus,
+  CredentialCondition
+} from '../models/Credential'
 import { cardAccentColor, cardIcon } from '../common/CardModel'
 
 @Component
@@ -110,7 +113,7 @@ export struct CardPreview {
       if (this.card.credentialBindingStatus === CredentialBindingStatus.WRITE_FAILED) {
         return this.language === 'zh' ? '写入失败' : 'Failed'
       }
-      if (this.card.credentialBindingStatus === CredentialBindingStatus.UPDATE_REQUIRED) {
+      if (this.card.credentialCondition === CredentialCondition.UPDATE_REQUIRED) {
         return this.language === 'zh' ? '需要更新' : 'Update'
       }
       if (this.card.credentialBindingStatus === CredentialBindingStatus.WRITTEN) {
@@ -128,7 +131,7 @@ export struct CardPreview {
     if (this.card.credentialBindingStatus === CredentialBindingStatus.WRITE_FAILED) {
       return this.language === 'zh' ? '写入失败' : 'Write failed'
     }
-    if (this.card.credentialBindingStatus === CredentialBindingStatus.UPDATE_REQUIRED) {
+    if (this.card.credentialCondition === CredentialCondition.UPDATE_REQUIRED) {
       return this.language === 'zh' ? '凭证需要更新' : 'Credential update required'
     }
     if (this.card.credentialBindingStatus === CredentialBindingStatus.WRITTEN) {

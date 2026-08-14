@@ -5,6 +5,8 @@ import {
   PhysicalCardDiscoveryState
 } from './PhysicalCard'
 import { DigitalCard } from './DigitalCard'
+import { OperationReceipt } from './Operation'
+import { PermissionId } from './DomainIdentifiers'
 
 export enum PhysicalCardFailureReason {
   NONE = 'none',
@@ -43,7 +45,7 @@ export interface PrimaryPhysicalCardBindingResult {
 }
 
 export interface CredentialWriteRequest {
-  authorizationId: string
+  permissionId: PermissionId
   digitalCardId: string
   physicalCardId: string
 }
@@ -51,6 +53,7 @@ export interface CredentialWriteRequest {
 export interface CredentialWriteResult {
   status: CredentialBindingStatus
   reason: PhysicalCardFailureReason
+  operation: OperationReceipt
   credential: Credential | null
   physicalCard: PhysicalCard | null
   digitalCard: DigitalCard | null
@@ -59,6 +62,7 @@ export interface CredentialWriteResult {
 export interface CredentialRemovalResult {
   success: boolean
   reason: PhysicalCardFailureReason
+  operation: OperationReceipt
   credentialId: string
   physicalCard: PhysicalCard | null
   digitalCard: DigitalCard | null
