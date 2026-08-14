@@ -1,0 +1,71 @@
+config SLE_CARD_ID
+    hex "Stable anonymous Card ID"
+    default 0xC0000001
+
+config SLE_CARD_FIRMWARE_VERSION
+    hex "Card firmware version"
+    default 0x00010100
+
+choice
+    prompt "Card credential storage backend"
+    default SLE_CARD_STORE_RAM
+
+config SLE_CARD_STORE_RAM
+    bool "Volatile RAM store (safe bring-up)"
+    help
+        Uses RAM only. Credentials and usage counters are lost after reset.
+
+config SLE_CARD_STORE_NV
+    bool "Persistent WS63 NV double-slot store"
+endchoice
+
+config SLE_CARD_NV_SLOT_A_KEY
+    hex "Credential NV slot A key (Card namespace 0x5C00-0x5CFF)"
+    default 0x5C10
+    depends on SLE_CARD_STORE_NV
+    help
+        The project reserves 0x5C00-0x5CFF for Card C. The default slot A key
+        is 0x5C10 and must differ from slot B.
+
+config SLE_CARD_NV_SLOT_B_KEY
+    hex "Credential NV slot B key (Card namespace 0x5C00-0x5CFF)"
+    default 0x5C11
+    depends on SLE_CARD_STORE_NV
+    help
+        The project reserves 0x5C00-0x5CFF for Card C. The default slot B key
+        is 0x5C11 and must differ from slot A.
+
+config SLE_CARD_MTU_SIZE
+    int "Card SLE MTU"
+    default 128
+    range 96 520
+
+config SLE_CARD_CONN_INTERVAL
+    int "Card SLE connection interval (x1.25 ms)"
+    default 12
+    range 6 32
+
+config SLE_CARD_UART_BUS
+    int "Card maintenance UART bus"
+    default 0
+
+config SLE_CARD_UART_TX_PIN
+    int "Card maintenance UART TX pin"
+    default 17
+
+config SLE_CARD_UART_RX_PIN
+    int "Card maintenance UART RX pin"
+    default 18
+
+config SLE_CARD_SERIAL_PROVISIONING
+    bool "Enable local serial provisioning protocol"
+    default y if SLE_CARD_STORE_RAM
+    default n
+    help
+        Enables the development-only `proto <hex-frame>` command on the local
+        UART. Keep this disabled in a persistent/production Card image unless
+        physical access to the maintenance UART is controlled.
+
+config SUPPORT_SLE_PERIPHERAL
+    bool
+    default y

@@ -1,0 +1,7 @@
+config SLE_CARD_NV_SLOT_A_KEY
+    hex "Credential store NV slot A key (Card namespace 0x5C00-0x5CFF)"
+    default 0x5C10
+
+config SLE_CARD_NV_SLOT_B_KEY
+    hex "Credential store NV slot B key (Card namespace 0x5C00-0x5CFF)"
+    default 0x5C11
