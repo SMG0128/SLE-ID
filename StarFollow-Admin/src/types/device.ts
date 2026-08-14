@@ -22,13 +22,14 @@ export interface WS63Status {
   protocol: string
   band: string
   nodes: number
-  latency: number
+  latency: number | null
   status: '正常' | '异常'
 }
 
 /** USB 串口状态（文档 4.2 USB 串口适配层） */
 export interface SerialStatus {
   connected: boolean
+  detectorBReady?: boolean
   port: string
   baudRate: number
   autoReconnect: boolean

@@ -8,7 +8,7 @@
         </div>
         <div class="ws-status__info">
           <h3>WS63 通信模块</h3>
-          <span>协议: {{ ws.protocol }} | 频段: {{ ws.band }} | 节点数: {{ ws.nodes }} | 延迟: {{ ws.latency }}ms</span>
+          <span>协议: {{ ws.protocol }} | 频段: {{ ws.band }} | 节点数: {{ ws.nodes }} | 延迟: {{ ws.latency == null ? '未测量' : `${ws.latency}ms` }}</span>
         </div>
         <el-tag :type="ws.status === '正常' ? 'success' : 'danger'" size="large" effect="dark">
           {{ ws.status === '正常' ? '运行正常' : '异常' }}
@@ -43,7 +43,6 @@
         <el-table-column label="操作" width="120" fixed="right">
           <template #default="{ row }">
             <el-button size="small" @click="restart(row)">重启</el-button>
-            <el-button size="small" type="primary" @click="updatePolicy(row)">更新策略</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -59,7 +58,7 @@ import { getDeviceList, getWS63Status, restartDevice } from '@/api/device'
 import type { Device, WS63Status } from '@/types/device'
 
 const devices = ref<Device[]>([])
-const ws = ref<WS63Status>({ protocol: '', band: '', nodes: 0, latency: 0, status: '正常' })
+const ws = ref<WS63Status>({ protocol: '', band: '', nodes: 0, latency: null, status: '异常' })
 const loading = ref(true)
 
 async function loadData() {
@@ -71,12 +70,10 @@ async function loadData() {
 }
 
 async function restart(row: Device) {
-  await restartDevice(row.id)
-  ElMessage.success(`检测端 ${row.name} 重启指令已发送 (WS63)`)
-}
-
-function updatePolicy(row: Device) {
-  ElMessage.success(`策略已更新至 ${row.policyVersion}`)
+  try {
+    await restartDevice(row.id)
+    ElMessage.success(`检测端 ${row.name} 重启指令已发送`)
+  } catch { /* 后端会明确提示当前协议不支持 */ }
 }
 
 onMounted(loadData)

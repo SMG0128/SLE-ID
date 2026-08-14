@@ -12,7 +12,7 @@
     <div class="control-bar">
       <span class="control-bar__title">实时检测 — 星闪主动感知</span>
       <el-switch v-model="autoRefresh" active-text="自动刷新" inactive-text="暂停" />
-      <el-tag :type="autoRefresh ? 'success' : 'info'" effect="dark">{{ autoRefresh ? '● 实时监控中' : '○ 已暂停' }}</el-tag>
+      <el-tag :type="socketConnected ? 'success' : 'warning'" effect="dark">{{ socketConnected ? '● 实时链路已连接' : '○ 正在重连' }}</el-tag>
     </div>
 
     <!-- 状态图例 -->
@@ -45,25 +45,48 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { tickRealtimeEvents } from '@/api/event'
+import { getEventList } from '@/api/event'
+import { onEventMessage, onSocketState } from '@/api/websocket'
 import type { RealtimeEvent, EventStatus } from '@/types/event'
 import { STATUS_ORDER } from '@/types/event'
 
 const events = ref<RealtimeEvent[]>([])
 const autoRefresh = ref(true)
-const eventCounter = ref(1)
+const socketConnected = ref(false)
 
 const activeCount = computed(() => events.value.filter(e => e.status !== 'COOLDOWN' && e.status !== 'COMPLETED').length)
 const inZoneCount = computed(() => events.value.filter(e => e.status === 'IN_ZONE').length)
 const completedCount = computed(() => events.value.filter(e => e.status === 'COMPLETED' || e.status === 'COOLDOWN').length)
 
 async function tick() {
-  events.value = await tickRealtimeEvents(events.value, autoRefresh.value, eventCounter)
+  if (!autoRefresh.value) return
+  const result = await getEventList({ page: 1, pageSize: 100 })
+  events.value = result.list.map(item => ({
+    eventId: item.eventId,
+    cardId: item.cardId,
+    device: item.device,
+    status: 'COMPLETED' as EventStatus,
+    authResult: item.result === '成功' ? '成功' : item.result === '失败' ? '失败' : '',
+    time: item.time,
+  }))
 }
 
 let timer: ReturnType<typeof setInterval> | null = null
-onMounted(() => { tick(); timer = setInterval(tick, 5000) })
-onUnmounted(() => { if (timer) { clearInterval(timer); timer = null } })
+let unsubscribeMessage: (() => void) | null = null
+let unsubscribeState: (() => void) | null = null
+onMounted(() => {
+  tick()
+  timer = setInterval(tick, 15000)
+  unsubscribeState = onSocketState(connected => { socketConnected.value = connected })
+  unsubscribeMessage = onEventMessage(message => {
+    if (autoRefresh.value && (message.topic === 'event.upsert' || message.topic === 'server.ready')) tick()
+  })
+})
+onUnmounted(() => {
+  if (timer) { clearInterval(timer); timer = null }
+  unsubscribeMessage?.()
+  unsubscribeState?.()
+})
 
 function statusLabel(s: EventStatus) {
   const m: Record<EventStatus, string> = { IDLE: '待命中', APPROACHING: '接近中', IN_ZONE: '区域内', COMPLETED: '已完成', COOLDOWN: '冷却中' }

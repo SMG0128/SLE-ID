@@ -1,5 +1,7 @@
 # StarFollow-Admin · 星随管理端
 
+> 2026-08-13：业务 API 已切换到本地后端 REST，并接入 `/ws/events` 与管理端二次确认页面。Vite 开发服务默认把 `/api`、`/ws` 代理到 `127.0.0.1:8080`。如果后端配置了 `STARFOLLOW_API_TOKEN`，请在“系统设置 → 管理端访问令牌”填写同一令牌。
+
 > 基于**星闪（NearLink）主动感知系统**的检测管理控制中心 Web 前端原型。  
 > HarmonyOS ArkUI 主应用 → Ark Web 容器 → Vue3 管理端 → 本地后端 (SQLite + WS63)
 

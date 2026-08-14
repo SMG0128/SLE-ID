@@ -5,14 +5,12 @@
       <div class="status-bar__inner">
         <div class="status-bar__title">
           <h2>星闪检测系统</h2>
-          <el-tag type="success" size="large" effect="dark">
-            <el-icon class="pulse-icon"><CircleCheckFilled /></el-icon> 在线
+          <el-tag :type="serial.detectorBReady ? 'success' : 'warning'" size="large" effect="dark">
+            <el-icon class="pulse-icon"><CircleCheckFilled /></el-icon> {{ serial.detectorBReady ? '硬件在线' : '等待 Detector B' }}
           </el-tag>
         </div>
         <div class="status-bar__meta">
-          <span>运行时长: <strong>15天 8小时</strong></span>
-          <el-divider direction="vertical" />
-          <span>WS63 节点: <strong>4/4 正常</strong></span>
+          <span>网关: <strong>{{ serial.detectorBReady ? '心跳正常' : '未就绪' }}</strong></span>
           <el-divider direction="vertical" />
           <span>串口: <strong :style="{ color: serial.connected ? '#67c23a' : '#f56c6c' }">{{ serial.connected ? `${serial.port} 已连接` : '未连接' }}</strong></span>
           <el-divider direction="vertical" />
@@ -28,7 +26,7 @@
           <div class="stat-card__icon"><el-icon :size="28"><TrendCharts /></el-icon></div>
           <div class="stat-card__body">
             <div class="stat-card__label">今日事件</div>
-            <div class="stat-card__value">256</div>
+            <div class="stat-card__value">{{ eventTotal }}</div>
           </div>
         </el-card>
       </el-col>
@@ -37,7 +35,7 @@
           <div class="stat-card__icon"><el-icon :size="28"><CircleCheck /></el-icon></div>
           <div class="stat-card__body">
             <div class="stat-card__label">成功</div>
-            <div class="stat-card__value">230</div>
+            <div class="stat-card__value">{{ successCount }}</div>
           </div>
         </el-card>
       </el-col>
@@ -46,7 +44,7 @@
           <div class="stat-card__icon"><el-icon :size="28"><WarningFilled /></el-icon></div>
           <div class="stat-card__body">
             <div class="stat-card__label">异常</div>
-            <div class="stat-card__value">6</div>
+            <div class="stat-card__value">{{ failureCount }}</div>
           </div>
         </el-card>
       </el-col>
@@ -55,7 +53,7 @@
           <div class="stat-card__icon"><el-icon :size="28"><Cpu /></el-icon></div>
           <div class="stat-card__body">
             <div class="stat-card__label">在线设备</div>
-            <div class="stat-card__value">2</div>
+            <div class="stat-card__value">{{ onlineDeviceCount }}</div>
           </div>
         </el-card>
       </el-col>
@@ -103,15 +101,28 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { LineChart, PieChart } from 'echarts/charts'
+import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
 import { CircleCheckFilled, CircleCheck, TrendCharts, WarningFilled, Cpu } from '@element-plus/icons-vue'
 import { getEventList } from '@/api/event'
-import { getSerialStatus } from '@/api/device'
+import { getSerialStatus, getDeviceList } from '@/api/device'
+import { getAlarmList } from '@/api/alarm'
 import type { EventLogItem } from '@/types/event'
 import type { SerialStatus } from '@/types/device'
+import type { AlarmStats } from '@/types/alarm'
 
-// ---- 最近事件（通过 API 层获取，不直接访问 mock）----
+echarts.use([LineChart, PieChart, GridComponent, LegendComponent, TooltipComponent, CanvasRenderer])
+
+// ---- 最近事件（真实 REST API）----
 const recentEvents = ref<EventLogItem[]>([])
+const eventTotal = ref(0)
+const successCount = ref(0)
+const failureCount = ref(0)
+const onlineDeviceCount = ref(0)
+const dashboardEvents = ref<EventLogItem[]>([])
+const alarmStats = ref<AlarmStats>({ severe: 0, high: 0, normal: 0, total: 0, unhandled: 0 })
 
 // ---- 系统状态（串口/数据库）----
 const serial = ref<SerialStatus>({ connected: false, port: '-', baudRate: 0, autoReconnect: false, lastFrameAt: null, frameCount: 0, errorCount: 0 })
@@ -127,8 +138,15 @@ function initTrendChart() {
   trendChart = echarts.init(trendChartRef.value)
 
   const hours = ['00:00','02:00','04:00','06:00','08:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00']
-  const successData = [12, 8, 5, 3, 10, 22, 38, 35, 40, 28, 18, 15]
-  const anomalyData = [1, 0, 0, 0, 1, 2, 2, 1, 3, 1, 1, 0]
+  const successData = Array<number>(12).fill(0)
+  const anomalyData = Array<number>(12).fill(0)
+  for (const item of dashboardEvents.value) {
+    const hour = Number(item.time.slice(0, 2))
+    if (!Number.isInteger(hour) || hour < 0 || hour > 23) continue
+    const bucket = Math.floor(hour / 2)
+    if (item.result === '成功') successData[bucket] += 1
+    else if (item.result === '失败') anomalyData[bucket] += 1
+  }
 
   trendChart.setOption({
     tooltip: { trigger: 'axis' },
@@ -173,23 +191,35 @@ function initAnomalyChart() {
       itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
       label: { show: false },
       emphasis: { label: { show: true, fontSize: 16 } },
-      data: [
-        { value: 3, name: '温度异常', itemStyle: { color: '#f56c6c' } },
-        { value: 1, name: '震动异常', itemStyle: { color: '#e6a23c' } },
-        { value: 1, name: '通信中断', itemStyle: { color: '#909399' } },
-        { value: 1, name: '电量过低', itemStyle: { color: '#409eff' } },
-      ],
+      data: alarmStats.value.total > 0 ? [
+        { value: alarmStats.value.severe, name: '严重', itemStyle: { color: '#f56c6c' } },
+        { value: alarmStats.value.high, name: '高', itemStyle: { color: '#e6a23c' } },
+        { value: alarmStats.value.normal, name: '普通', itemStyle: { color: '#409eff' } },
+      ].filter(item => item.value > 0) : [{ value: 1, name: '暂无报警', itemStyle: { color: '#dcdfe6' } }],
     }],
   })
 }
 
 // ---- 生命周期 ----
 onMounted(async () => {
-  // 加载最近事件（通过 API 层）
-  const res = await getEventList({ page: 1, pageSize: 6 })
-  recentEvents.value = res.list
-  // 加载串口状态
-  serial.value = await getSerialStatus()
+  const now = new Date()
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+  const [events, successes, failures, alarms, serialState, devices] = await Promise.all([
+    getEventList({ page: 1, pageSize: 200, dateStart: today, dateEnd: today }),
+    getEventList({ page: 1, pageSize: 1, dateStart: today, dateEnd: today, result: '成功' }),
+    getEventList({ page: 1, pageSize: 1, dateStart: today, dateEnd: today, result: '失败' }),
+    getAlarmList({ page: 1, pageSize: 1 }),
+    getSerialStatus(),
+    getDeviceList(),
+  ])
+  dashboardEvents.value = events.list
+  recentEvents.value = events.list.slice(0, 6)
+  eventTotal.value = events.total
+  successCount.value = successes.total
+  failureCount.value = failures.total
+  alarmStats.value = alarms.stats
+  serial.value = serialState
+  onlineDeviceCount.value = devices.list.filter(device => device.status === '在线').length
 
   await nextTick()
   initTrendChart()

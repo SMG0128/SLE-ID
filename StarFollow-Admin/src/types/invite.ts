@@ -13,6 +13,9 @@ export interface InviteCode {
   createdAt: string
   revokeReason: string    // 失效原因
   oneTime: boolean        // 是否一次性
+  maxUses?: number
+  usedCount?: number
+  remainingUses?: number
 }
 
 /** 生成邀请码表单 */

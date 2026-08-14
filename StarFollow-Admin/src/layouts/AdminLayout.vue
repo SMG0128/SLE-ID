@@ -31,6 +31,10 @@
           <el-icon><Bell /></el-icon>
           <template #title>报警中心</template>
         </el-menu-item>
+        <el-menu-item index="/confirmation-center">
+          <el-icon><CircleCheck /></el-icon>
+          <template #title>待确认</template>
+        </el-menu-item>
         <el-menu-item index="/device-manage">
           <el-icon><Monitor /></el-icon>
           <template #title>检测端管理</template>
@@ -67,7 +71,7 @@
         </div>
         <div class="header-right">
           <span class="header-time">{{ currentTime }}</span>
-          <el-tag size="small" type="success">系统正常</el-tag>
+          <el-tag size="small" :type="wsConnected ? 'success' : 'warning'">{{ wsConnected ? '实时链路正常' : '实时链路重连中' }}</el-tag>
         </div>
       </el-header>
 
@@ -82,13 +86,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { HomeFilled, VideoCamera, Document, Bell, Monitor, Key, Tickets, CreditCard, Setting, Fold, Expand } from '@element-plus/icons-vue'
+import { HomeFilled, VideoCamera, Document, Bell, Monitor, Key, Tickets, CreditCard, Setting, Fold, Expand, CircleCheck } from '@element-plus/icons-vue'
+import { connectEventSocket, closeSocket, onSocketState } from '@/api/websocket'
 
 const route = useRoute()
 const isCollapse = ref(false)
 
 const activeMenu = computed(() => route.path)
 const currentTime = ref('')
+const wsConnected = ref(false)
 
 function updateTime() {
   const now = new Date()
@@ -99,14 +105,19 @@ function updateTime() {
 }
 
 let timer: ReturnType<typeof setInterval> | null = null
+let unsubscribeSocket: (() => void) | null = null
 
 onMounted(() => {
   updateTime()
   timer = setInterval(updateTime, 1000)
+  unsubscribeSocket = onSocketState(connected => { wsConnected.value = connected })
+  connectEventSocket()
 })
 
 onUnmounted(() => {
   if (timer) clearInterval(timer)
+  unsubscribeSocket?.()
+  closeSocket()
 })
 </script>
 

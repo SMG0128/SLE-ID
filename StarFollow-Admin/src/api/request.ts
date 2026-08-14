@@ -1,11 +1,18 @@
-/**
- * Axios 实例 — 后端就绪后启用
- *
- * 当前阶段所有 API 函数走 Mock 本地数据，
- * 接入真实后端时将各 api/*.ts 中的 mock 调用替换为 request 即可。
- */
+/** StarFollow 后端 Axios 实例。 */
 import axios, { type AxiosInstance, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import { ElMessage } from 'element-plus'
+
+const TOKEN_KEY = 'starfollow.apiToken'
+
+export function getAccessToken(): string {
+  return localStorage.getItem(TOKEN_KEY)?.trim() || import.meta.env.VITE_STARFOLLOW_API_TOKEN?.trim() || ''
+}
+
+export function setAccessToken(token: string): void {
+  const value = token.trim()
+  if (value) localStorage.setItem(TOKEN_KEY, value)
+  else localStorage.removeItem(TOKEN_KEY)
+}
 
 const service: AxiosInstance = axios.create({
   baseURL: '/api',
@@ -15,8 +22,8 @@ const service: AxiosInstance = axios.create({
 
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // const token = useSystemStore().token
-    // if (token) config.headers.Authorization = `Bearer ${token}`
+    const token = getAccessToken()
+    if (token) config.headers.Authorization = `Bearer ${token}`
     return config
   },
   (error) => Promise.reject(error),
@@ -32,14 +39,10 @@ service.interceptors.response.use(
     return data.data
   },
   (error) => {
-    ElMessage.error(error.message || '网络异常')
+    const message = error.response?.data?.message || (error.response?.status === 401 ? '访问令牌无效或未配置' : error.message) || '网络异常'
+    ElMessage.error(message)
     return Promise.reject(error)
   },
 )
 
 export default service
-
-/** 模拟网络延迟的辅助函数 */
-export function mockDelay<T>(data: T, ms = 200): Promise<T> {
-  return new Promise(resolve => setTimeout(() => resolve(data), ms))
-}

@@ -28,12 +28,12 @@
 
         <!-- 管理员与保密 -->
         <el-card shadow="hover" class="setting-card">
-          <template #header><h3>管理员与保密设置</h3></template>
-          <el-form :model="form" label-width="110px">
-            <el-form-item label="管理员账号"><el-input v-model="form.adminName" /></el-form-item>
-            <el-form-item label="管理密钥"><el-input v-model="form.adminSecret" type="password" show-password /></el-form-item>
+          <template #header><h3>管理端访问令牌</h3></template>
+          <el-form label-width="110px">
+            <el-form-item label="管理员账号"><el-input v-model="form.adminName" disabled /></el-form-item>
+            <el-form-item label="访问令牌"><el-input v-model="accessToken" type="password" show-password placeholder="与后端 STARFOLLOW_API_TOKEN 一致" /></el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="saveAdmin">保存</el-button>
+              <el-button type="primary" @click="saveAccessToken">保存并重连</el-button>
             </el-form-item>
           </el-form>
         </el-card>
@@ -51,7 +51,7 @@
           </el-descriptions>
           <div class="db-actions">
             <el-button type="success" @click="backupDb">立即备份</el-button>
-            <el-button @click="exportDb">导出数据库</el-button>
+            <el-tooltip content="当前后端未提供安全的数据库下载接口"><el-button disabled>导出数据库</el-button></el-tooltip>
           </div>
         </el-card>
 
@@ -73,7 +73,9 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { getSystemSettings, updateSerialConfig, updateServerSync, getSerialPortOptions } from '@/api/system'
+import { getSystemSettings, updateSerialConfig, updateServerSync, getSerialPortOptions, backupDatabase } from '@/api/system'
+import { getAccessToken, setAccessToken } from '@/api/request'
+import { reconnectEventSocket } from '@/api/websocket'
 import { BAUD_RATE_OPTIONS, type SystemSettings, type SerialPortOption } from '@/types/system'
 
 const form = reactive<SystemSettings>({
@@ -85,6 +87,7 @@ const form = reactive<SystemSettings>({
 })
 const portOptions = ref<SerialPortOption[]>([])
 const syncEnabled = ref(false)
+const accessToken = ref(getAccessToken())
 
 // 用于展示的数据库信息
 const db = reactive({ sizeKB: 0, eventCount: 0, licenseCount: 0, lastBackup: null as string | null })
@@ -103,17 +106,16 @@ async function saveSerial() {
   ElMessage.success('串口配置已保存')
 }
 
-function saveAdmin() {
-  ElMessage.success('管理员设置已保存')
+function saveAccessToken() {
+  setAccessToken(accessToken.value)
+  reconnectEventSocket()
+  ElMessage.success('访问令牌已保存，实时链路正在重连')
 }
 
-function backupDb() {
-  db.lastBackup = new Date().toISOString().replace('T', ' ').slice(0, 19)
+async function backupDb() {
+  const result = await backupDatabase() as { createdAt?: string }
+  db.lastBackup = result.createdAt || new Date().toISOString()
   ElMessage.success('数据库备份完成')
-}
-
-function exportDb() {
-  ElMessage.success('数据库已导出 (starfollow.db)')
 }
 
 async function saveSync() {

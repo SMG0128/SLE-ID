@@ -32,6 +32,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '报警中心' },
       },
       {
+        path: 'confirmation-center',
+        name: 'ConfirmationCenter',
+        component: () => import('@/views/ConfirmationCenter.vue'),
+        meta: { title: '待确认' },
+      },
+      {
         path: 'device-manage',
         name: 'DeviceManage',
         component: () => import('@/views/DeviceManage.vue'),

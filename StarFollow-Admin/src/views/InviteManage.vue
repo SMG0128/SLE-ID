@@ -35,6 +35,9 @@
         <el-table-column label="剩余有效时间" width="120">
           <template #default="{ row }">{{ remainTime(row) }}</template>
         </el-table-column>
+        <el-table-column label="使用次数" width="100">
+          <template #default="{ row }">{{ row.usedCount ?? 0 }} / {{ row.maxUses ?? 1 }}</template>
+        </el-table-column>
         <el-table-column prop="usedBy" label="绑定对象" width="100" />
         <el-table-column label="绑定时间" width="160">
           <template #default="{ row }">{{ row.usedAt || '-' }}</template>

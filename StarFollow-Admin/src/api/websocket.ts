@@ -1,53 +1,102 @@
-/**
- * WebSocket 实时事件推送接口 — Ark Web 容器适配层
- *
- * 当前阶段：暂不连接真实 WebSocket，仅提供接口预留。
- * 后端 WS63 通信模块就绪后，取消 connectEventSocket 中的注释即可接入。
- *
- * 架构：HarmonyOS ArkUI 主应用 → Ark Web 容器 → Vue3 管理端
- *       WebSocket 用于接收设备实时感知事件、报警推送、设备心跳等。
- */
+import { getAccessToken } from './request'
 
-type EventMessageHandler = (data: unknown) => void
+export interface WsEnvelope<T = unknown> {
+  version: 1
+  seq: number
+  topic: string
+  sentAt: string
+  data: T
+}
+
+type EventMessageHandler = (message: WsEnvelope) => void
+type StateHandler = (connected: boolean) => void
 
 const handlers = new Set<EventMessageHandler>()
+const stateHandlers = new Set<StateHandler>()
 let ws: WebSocket | null = null
+let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+let reconnectAttempt = 0
+let stopped = true
+let configuredUrl: string | undefined
 
-/** 连接事件 WebSocket（暂不连接） */
-export function connectEventSocket(url?: string): void {
-  // ---- 后端就绪后启用以下代码 ----
-  // const target = url || 'ws://localhost:8080/ws/events'
-  // ws = new WebSocket(target)
-  // ws.onmessage = (event) => {
-  //   try {
-  //     const data = JSON.parse(event.data)
-  //     handlers.forEach(fn => fn(data))
-  //   } catch (e) {
-  //     console.error('[WS] 消息解析失败', e)
-  //   }
-  // }
-  // ws.onopen = () => console.log('[WS] 已连接:', target)
-  // ws.onclose = () => console.log('[WS] 连接已关闭')
-  // ws.onerror = (e) => console.error('[WS] 连接错误', e)
-  console.log('[WebSocket] 接口已就绪，等待后端 WS63 模块接入')
+function socketUrl(url?: string): string {
+  const target = url || import.meta.env.VITE_STARFOLLOW_WS_URL || `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws/events`
+  const parsed = new URL(target, location.href)
+  const token = getAccessToken()
+  if (token) parsed.searchParams.set('access_token', token)
+  return parsed.toString()
 }
 
-/** 关闭 WebSocket 连接 */
-export function closeSocket(): void {
-  if (ws) {
-    ws.close()
-    ws = null
+function notifyState(connected: boolean): void {
+  stateHandlers.forEach(handler => handler(connected))
+}
+
+function scheduleReconnect(): void {
+  if (stopped || reconnectTimer) return
+  const delay = Math.min(30_000, 1000 * (2 ** Math.min(reconnectAttempt, 5)))
+  reconnectAttempt += 1
+  reconnectTimer = setTimeout(() => {
+    reconnectTimer = null
+    openSocket()
+  }, delay)
+}
+
+function openSocket(): void {
+  if (stopped || ws?.readyState === WebSocket.OPEN || ws?.readyState === WebSocket.CONNECTING) return
+  const socket = new WebSocket(socketUrl(configuredUrl))
+  ws = socket
+  socket.onopen = () => {
+    reconnectAttempt = 0
+    notifyState(true)
   }
-  console.log('[WebSocket] 连接已关闭')
+  socket.onmessage = event => {
+    try {
+      const message = JSON.parse(String(event.data)) as WsEnvelope
+      if (message.version === 1 && typeof message.topic === 'string') handlers.forEach(handler => handler(message))
+    } catch (error) {
+      console.error('[WebSocket] 消息解析失败', error)
+    }
+  }
+  socket.onclose = () => {
+    if (ws === socket) ws = null
+    notifyState(false)
+    scheduleReconnect()
+  }
+  socket.onerror = () => socket.close()
 }
 
-/** 订阅事件消息 — 返回取消订阅函数 */
+export function connectEventSocket(url?: string): void {
+  configuredUrl = url
+  stopped = false
+  openSocket()
+}
+
+export function closeSocket(): void {
+  stopped = true
+  if (reconnectTimer) clearTimeout(reconnectTimer)
+  reconnectTimer = null
+  const socket = ws
+  ws = null
+  socket?.close()
+  notifyState(false)
+}
+
+export function reconnectEventSocket(): void {
+  closeSocket()
+  connectEventSocket(configuredUrl)
+}
+
 export function onEventMessage(handler: EventMessageHandler): () => void {
   handlers.add(handler)
   return () => handlers.delete(handler)
 }
 
-/** 获取当前连接状态 */
+export function onSocketState(handler: StateHandler): () => void {
+  stateHandlers.add(handler)
+  handler(isSocketConnected())
+  return () => stateHandlers.delete(handler)
+}
+
 export function isSocketConnected(): boolean {
-  return ws !== null && ws.readyState === WebSocket.OPEN
+  return ws?.readyState === WebSocket.OPEN
 }

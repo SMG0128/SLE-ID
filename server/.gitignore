@@ -1,12 +1,9 @@
-# Dependencies
 node_modules/
-
-# Database
+dist/
 data/*.db
-data/*.db-journal
-
-# Logs
+data/*.db-*
+data/backups/
+logs/
 *.log
-
-# Environment
 .env
+coverage/

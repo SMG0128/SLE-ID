@@ -5,3 +5,8 @@ declare module '*.vue' {
   const component: DefineComponent<object, object, unknown>
   export default component
 }
+
+interface ImportMetaEnv {
+  readonly VITE_STARFOLLOW_API_TOKEN?: string
+  readonly VITE_STARFOLLOW_WS_URL?: string
+}

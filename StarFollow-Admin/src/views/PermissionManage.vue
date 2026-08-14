@@ -39,9 +39,9 @@
         <el-table-column prop="cardCount" label="绑定卡片" width="80" />
         <el-table-column prop="keyVersion" label="密钥版本" width="80" />
         <el-table-column prop="expireTime" label="有效期至" width="100" />
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column label="操作" width="150" fixed="right">
           <template #default="{ row }">
-            <el-button size="small" @click="edit(row)">编辑</el-button>
+            <el-button size="small" type="primary" @click="deploy(row)">下发</el-button>
             <el-button size="small" type="danger" @click="revoke(row)">吊销</el-button>
           </template>
         </el-table-column>
@@ -49,7 +49,7 @@
     </el-card>
 
     <!-- 发布/编辑许可弹窗 -->
-    <el-dialog v-model="dialogVisible" :title="editingId ? '编辑许可' : '发布许可'" width="760px" top="4vh">
+    <el-dialog v-model="dialogVisible" title="发布许可" width="760px" top="4vh">
       <el-form :model="form" label-width="120px">
         <el-form-item label="许可名称"><el-input v-model="form.name" placeholder="如: 正门区域许可" /></el-form-item>
         <el-form-item label="区域">
@@ -161,7 +161,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getLicenses, createLicense, revokeLicense } from '@/api/permission'
+import { getLicenses, createLicense, revokeLicense, deployLicense } from '@/api/permission'
 import { POLICY_TEMPLATES, ZONE_OPTIONS, SCOPE_OPTIONS, defaultPolicy, type License, type CreateLicenseForm, type LicensePolicy, type PolicyTemplate } from '@/types/license'
 
 const licenses = ref<License[]>([])
@@ -179,27 +179,15 @@ async function loadData() {
 
 // ---- 弹窗与表单 ----
 const dialogVisible = ref(false)
-const editingId = ref('')
 const formTemplate = ref('')
 const form = reactive<CreateLicenseForm>({ name: '', zone: '', dateRange: null, policies: defaultPolicy() })
 
 function openCreate() {
-  editingId.value = ''
   formTemplate.value = ''
   form.name = ''
   form.zone = ''
   form.dateRange = null
   form.policies = defaultPolicy()
-  dialogVisible.value = true
-}
-
-function edit(row: License) {
-  editingId.value = row.id
-  formTemplate.value = ''
-  form.name = row.name
-  form.zone = row.zone
-  form.dateRange = null
-  form.policies = JSON.parse(JSON.stringify(row.policies))
   dialogVisible.value = true
 }
 
@@ -245,27 +233,25 @@ async function save() {
     ElMessage.warning('请填写完整信息')
     return
   }
-  if (editingId.value) {
-    const target = licenses.value.find(l => l.id === editingId.value)
-    if (target) {
-      target.name = form.name
-      target.zone = form.zone
-      target.policies = JSON.parse(JSON.stringify(form.policies))
-    }
-    ElMessage.success('许可已更新')
-  } else {
-    const newLicense = await createLicense(form, '当前用户')
-    licenses.value.unshift(newLicense)
-    ElMessage.success('许可已发布')
-  }
+  const newLicense = await createLicense(form, '当前用户')
+  licenses.value.unshift(newLicense)
+  ElMessage.success('许可已保存；需要点击“下发”同步到 Detector B')
   dialogVisible.value = false
+}
+
+async function deploy(row: License) {
+  const result = await deployLicense(row.id) as { status?: number; policyVersion?: number }
+  if (result.status === 0) {
+    ElMessage.success(`策略已下发，硬件版本 ${result.policyVersion ?? '-'}`)
+    await loadData()
+  }
 }
 
 async function revoke(row: License) {
   try {
     await ElMessageBox.confirm(`确定吊销许可 "${row.name}"? 已绑定的 ${row.cardCount} 张卡片将立即失效。`, '吊销许可', { type: 'error' })
     await revokeLicense(row.id)
-    licenses.value = licenses.value.filter(l => l.id !== row.id)
+    await loadData()
     ElMessage.success('许可已吊销')
   } catch { /* 取消 */ }
 }

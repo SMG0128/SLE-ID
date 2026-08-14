@@ -113,7 +113,7 @@ async function loadData() {
 }
 
 async function setStatus(row: AlarmRecord, status: AlarmHandleStatus) {
-  await handleAlarm(row.id)
+  await handleAlarm(row.id, status)
   row.handleStatus = status
   if (status !== 'unhandled') stats.value.unhandled = Math.max(0, stats.value.unhandled - 1)
   ElMessage.success(status === 'handled' ? '已标记处理' : status === 'ignored' ? '已忽略' : '已升级')
