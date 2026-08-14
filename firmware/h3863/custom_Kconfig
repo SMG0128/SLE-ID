@@ -1,0 +1,21 @@
+config SAMPLE_SUPPORT_SLE_AB
+    bool "Support SLE detector A/B project"
+    default n
+    depends on SAMPLE_ENABLE
+
+if SAMPLE_SUPPORT_SLE_AB
+menu "SLE detector A/B configuration"
+    osource "application/samples/custom/sle_ab/Kconfig"
+endmenu
+endif
+
+config SAMPLE_SUPPORT_SLE_CARD
+    bool "Support independent SLE Card C project"
+    default n
+    depends on SAMPLE_ENABLE
+
+if SAMPLE_SUPPORT_SLE_CARD
+menu "SLE Card C configuration"
+    osource "application/samples/custom/sle_card/Kconfig"
+endmenu
+endif

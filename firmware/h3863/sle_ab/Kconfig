@@ -1,0 +1,54 @@
+choice
+    prompt "Select SLE A/B detector role"
+    default SLE_AB_ROLE_A
+
+config SLE_AB_ROLE_A
+    bool "Detector A - passage sensing and SLE client"
+
+config SLE_AB_ROLE_B
+    bool "Detector B - policy, gateway and SLE server"
+endchoice
+
+config SLE_AB_UART_BUS
+    int "Console UART bus"
+    default 0
+
+config SLE_AB_UART_TX_PIN
+    int "Console UART TX pin"
+    default 17
+
+config SLE_AB_UART_RX_PIN
+    int "Console UART RX pin"
+    default 18
+
+config SLE_AB_ACTUATOR_PIN
+    int "Detector B actuator/LED GPIO"
+    default 10
+
+config SLE_AB_TEST_MODE
+    bool "Enable serial demo and simulated authentication commands"
+    default y
+    help
+        Development only. Disable this for a production build so that serial
+        commands cannot forge passage observations or authentication results.
+
+config SLE_UART_MSGQ_ITEM_SIZE
+    int
+    default 520
+
+config SLE_UART_MTU_SIZE
+    int
+    default 520
+
+config SLE_UART_CONN_INTERVAL
+    int "SLE connection interval (x1.25ms)"
+    default 12
+    range 6 32
+
+config SUPPORT_SLE_CENTRAL
+    bool
+    default y if SLE_AB_ROLE_A
+
+config SUPPORT_SLE_PERIPHERAL
+    bool
+    default y if SLE_AB_ROLE_B

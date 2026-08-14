@@ -1,0 +1,29 @@
+# Local build and release artifacts
+outputs/
+backups/
+work/
+tmp/
+.tmp/
+.docx_review/
+.pnpm-store/
+
+# Host test executables and compiler output
+tests/*.exe
+*.o
+*.obj
+*.elf
+*.map
+
+# Generated document previews
+docs/.render*/
+
+# IDE and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and local configuration
+*.log
+.env
+.env.*
