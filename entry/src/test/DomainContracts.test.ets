@@ -45,6 +45,7 @@ function pendingConfirmation(expiresAt: string): ConfirmationRequest {
     action: 'access',
     direction: ConfirmationDirection.ENTRY,
     randomCode: '123456',
+    adminConfirmRequired: true,
     status: ConfirmationRequestStatus.PENDING,
     createdAt: '2026-08-14T00:00:00.000Z',
     expiresAt: expiresAt,
@@ -134,6 +135,10 @@ export default function domainContractsTest() {
       const first = await source.redeemInvitation('SLE-LAB2-2026')
       const second = await source.redeemInvitation('SLE-LAB2-2026')
       expect(first.state).assertEqual(InvitationFlowState.SUCCESS)
+      expect(first.authorization?.status).assertEqual(AuthorizationStatus.BOUND)
+      expect(first.digitalCard?.credentialBindingStatus).assertEqual(
+        CredentialBindingStatus.NOT_WRITTEN
+      )
       expect(second.state).assertEqual(InvitationFlowState.ALREADY_USED)
       expect(source.getAuthorizationSnapshot().length).assertEqual(beforeCount + 1)
     })

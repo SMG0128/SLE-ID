@@ -14,7 +14,10 @@ import {
   CredentialCondition
 } from '../models/Credential'
 import { createLocalSyncState } from '../models/SyncState'
-import { ConfirmationRequest } from '../models/ConfirmationRequest'
+import {
+  ConfirmationRequest,
+  ConfirmationRequestStatus
+} from '../models/ConfirmationRequest'
 import { ConfirmationStore } from '../stores/ConfirmationStore'
 import {
   AuthorizationAlertPolicy,
@@ -28,6 +31,7 @@ import {
   InvitationRedemptionResult
 } from '../models/Invitation'
 import { CardStore } from '../stores/CardStore'
+import { OperationAuthority } from '../models/Operation'
 import * as Theme from '../common/Theme'
 
 @Entry
@@ -54,12 +58,30 @@ struct Index {
   @State invitationState: InvitationFlowState = InvitationFlowState.IDLE
   @State invitationFailureReason: InvitationFailureReason = InvitationFailureReason.NONE
   @State invitationPreview: InvitationAuthorizationPreview | null = null
+  @State confirmationNowMillis: number = Date.now()
   private invitationOperationId: number = 0
+  private confirmationTimer: number = -1
 
   aboutToAppear(): void {
+    this.confirmationStore.setPendingListener((request: ConfirmationRequest | null) => {
+      if (request) {
+        this.verificationCardId = request.digitalCardId
+        this.verificationRandomCode = request.randomCode
+        this.showVerificationDialog = true
+        this.startConfirmationTimer()
+      } else if (!this.verificationPending) {
+        this.showVerificationDialog = false
+        this.stopConfirmationTimer()
+      }
+    })
     this.cardStore.refresh().catch(() => {
       console.error('Unable to refresh mock card data')
     })
+  }
+
+  aboutToDisappear(): void {
+    this.confirmationStore.setPendingListener(null)
+    this.stopConfirmationTimer()
   }
 
   build() {
@@ -313,8 +335,38 @@ struct Index {
           .width('100%')
           .margin({ top: Theme.SPACING_XS, bottom: Theme.SPACING_LG })
 
-        CardPreview({ card: this.verificationCard(), language: this.language })
+        if (this.hasVerificationCard()) {
+          CardPreview({ card: this.verificationCard(), language: this.language })
+            .width('100%')
+        }
+
+        if (this.activeConfirmation()) {
+          Column({ space: Theme.SPACING_XS }) {
+            Text(this.confirmationLocationText())
+              .fontSize(Theme.BODY_MD_FONT_SIZE)
+              .fontColor(Theme.ON_SURFACE)
+              .width('100%')
+            Text(this.confirmationActionText())
+              .fontSize(Theme.LABEL_MD_FONT_SIZE)
+              .fontColor(Theme.ON_SURFACE_VARIANT)
+              .width('100%')
+            Text(this.confirmationCountdownText())
+              .fontSize(Theme.LABEL_MD_FONT_SIZE)
+              .fontColor(Theme.ERROR)
+              .width('100%')
+            if (this.activeConfirmation()?.adminConfirmRequired) {
+              Text(this.language === 'zh' ?
+                '管理员策略要求本次二次确认' :
+                'Required by administrator policy')
+                .fontSize(Theme.LABEL_MD_FONT_SIZE)
+                .fontColor(Theme.PRIMARY)
+                .width('100%')
+            }
+          }
           .width('100%')
+          .padding({ top: Theme.SPACING_MD })
+          .alignItems(HorizontalAlign.Start)
+        }
 
         Stack({ alignContent: Alignment.Center }) {
           Text(this.language === 'zh' ? '滑动以同意  →' : 'Slide to approve  →')
@@ -338,6 +390,7 @@ struct Index {
             .blockColor(Color.White)
             .trackThickness(52)
             .blockSize({ width: 44, height: 44 })
+            .enabled(!this.confirmationStore.isSubmitting)
             .onChange((value: number) => {
               this.slideProgress = value
               if (value >= 98) {
@@ -348,6 +401,31 @@ struct Index {
         .width('100%')
         .height(56)
         .margin({ top: Theme.SPACING_LG })
+
+        Button(this.language === 'zh' ? '拒绝' : 'Reject')
+          .width('100%')
+          .height(44)
+          .enabled(!this.confirmationStore.isSubmitting)
+          .backgroundColor(Theme.SURFACE_CONTAINER_HIGH)
+          .fontColor(Theme.ERROR)
+          .margin({ top: Theme.SPACING_MD })
+          .onClick(() => {
+            this.rejectVerification()
+          })
+
+        if (this.confirmationStore.isSubmitting) {
+          Text(this.language === 'zh' ?
+            '正在等待后端确认…' :
+            'Waiting for backend acknowledgement…')
+            .fontSize(Theme.LABEL_MD_FONT_SIZE)
+            .fontColor(Theme.ON_SURFACE_VARIANT)
+            .margin({ top: Theme.SPACING_SM })
+        } else if (this.confirmationStore.errorMessage.length > 0) {
+          Text(this.confirmationStore.errorMessage)
+            .fontSize(Theme.LABEL_MD_FONT_SIZE)
+            .fontColor(Theme.ERROR)
+            .margin({ top: Theme.SPACING_SM })
+        }
       }
       .width('90%')
       .constraintSize({ maxWidth: 460 })
@@ -379,30 +457,118 @@ struct Index {
     return result
   }
 
+  private hasVerificationCard(): boolean {
+    let found: boolean = false
+    this.cardStore.cards.forEach((card: DigitalCard) => {
+      if (card.id === this.verificationCardId) {
+        found = true
+      }
+    })
+    return found
+  }
+
+  private activeConfirmation(): ConfirmationRequest | null {
+    return this.confirmationStore.activePendingRequest()
+  }
+
   private approveVerification(): void {
-    const card: DigitalCard = this.verificationCard()
-    const request: ConfirmationRequest =
-      this.confirmationStore.receiveLocalMockRequest(
+    this.submitVerification(ConfirmationRequestStatus.APPROVED).catch(() => {
+      this.slideProgress = 0
+    })
+  }
+
+  private rejectVerification(): void {
+    this.submitVerification(ConfirmationRequestStatus.REJECTED).catch(() => {
+      this.slideProgress = 0
+    })
+  }
+
+  private async submitVerification(status: ConfirmationRequestStatus): Promise<void> {
+    let request: ConfirmationRequest | null = this.activeConfirmation()
+    if (!request) {
+      if (!this.hasVerificationCard()) {
+        this.slideProgress = 0
+        return
+      }
+      const card: DigitalCard = this.verificationCard()
+      request = this.confirmationStore.currentOrCreateLegacyMock(
         card.id,
         card.permissionId,
         this.verificationRandomCode
       )
-    this.confirmationStore.approveLocalMock(request.requestId)
-    if (!this.confirmationStore.hasAuthoritativeLocalResult(request.requestId)) {
+    }
+    const success: boolean = await this.confirmationStore.submitDecision(
+      request.requestId,
+      status
+    )
+    if (!success) {
       this.slideProgress = 0
       return
     }
-    // Dismissal follows the local mock acknowledgement; it does not create it.
     this.verificationPending = false
     this.showVerificationDialog = false
     this.slideProgress = 0
+    this.stopConfirmationTimer()
     try {
+      const isBackend: boolean =
+        this.confirmationStore.lastOperation.authority === OperationAuthority.BACKEND
       this.getUIContext().getPromptAction().showToast({
-        message: this.language === 'zh' ? '本地 Mock 已记录同意结果' :
-          'Approval recorded by the local mock'
+        message: isBackend ?
+          (this.language === 'zh' ? '后端已确认本次决定' : 'Decision acknowledged by backend') :
+          (this.language === 'zh' ? '本地 Mock 已记录决定' : 'Decision recorded by local mock')
       })
     } catch (error) {
-      console.error(`Unable to show verification result: ${JSON.stringify(error)}`)
+      console.error('Unable to show verification result')
+    }
+  }
+
+  private confirmationLocationText(): string {
+    const request: ConfirmationRequest | null = this.activeConfirmation()
+    if (!request) {
+      return ''
+    }
+    const location: string = request.checkpointName.length > 0 ?
+      request.checkpointName : request.detectorId
+    return `${location} · ${request.detectorId}`
+  }
+
+  private confirmationActionText(): string {
+    const request: ConfirmationRequest | null = this.activeConfirmation()
+    if (!request) {
+      return ''
+    }
+    return `${request.action} · ${request.direction}`
+  }
+
+  private confirmationCountdownText(): string {
+    const request: ConfirmationRequest | null = this.activeConfirmation()
+    if (!request) {
+      return ''
+    }
+    const remainingMillis: number =
+      Date.parse(request.expiresAt) - this.confirmationNowMillis
+    const seconds: number = remainingMillis > 0 ?
+      Math.ceil(remainingMillis / 1000) : 0
+    return this.language === 'zh' ? `剩余 ${seconds} 秒` : `${seconds}s remaining`
+  }
+
+  private startConfirmationTimer(): void {
+    if (this.confirmationTimer >= 0) {
+      return
+    }
+    this.confirmationNowMillis = Date.now()
+    this.confirmationTimer = setInterval(() => {
+      this.confirmationNowMillis = Date.now()
+      this.confirmationStore.expirePending(this.confirmationNowMillis).catch(() => {
+        this.confirmationStore.errorMessage = 'Unable to persist confirmation timeout'
+      })
+    }, 1000)
+  }
+
+  private stopConfirmationTimer(): void {
+    if (this.confirmationTimer >= 0) {
+      clearInterval(this.confirmationTimer)
+      this.confirmationTimer = -1
     }
   }
 

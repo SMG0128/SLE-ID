@@ -36,6 +36,9 @@
     ],
     "requestPermissions": [
       {
+        "name": "ohos.permission.INTERNET"
+      },
+      {
         "name": "ohos.permission.ACCESS_NEARLINK",
         "reason": "$string:nearlink_permission_reason",
         "usedScene": {

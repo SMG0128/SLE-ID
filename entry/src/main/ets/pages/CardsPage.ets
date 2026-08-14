@@ -55,6 +55,25 @@ export struct CardsPage {
           .alignItems(VerticalAlign.Bottom)
           .margin({ bottom: Theme.SPACING_LG })
 
+          if (this.cardStore.isLoading) {
+            Text(this.language === 'zh' ? '正在同步卡片…' : 'Syncing cards…')
+              .fontSize(Theme.LABEL_MD_FONT_SIZE)
+              .fontColor(Theme.ON_SURFACE_VARIANT)
+              .margin({ bottom: Theme.SPACING_MD })
+          } else if (this.cardStore.isOffline) {
+            Text(this.language === 'zh' ?
+              '当前离线，正在显示本地缓存' :
+              'Offline — showing cached cards')
+              .fontSize(Theme.LABEL_MD_FONT_SIZE)
+              .fontColor(Theme.ERROR)
+              .margin({ bottom: Theme.SPACING_MD })
+          } else if (this.cardStore.errorMessage.length > 0) {
+            Text(this.cardStore.errorMessage)
+              .fontSize(Theme.LABEL_MD_FONT_SIZE)
+              .fontColor(Theme.ERROR)
+              .margin({ bottom: Theme.SPACING_MD })
+          }
+
           // Cards list
           if (this.isTablet) {
             // Tablet: multi-column grid

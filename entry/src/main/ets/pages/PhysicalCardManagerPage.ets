@@ -534,12 +534,12 @@ export struct PhysicalCardManagerPage {
     if (this.cardStore.discoveryState === PhysicalCardDiscoveryState.DISCOVERY_FAILED) {
       return this.language === 'zh' ? '发现失败' : 'Discovery failed'
     }
-    return this.language === 'zh' ? '虚拟 WS63 实体卡' : 'Virtual WS63 cards'
+    return this.language === 'zh' ? 'WS63 实体卡' : 'WS63 cards'
   }
 
   private discoveryDescription(): string {
     return this.language === 'zh' ?
-      '以下为临时 Mock 发现结果。只有选中的设备会保存为主要实体卡。' :
-      'These are temporary Mock discovery results. Only the selected device becomes the primary card.'
+      '只有选中的设备会保存为主要实体卡。' :
+      'Only the selected device becomes the primary card.'
   }
 }

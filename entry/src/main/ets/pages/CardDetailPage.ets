@@ -17,6 +17,7 @@ import {
   PrimaryPhysicalCardBindingResult
 } from '../models/PhysicalCardOperation'
 import { CardStore } from '../stores/CardStore'
+import { CardProvisioningStage } from '../models/CardProvisioning'
 
 @Component
 export struct CardDetailPage {
@@ -676,6 +677,16 @@ export struct CardDetailPage {
             .margin({ top: Theme.SPACING_MD })
         }
 
+        if (this.cardStore.provisioningStage !== CardProvisioningStage.IDLE) {
+          Text(this.provisioningStageText())
+            .fontSize(Theme.LABEL_SM_FONT_SIZE)
+            .fontColor(this.cardStore.provisioningStage ===
+              CardProvisioningStage.RETRYABLE_FAILURE ? Theme.ERROR : Theme.PRIMARY)
+            .textAlign(TextAlign.Center)
+            .width('100%')
+            .margin({ top: Theme.SPACING_SM })
+        }
+
         Row({ space: Theme.SPACING_SM }) {
           Button(this.language === 'zh' ? '取消' : 'Cancel')
             .layoutWeight(1)
@@ -908,6 +919,11 @@ export struct CardDetailPage {
       .borderWidth(1)
       .borderColor('rgba(186, 26, 26, 0.1)')
       .type(ButtonType.Normal)
+      .onClick(() => {
+        this.unbindCard().catch(() => {
+          this.cardStore.errorMessage = 'Unable to unbind card'
+        })
+      })
 
       Text(this.language === 'zh' ? '删除卡片后无法恢复。' : 'Deleting this card is permanent and cannot be undone.')
         .fontSize(Theme.LABEL_SM_FONT_SIZE)
@@ -1039,8 +1055,8 @@ export struct CardDetailPage {
     }
     const operationId: number = ++this.physicalOperationId
     this.physicalOperationMessage = this.language === 'zh' ?
-      '正在生成并写入 Mock Credential…' :
-      'Generating and writing the Mock credential…'
+      '正在准备并写入凭证…' :
+      'Preparing and writing the credential…'
     const result: CredentialWriteResult =
       await this.cardStore.writeCardToPrimaryPhysicalCard(
         this.currentCard().id
@@ -1088,6 +1104,14 @@ export struct CardDetailPage {
   }
 
   private writePrimaryButtonText(): string {
+    if (this.cardStore.provisioningStage ===
+      CardProvisioningStage.SYNCHRONIZING) {
+      return this.language === 'zh' ? '同步中…' : 'Synchronizing…'
+    }
+    if (this.cardStore.provisioningStage ===
+      CardProvisioningStage.AUTHENTICATING) {
+      return this.language === 'zh' ? '认证中…' : 'Authenticating…'
+    }
     if (this.cardStore.activeWriteStatus === CredentialBindingStatus.VERIFYING) {
       return this.language === 'zh' ? '校验中…' : 'Verifying…'
     }
@@ -1113,7 +1137,7 @@ export struct CardDetailPage {
         'This authorization will be written to the current primary card'
     }
     if (this.cardStore.discoveryState === PhysicalCardDiscoveryState.DISCOVERING) {
-      return this.language === 'zh' ? '正在发现虚拟实体卡…' : 'Discovering virtual cards…'
+      return this.language === 'zh' ? '正在发现实体卡…' : 'Discovering physical cards…'
     }
     if (this.cardStore.discoveryState === PhysicalCardDiscoveryState.NO_DEVICE) {
       return this.language === 'zh' ? '未发现实体卡' : 'No physical card found'
@@ -1123,8 +1147,8 @@ export struct CardDetailPage {
       return this.language === 'zh' ? '实体卡发现失败' : 'Discovery failed'
     }
     return this.language === 'zh' ?
-      '请选择一张实体卡并建立 Mock 连接' :
-      'Select a card and establish a Mock connection'
+      '请选择一张实体卡并建立连接' :
+      'Select a card and establish a connection'
   }
 
   private physicalCardConnectionText(card: PhysicalCard): string {
@@ -1174,8 +1198,14 @@ export struct CardDetailPage {
         'Post-write verification failed. You can retry.'
     }
     if (reason === PhysicalCardFailureReason.PERSISTENCE_FAILED) {
+      if (this.cardStore.provisioningStage ===
+        CardProvisioningStage.SYNCHRONIZING) {
+        return this.language === 'zh' ?
+          '实体写入已校验，回执将在网络恢复后同步' :
+          'Physical write verified; the receipt will sync after recovery.'
+      }
       return this.language === 'zh' ?
-        '保存 Mock 写卡结果失败，本次写入已回滚' :
+        '保存写卡结果失败，本次写入未完成' :
         'Mock persistence failed. This write was rolled back.'
     }
     if (reason === PhysicalCardFailureReason.DEVICE_OFFLINE) {
@@ -1213,6 +1243,37 @@ export struct CardDetailPage {
       return this.language === 'zh' ? '凭证已从实体卡删除' : 'Credential removed'
     }
     return this.language === 'zh' ? '尚未写入实体卡' : 'Not written to a physical card'
+  }
+
+  private provisioningStageText(): string {
+    const stage: CardProvisioningStage = this.cardStore.provisioningStage
+    if (stage === CardProvisioningStage.SCANNING) {
+      return this.language === 'zh' ? '正在扫描 Card C' : 'Scanning for Card C'
+    }
+    if (stage === CardProvisioningStage.CONNECTING) {
+      return this.language === 'zh' ? '正在连接 Card C' : 'Connecting to Card C'
+    }
+    if (stage === CardProvisioningStage.AUTHENTICATING) {
+      return this.language === 'zh' ? '正在认证写入授权' : 'Authenticating write authorization'
+    }
+    if (stage === CardProvisioningStage.WRITING) {
+      return this.language === 'zh' ? '正在写入凭证' : 'Writing credential'
+    }
+    if (stage === CardProvisioningStage.VERIFYING) {
+      return this.language === 'zh' ? '正在读取并校验凭证' : 'Reading back and verifying'
+    }
+    if (stage === CardProvisioningStage.SYNCHRONIZING) {
+      return this.language === 'zh' ? '正在同步写入回执' : 'Synchronizing write receipt'
+    }
+    if (stage === CardProvisioningStage.SUCCESS) {
+      return this.language === 'zh' ? '写入、校验与同步已完成' :
+        'Write, verification, and synchronization complete'
+    }
+    if (stage === CardProvisioningStage.RETRYABLE_FAILURE) {
+      return this.language === 'zh' ? '操作未完成，可以重试' :
+        'Operation incomplete; retry is available'
+    }
+    return ''
   }
 
   private bindingDescription(): string {
@@ -1288,18 +1349,32 @@ export struct CardDetailPage {
   }
 
   private updateNickname(value: string): void {
-    this.cardStore.updateNickname(this.currentCard().id, value)
+    this.cardStore.updateNickname(this.currentCard().id, value).catch(() => {
+      this.cardStore.errorMessage = 'Unable to save nickname'
+    })
   }
 
   private updateCategory(value: string): void {
-    this.cardStore.updateCategory(this.currentCard().id, value)
+    this.cardStore.updateCategory(this.currentCard().id, value).catch(() => {
+      this.cardStore.errorMessage = 'Unable to save category'
+    })
   }
 
   private updateEnabled(isOn: boolean): void {
-    this.cardStore.updateEnabled(this.currentCard().id, isOn)
+    this.cardStore.updateEnabled(this.currentCard().id, isOn).catch(() => {
+      this.cardStore.errorMessage = 'Unable to update card security state'
+    })
   }
 
   private updateTwoFactor(isOn: boolean): void {
-    this.cardStore.updateUserConfirmation(this.currentCard().id, isOn)
+    this.cardStore.updateUserConfirmation(this.currentCard().id, isOn).catch(() => {
+      this.cardStore.errorMessage = 'Unable to save confirmation preference'
+    })
+  }
+
+  private async unbindCard(): Promise<void> {
+    const cardId: string = this.currentCard().id
+    await this.cardStore.removeCard(cardId)
+    this.showCardDetailPage = false
   }
 }

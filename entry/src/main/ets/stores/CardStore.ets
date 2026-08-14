@@ -37,10 +37,46 @@ import {
 } from '../models/ConfirmationPolicy'
 import {
   createPendingOperation,
+  isAuthoritativeSuccess,
   OperationAuthority,
   OperationReceipt,
   OperationState
 } from '../models/Operation'
+import {
+  CardMutationResult,
+  CardPreferenceUpdate,
+  MobileCardAction,
+  PendingMobileMutation,
+  PendingMobileMutationKind
+} from '../models/MobileOperation'
+import { PendingOperation, SyncState, createLocalSyncState } from '../models/SyncState'
+import {
+  PersistedCredentialState,
+  WALLET_SCHEMA_VERSION,
+  WalletPersistenceState
+} from '../models/WalletPersistence'
+import { WalletPersistenceService } from '../services/WalletPersistenceService'
+import { MobileBackendService } from '../services/MobileBackendService'
+import {
+  CardProvisioningFailure,
+  CardProvisioningResult,
+  CardProvisioningStage
+} from '../models/CardProvisioning'
+import { CardProvisioningCoordinatorService } from '../services/CardProvisioningService'
+
+export interface CardStoreConfiguration {
+  cardService: DigitalCardService
+  authorizationService: AuthorizationService
+  invitationService: InvitationService
+  physicalCardService: PhysicalCardService
+  credentialService: CredentialService
+  backendService: MobileBackendService | null
+  persistenceService: WalletPersistenceService | null
+  cachedState: WalletPersistenceState
+  initialPhysicalCards: PhysicalCard[]
+  initialCredentials: Credential[]
+  provisioningService?: CardProvisioningCoordinatorService
+}
 
 @Observed
 export class CardStore {
@@ -60,8 +96,13 @@ export class CardStore {
     CredentialBindingStatus.NOT_WRITTEN
   physicalCardFailureReason: PhysicalCardFailureReason =
     PhysicalCardFailureReason.NONE
+  provisioningStage: CardProvisioningStage = CardProvisioningStage.IDLE
+  pendingWriteReceiptCount: number = 0
   isLoading: boolean = false
   errorMessage: string = ''
+  isOffline: boolean = false
+  syncState: SyncState = createLocalSyncState('')
+  pendingMutations: PendingMobileMutation[] = []
   lastCardOperation: OperationReceipt = {
     operationId: '',
     state: OperationState.IDLE,
@@ -77,6 +118,10 @@ export class CardStore {
   private invitationService: InvitationService
   private physicalCardService: PhysicalCardService
   private credentialService: CredentialService
+  private backendService: MobileBackendService | null
+  private persistenceService: WalletPersistenceService | null
+  private isRecoveringPendingMutations: boolean = false
+  private provisioningService: CardProvisioningCoordinatorService | null
 
   private constructor(
     cardService: DigitalCardService,
@@ -87,7 +132,12 @@ export class CardStore {
     initialCards: DigitalCard[],
     initialAuthorizations: Authorization[],
     initialPhysicalCards: PhysicalCard[],
-    initialCredentials: Credential[]
+    initialCredentials: Credential[],
+    backendService: MobileBackendService | null,
+    persistenceService: WalletPersistenceService | null,
+    initialSyncState: SyncState,
+    initialPendingMutations: PendingMobileMutation[],
+    provisioningService: CardProvisioningCoordinatorService | null
   ) {
     this.cardService = cardService
     this.authorizationService = authorizationService
@@ -100,6 +150,30 @@ export class CardStore {
     this.primaryPhysicalCard =
       initialPhysicalCards.length > 0 ? initialPhysicalCards[0] : null
     this.credentials = initialCredentials
+    this.backendService = backendService
+    this.persistenceService = persistenceService
+    this.syncState = initialSyncState
+    this.pendingMutations = initialPendingMutations
+    this.provisioningService = provisioningService
+  }
+
+  static configure(configuration: CardStoreConfiguration): void {
+    CardStore.instance = new CardStore(
+      configuration.cardService,
+      configuration.authorizationService,
+      configuration.invitationService,
+      configuration.physicalCardService,
+      configuration.credentialService,
+      configuration.cachedState.cards,
+      configuration.cachedState.authorizations,
+      configuration.initialPhysicalCards,
+      configuration.initialCredentials,
+      configuration.backendService,
+      configuration.persistenceService,
+      configuration.cachedState.syncState,
+      configuration.cachedState.pendingMutations,
+      configuration.provisioningService ? configuration.provisioningService : null
+    )
   }
 
   static getInstance(): CardStore {
@@ -114,7 +188,12 @@ export class CardStore {
         mockDataSource.getCardSnapshot(),
         mockDataSource.getAuthorizationSnapshot(),
         mockDataSource.getPhysicalCardSnapshot(),
-        mockDataSource.getCredentialSnapshot()
+        mockDataSource.getCredentialSnapshot(),
+        null,
+        null,
+        createLocalSyncState(''),
+        [],
+        null
       )
     }
     return CardStore.instance
@@ -145,8 +224,18 @@ export class CardStore {
       this.physicalCards = refreshedPrimaryPhysicalCard ?
         [refreshedPrimaryPhysicalCard] : []
       this.credentials = refreshedCredentials
+      if (this.backendService) {
+        this.syncState = this.backendService.latestSyncState()
+      } else {
+        this.syncState.lastSyncAt = new Date().toISOString()
+      }
+      this.isOffline = false
+      this.refreshPendingOperationContract()
+      await this.persistWalletState()
+      await this.recoverPendingMutations()
     } catch (error) {
       this.errorMessage = 'Unable to load cards'
+      this.isOffline = true
     } finally {
       this.isLoading = false
     }
@@ -229,6 +318,7 @@ export class CardStore {
       return
     }
     this.discoveryState = PhysicalCardDiscoveryState.DISCOVERING
+    this.provisioningStage = CardProvisioningStage.SCANNING
     this.discoveredPhysicalCards = []
     this.physicalCardFailureReason = PhysicalCardFailureReason.NONE
     this.physicalCardService.startDiscovery((update: PhysicalCardDiscoveryUpdate) => {
@@ -248,12 +338,16 @@ export class CardStore {
   stopPhysicalCardDiscovery(): void {
     this.physicalCardService.stopDiscovery()
     this.discoveryState = PhysicalCardDiscoveryState.STOPPED
+    if (this.provisioningStage === CardProvisioningStage.SCANNING) {
+      this.provisioningStage = CardProvisioningStage.IDLE
+    }
   }
 
   async connectPhysicalCard(
     physicalCardId: string
   ): Promise<PhysicalCardConnectionResult> {
     this.connectionState = PhysicalCardConnectionState.CONNECTING
+    this.provisioningStage = CardProvisioningStage.CONNECTING
     this.connectedPhysicalCardId = physicalCardId
     this.physicalCardFailureReason = PhysicalCardFailureReason.NONE
     const result: PhysicalCardConnectionResult =
@@ -266,6 +360,9 @@ export class CardStore {
     }
     if (result.state !== PhysicalCardConnectionState.CONNECTED) {
       this.connectedPhysicalCardId = ''
+      this.provisioningStage = CardProvisioningStage.RETRYABLE_FAILURE
+    } else {
+      this.provisioningStage = CardProvisioningStage.IDLE
     }
     return result
   }
@@ -324,6 +421,13 @@ export class CardStore {
       )
     }
 
+    if (this.provisioningService) {
+      return await this.writeUsingProvisioningCoordinator(
+        digitalCard,
+        this.primaryPhysicalCard
+      )
+    }
+
     const request: CredentialWriteRequest = {
       permissionId: digitalCard.permissionId,
       digitalCardId: digitalCard.id,
@@ -332,12 +436,15 @@ export class CardStore {
     const previousBindingStatus: CredentialBindingStatus =
       digitalCard.credentialBindingStatus
     this.activeWriteStatus = CredentialBindingStatus.WRITING
+    this.provisioningStage = CardProvisioningStage.WRITING
     this.physicalCardFailureReason = PhysicalCardFailureReason.NONE
     const result: CredentialWriteResult =
       await this.physicalCardService.writeCredential(
         request,
         (status: CredentialBindingStatus) => {
           this.activeWriteStatus = status
+          this.provisioningStage = status === CredentialBindingStatus.VERIFYING ?
+            CardProvisioningStage.VERIFYING : CardProvisioningStage.WRITING
           const activeCard: DigitalCard | null = this.getCard(digitalCardId)
           if (activeCard) {
             activeCard.credentialBindingStatus = status
@@ -347,6 +454,8 @@ export class CardStore {
       )
     this.activeWriteStatus = result.status
     this.physicalCardFailureReason = result.reason
+    this.provisioningStage = result.status === CredentialBindingStatus.ACTIVE ?
+      CardProvisioningStage.SUCCESS : CardProvisioningStage.RETRYABLE_FAILURE
     if (result.physicalCard) {
       this.replacePhysicalCard(result.physicalCard)
     }
@@ -370,6 +479,21 @@ export class CardStore {
     this.physicalCardService.cancelCredentialWrite()
     this.activeWriteStatus = CredentialBindingStatus.NOT_WRITTEN
     this.physicalCardFailureReason = PhysicalCardFailureReason.CANCELLED
+    this.provisioningStage = CardProvisioningStage.RETRYABLE_FAILURE
+  }
+
+  async recoverPendingWriteReceipts(): Promise<number> {
+    if (!this.provisioningService) {
+      return 0
+    }
+    const acknowledged: number =
+      await this.provisioningService.retryPendingReceipts()
+    this.pendingWriteReceiptCount =
+      this.provisioningService.pendingReceiptCount()
+    if (acknowledged > 0) {
+      await this.refresh()
+    }
+    return acknowledged
   }
 
   async removeCredentialFromPhysicalCard(
@@ -443,6 +567,7 @@ export class CardStore {
       updatedCards.push(result.digitalCard)
       this.authorizations = updatedAuthorizations
       this.cards = updatedCards
+      await this.persistWalletState()
       return result
     } catch (error) {
       return this.invitationRequestErrorResult()
@@ -457,37 +582,41 @@ export class CardStore {
     return await this.invitationService.isAuthorizationBound(authorizationId)
   }
 
-  updateNickname(cardId: string, value: string): void {
-    const card: DigitalCard | null = this.getCard(cardId)
-    if (!card) {
-      return
-    }
-    card.nickname = value
-    this.publishAndPersist(card)
+  async updateNickname(cardId: string, value: string): Promise<boolean> {
+    return await this.updatePreferences(cardId, { nickname: value })
   }
 
-  updateCategory(cardId: string, value: string): void {
-    const card: DigitalCard | null = this.getCard(cardId)
-    if (!card) {
-      return
-    }
-    card.category = value
-    this.publishAndPersist(card)
+  async updateCategory(cardId: string, value: string): Promise<boolean> {
+    return await this.updatePreferences(cardId, { category: value })
   }
 
-  updateEnabled(cardId: string, isEnabled: boolean): void {
+  async updateEnabled(cardId: string, isEnabled: boolean): Promise<boolean> {
+    if (this.backendService) {
+      return await this.runBackendAction(
+        cardId,
+        isEnabled ? MobileCardAction.RESTORE : MobileCardAction.FREEZE
+      )
+    }
     const card: DigitalCard | null = this.getCard(cardId)
     if (!card) {
-      return
+      return false
     }
-    card.status = isEnabled ? DigitalCardStatus.ACTIVE : DigitalCardStatus.FROZEN
-    this.publishAndPersist(card)
+    const updatedCard: DigitalCard = this.cloneDigitalCard(card)
+    updatedCard.status = isEnabled ? DigitalCardStatus.ACTIVE : DigitalCardStatus.FROZEN
+    return await this.saveLocallyAcknowledgedCard(updatedCard)
   }
 
-  updateUserConfirmation(cardId: string, isEnabled: boolean): void {
+  async markCardLost(cardId: string): Promise<boolean> {
+    return await this.runBackendAction(cardId, MobileCardAction.LOST)
+  }
+
+  async updateUserConfirmation(
+    cardId: string,
+    isEnabled: boolean
+  ): Promise<boolean> {
     const card: DigitalCard | null = this.getCard(cardId)
     if (!card) {
-      return
+      return false
     }
     const currentPolicy: ConfirmationPolicy = {
       adminConfirmRequired: card.adminConfirmRequired,
@@ -495,17 +624,167 @@ export class CardStore {
     }
     const nextPolicy: ConfirmationPolicy =
       applyUserConfirmationPreference(currentPolicy, isEnabled)
-    card.userConfirmationEnabled = nextPolicy.userConfirmEnabled
-    this.publishAndPersist(card)
+    return await this.updatePreferences(cardId, {
+      userConfirmEnabled: nextPolicy.userConfirmEnabled
+    })
   }
 
   async removeCard(cardId: string): Promise<void> {
+    if (this.backendService) {
+      const success: boolean = await this.runBackendAction(
+        cardId,
+        MobileCardAction.UNBIND
+      )
+      if (!success) {
+        throw new Error('Backend did not acknowledge card unbind')
+      }
+      this.cards = this.cards.filter((card: DigitalCard) => card.id !== cardId)
+      await this.persistWalletState()
+      return
+    }
     await this.cardService.removeDigitalCard(cardId)
     this.cards = this.cards.filter((card: DigitalCard) => card.id !== cardId)
   }
 
-  private publishAndPersist(card: DigitalCard): void {
-    this.cards = this.cards.slice()
+  private async updatePreferences(
+    cardId: string,
+    update: CardPreferenceUpdate
+  ): Promise<boolean> {
+    const card: DigitalCard | null = this.getCard(cardId)
+    if (!card) {
+      return false
+    }
+    if (this.backendService) {
+      const mutation: PendingMobileMutation = this.createMutation(
+        PendingMobileMutationKind.PREFERENCES,
+        cardId,
+        update,
+        null
+      )
+      return await this.executeBackendMutation(mutation)
+    }
+    const updatedCard: DigitalCard = this.cloneDigitalCard(card)
+    if (update.nickname !== undefined) {
+      updatedCard.nickname = update.nickname
+    }
+    if (update.category !== undefined) {
+      updatedCard.category = update.category
+    }
+    if (update.userConfirmEnabled !== undefined) {
+      updatedCard.userConfirmationEnabled = update.userConfirmEnabled
+    }
+    return await this.saveLocallyAcknowledgedCard(updatedCard)
+  }
+
+  private async runBackendAction(
+    cardId: string,
+    action: MobileCardAction
+  ): Promise<boolean> {
+    if (!this.backendService) {
+      return false
+    }
+    const mutation: PendingMobileMutation = this.createMutation(
+      PendingMobileMutationKind.ACTION,
+      cardId,
+      null,
+      action
+    )
+    return await this.executeBackendMutation(mutation)
+  }
+
+  private createMutation(
+    kind: PendingMobileMutationKind,
+    cardId: string,
+    update: CardPreferenceUpdate | null,
+    action: MobileCardAction | null
+  ): PendingMobileMutation {
+    const timestamp: string = new Date().toISOString()
+    return {
+      operationId: `mobile-${kind}-${cardId}-${Date.now()}`,
+      kind: kind,
+      cardId: cardId,
+      preferenceUpdate: update,
+      action: action,
+      createdAt: timestamp,
+      lastAttemptAt: '',
+      attemptCount: 0,
+      state: OperationState.PENDING
+    }
+  }
+
+  private async executeBackendMutation(
+    mutation: PendingMobileMutation
+  ): Promise<boolean> {
+    this.pendingMutations.push(mutation)
+    this.refreshPendingOperationContract()
+    this.lastCardOperation = createPendingOperation(
+      mutation.operationId,
+      OperationAuthority.BACKEND,
+      false,
+      mutation.createdAt
+    )
+    await this.persistWalletState()
+    try {
+      const result: CardMutationResult = await this.sendMutation(mutation)
+      if (!isAuthoritativeSuccess(result.operation)) {
+        throw new Error('Missing backend acknowledgement')
+      }
+      if (result.card) {
+        this.replaceDigitalCard(result.card)
+      }
+      this.lastCardOperation = result.operation
+      this.removePendingMutation(mutation.operationId)
+      this.isOffline = false
+      this.errorMessage = ''
+      await this.persistWalletState()
+      return true
+    } catch (error) {
+      if (!this.hasPendingMutation(mutation.operationId)) {
+        this.pendingMutations.push(mutation)
+      }
+      mutation.state = OperationState.FAILED
+      mutation.lastAttemptAt = new Date().toISOString()
+      mutation.attemptCount++
+      this.lastCardOperation = {
+        operationId: mutation.operationId,
+        state: OperationState.FAILED,
+        authority: OperationAuthority.BACKEND,
+        verificationRequired: false,
+        receiptId: '',
+        errorCode: 'BACKEND_REQUEST_FAILED',
+        updatedAt: mutation.lastAttemptAt
+      }
+      this.errorMessage = 'Unable to synchronize card change'
+      this.isOffline = true
+      this.refreshPendingOperationContract()
+      await this.persistWalletState()
+      return false
+    }
+  }
+
+  private async sendMutation(
+    mutation: PendingMobileMutation
+  ): Promise<CardMutationResult> {
+    if (!this.backendService) {
+      throw new Error('Backend service unavailable')
+    }
+    if (mutation.kind === PendingMobileMutationKind.PREFERENCES &&
+      mutation.preferenceUpdate) {
+      return await this.backendService.updateCardPreferences(
+        mutation.cardId,
+        mutation.preferenceUpdate
+      )
+    }
+    if (mutation.kind === PendingMobileMutationKind.ACTION && mutation.action) {
+      return await this.backendService.performCardAction(
+        mutation.cardId,
+        mutation.action
+      )
+    }
+    throw new Error('Invalid pending mutation')
+  }
+
+  private async saveLocallyAcknowledgedCard(card: DigitalCard): Promise<boolean> {
     const operationId: string = `card-save-${card.id}-${Date.now()}`
     this.lastCardOperation = createPendingOperation(
       operationId,
@@ -513,7 +792,9 @@ export class CardStore {
       false,
       new Date().toISOString()
     )
-    this.cardService.saveDigitalCard(card).then(() => {
+    try {
+      const savedCard: DigitalCard = await this.cardService.saveDigitalCard(card)
+      this.replaceDigitalCard(savedCard)
       this.lastCardOperation = {
         operationId: operationId,
         state: OperationState.ACKNOWLEDGED,
@@ -523,7 +804,8 @@ export class CardStore {
         errorCode: '',
         updatedAt: new Date().toISOString()
       }
-    }).catch(() => {
+      return true
+    } catch (error) {
       this.errorMessage = 'Unable to save card'
       this.lastCardOperation = {
         operationId: operationId,
@@ -534,7 +816,105 @@ export class CardStore {
         errorCode: 'PERSISTENCE_FAILED',
         updatedAt: new Date().toISOString()
       }
+      return false
+    }
+  }
+
+  private async recoverPendingMutations(): Promise<void> {
+    if (!this.backendService || this.isRecoveringPendingMutations ||
+      this.pendingMutations.length === 0) {
+      return
+    }
+    this.isRecoveringPendingMutations = true
+    const recoverable: PendingMobileMutation[] = this.pendingMutations.slice()
+    for (let index: number = 0; index < recoverable.length; index++) {
+      const mutation: PendingMobileMutation = recoverable[index]
+      mutation.state = OperationState.PENDING
+      mutation.lastAttemptAt = new Date().toISOString()
+      mutation.attemptCount++
+      try {
+        const result: CardMutationResult = await this.sendMutation(mutation)
+        if (!isAuthoritativeSuccess(result.operation)) {
+          throw new Error('Missing backend acknowledgement')
+        }
+        if (result.card) {
+          this.replaceDigitalCard(result.card)
+        }
+        this.lastCardOperation = result.operation
+        this.removePendingMutation(mutation.operationId)
+      } catch (error) {
+        mutation.state = OperationState.FAILED
+        this.isOffline = true
+        this.errorMessage = 'Some card changes are pending synchronization'
+      }
+    }
+    this.refreshPendingOperationContract()
+    try {
+      await this.persistWalletState()
+    } finally {
+      this.isRecoveringPendingMutations = false
+    }
+  }
+
+  private hasPendingMutation(operationId: string): boolean {
+    let found: boolean = false
+    this.pendingMutations.forEach((mutation: PendingMobileMutation) => {
+      if (mutation.operationId === operationId) {
+        found = true
+      }
     })
+    return found
+  }
+
+  private removePendingMutation(operationId: string): void {
+    this.pendingMutations = this.pendingMutations.filter(
+      (mutation: PendingMobileMutation) => mutation.operationId !== operationId
+    )
+    this.refreshPendingOperationContract()
+  }
+
+  private refreshPendingOperationContract(): void {
+    const pendingOperations: PendingOperation[] = []
+    this.pendingMutations.forEach((mutation: PendingMobileMutation) => {
+      pendingOperations.push({
+        operationId: mutation.operationId,
+        operationType: mutation.kind,
+        state: mutation.state,
+        authority: OperationAuthority.BACKEND,
+        createdAt: mutation.createdAt,
+        lastAttemptAt: mutation.lastAttemptAt,
+        attemptCount: mutation.attemptCount,
+        payloadReference: `${mutation.kind}:${mutation.cardId}`
+      })
+    })
+    this.syncState.pendingOperations = pendingOperations
+  }
+
+  private async persistWalletState(): Promise<void> {
+    if (!this.persistenceService) {
+      return
+    }
+    const credentialStates: PersistedCredentialState[] = []
+    this.credentials.forEach((credential: Credential) => {
+      credentialStates.push({
+        credentialId: credential.credentialId,
+        permissionId: credential.permissionId,
+        physicalCardId: credential.physicalCardId,
+        bindingStatus: credential.bindingStatus,
+        condition: credential.condition,
+        writtenAt: credential.writtenAt,
+        verifiedAt: credential.verifiedAt
+      })
+    })
+    const state: WalletPersistenceState = {
+      schemaVersion: WALLET_SCHEMA_VERSION,
+      cards: this.cards,
+      authorizations: this.authorizations,
+      credentialStates: credentialStates,
+      syncState: this.syncState,
+      pendingMutations: this.pendingMutations
+    }
+    await this.persistenceService.save(state)
   }
 
   private invitationRequestErrorResult(): InvitationRedemptionResult {
@@ -555,6 +935,111 @@ export class CardStore {
       authorization: null,
       digitalCard: null
     }
+  }
+
+  private async writeUsingProvisioningCoordinator(
+    digitalCard: DigitalCard,
+    physicalCard: PhysicalCard
+  ): Promise<CredentialWriteResult> {
+    if (!this.provisioningService) {
+      return this.physicalWriteErrorResult(
+        PhysicalCardFailureReason.WRITE_FAILED
+      )
+    }
+    this.physicalCardFailureReason = PhysicalCardFailureReason.NONE
+    const result: CardProvisioningResult =
+      await this.provisioningService.provision(
+        digitalCard.id,
+        physicalCard.physicalCardId,
+        (stage: CardProvisioningStage) => {
+          this.provisioningStage = stage
+          if (stage === CardProvisioningStage.WRITING ||
+            stage === CardProvisioningStage.AUTHENTICATING) {
+            this.activeWriteStatus = CredentialBindingStatus.WRITING
+          } else if (stage === CardProvisioningStage.VERIFYING ||
+            stage === CardProvisioningStage.SYNCHRONIZING) {
+            this.activeWriteStatus = CredentialBindingStatus.VERIFYING
+          }
+        }
+      )
+    this.provisioningStage = result.stage
+    this.pendingWriteReceiptCount =
+      this.provisioningService.pendingReceiptCount()
+    this.physicalCardFailureReason =
+      this.mapProvisioningFailure(result.failure)
+
+    if (result.physicalVerified && result.backendAcknowledged &&
+      result.stage === CardProvisioningStage.SUCCESS) {
+      digitalCard.credentialBindingStatus = CredentialBindingStatus.ACTIVE
+      digitalCard.physicalCardId = physicalCard.physicalCardId
+      this.activeWriteStatus = CredentialBindingStatus.ACTIVE
+      this.cards = this.cards.slice()
+      await this.persistWalletState()
+      return {
+        status: CredentialBindingStatus.ACTIVE,
+        reason: PhysicalCardFailureReason.NONE,
+        operation: result.physicalOperation,
+        credential: null,
+        physicalCard: physicalCard,
+        digitalCard: digitalCard
+      }
+    }
+
+    if (result.physicalVerified && result.receiptPending) {
+      // Physical readback is known, but the UI remains in Synchronizing until
+      // the backend receipt is acknowledged. Recovery never repeats SLE write.
+      digitalCard.credentialBindingStatus = CredentialBindingStatus.VERIFYING
+      this.activeWriteStatus = CredentialBindingStatus.VERIFYING
+      this.cards = this.cards.slice()
+      await this.persistWalletState()
+      return {
+        status: CredentialBindingStatus.VERIFYING,
+        reason: PhysicalCardFailureReason.PERSISTENCE_FAILED,
+        operation: result.receiptOperation,
+        credential: null,
+        physicalCard: physicalCard,
+        digitalCard: digitalCard
+      }
+    }
+
+    digitalCard.credentialBindingStatus = CredentialBindingStatus.WRITE_FAILED
+    this.activeWriteStatus = CredentialBindingStatus.WRITE_FAILED
+    this.cards = this.cards.slice()
+    await this.persistWalletState()
+    return {
+      status: CredentialBindingStatus.WRITE_FAILED,
+      reason: this.physicalCardFailureReason,
+      operation: result.physicalOperation,
+      credential: null,
+      physicalCard: physicalCard,
+      digitalCard: digitalCard
+    }
+  }
+
+  private mapProvisioningFailure(
+    failure: CardProvisioningFailure
+  ): PhysicalCardFailureReason {
+    if (failure === CardProvisioningFailure.NONE) {
+      return PhysicalCardFailureReason.NONE
+    }
+    if (failure === CardProvisioningFailure.SCAN_TIMEOUT) {
+      return PhysicalCardFailureReason.NO_DEVICE
+    }
+    if (failure === CardProvisioningFailure.CONNECTION_FAILED) {
+      return PhysicalCardFailureReason.CONNECTION_FAILED
+    }
+    if (failure === CardProvisioningFailure.CONNECTION_INTERRUPTED) {
+      return PhysicalCardFailureReason.CONNECTION_INTERRUPTED
+    }
+    if (failure === CardProvisioningFailure.READBACK_MISMATCH ||
+      failure === CardProvisioningFailure.IDENTITY_MISMATCH) {
+      return PhysicalCardFailureReason.VERIFICATION_FAILED
+    }
+    if (failure === CardProvisioningFailure.RECEIPT_UPLOAD_FAILED ||
+      failure === CardProvisioningFailure.RECEIPT_PERSISTENCE_FAILED) {
+      return PhysicalCardFailureReason.PERSISTENCE_FAILED
+    }
+    return PhysicalCardFailureReason.WRITE_FAILED
   }
 
   private physicalWriteErrorResult(
@@ -597,6 +1082,32 @@ export class CardStore {
   private replaceDigitalCard(card: DigitalCard): void {
     this.cards = this.cards.map((item: DigitalCard) =>
       item.id === card.id ? card : item)
+  }
+
+  private cloneDigitalCard(card: DigitalCard): DigitalCard {
+    return {
+      id: card.id,
+      name: card.name,
+      issuer: card.issuer,
+      cardAnonId: card.cardAnonId,
+      anonymousNumber: card.anonymousNumber,
+      nickname: card.nickname,
+      detail: card.detail,
+      category: card.category,
+      status: card.status,
+      visualStyle: card.visualStyle,
+      permissionId: card.permissionId,
+      credentialId: card.credentialId,
+      physicalCardId: card.physicalCardId,
+      credentialBindingStatus: card.credentialBindingStatus,
+      credentialCondition: card.credentialCondition,
+      adminConfirmRequired: card.adminConfirmRequired,
+      userConfirmationEnabled: card.userConfirmationEnabled,
+      allowTemporaryPass: card.allowTemporaryPass,
+      validFrom: card.validFrom,
+      validUntil: card.validUntil,
+      syncState: card.syncState
+    }
   }
 
   private replaceCredential(credential: Credential): void {

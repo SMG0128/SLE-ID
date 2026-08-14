@@ -37,6 +37,7 @@ export interface ConfirmationRequest {
   action: string
   direction: ConfirmationDirection
   randomCode: string
+  readonly adminConfirmRequired: boolean
   status: ConfirmationRequestStatus
   createdAt: string
   expiresAt: string
@@ -121,6 +122,7 @@ export function cloneConfirmationRequest(
     action: request.action,
     direction: request.direction,
     randomCode: request.randomCode,
+    adminConfirmRequired: request.adminConfirmRequired === true,
     status: request.status,
     createdAt: request.createdAt,
     expiresAt: request.expiresAt,
