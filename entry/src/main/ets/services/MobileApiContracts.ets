@@ -8,6 +8,7 @@ import {
 } from '../models/Invitation'
 import { MobileSession } from '../models/MobileSession'
 import { CardMutationResult } from '../models/MobileOperation'
+import { WriteReceiptAcknowledgement } from '../models/CardProvisioning'
 
 export interface PairResponse {
   session: MobileSession
@@ -37,6 +38,28 @@ export interface PendingConfirmationsResponse {
 
 export interface ConfirmationDecisionResponse {
   result: ConfirmationDecisionResult
+}
+
+export interface MobileCardWritePackage {
+  requestId: string
+  digitalCardId: string
+  physicalCardId: string
+  cardAnonId: string
+  permissionId: string
+  credentialVersion: number
+  credentialPayloadBase64: string
+  credentialHash: string
+  expiresAt: string
+  nonce: string
+  writeTicket: string
+}
+
+export interface CardWritePackageResponse {
+  writePackage: MobileCardWritePackage
+}
+
+export interface CardWriteReceiptResponse {
+  acknowledgement: WriteReceiptAcknowledgement
 }
 
 export interface MobileHttpRequest {

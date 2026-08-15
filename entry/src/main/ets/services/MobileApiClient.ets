@@ -12,6 +12,11 @@ import {
 } from '../models/Invitation'
 import { MobilePairRequest, MobileSession } from '../models/MobileSession'
 import {
+  CardWritePackage,
+  PendingWriteReceipt,
+  WriteReceiptAcknowledgement
+} from '../models/CardProvisioning'
+import {
   CardMutationResult,
   CardPreferenceUpdate,
   MobileCardAction
@@ -27,6 +32,8 @@ import { DigitalCardService } from './DigitalCardService'
 import { InvitationService } from './InvitationService'
 import {
   CardMutationResponse,
+  CardWritePackageResponse,
+  CardWriteReceiptResponse,
   ConfirmationDecisionResponse,
   InvitationPreviewResponse,
   InvitationRedeemResponse,
@@ -39,6 +46,10 @@ import {
 } from './MobileApiContracts'
 import { MobileBackendService } from './MobileBackendService'
 import { ConfirmationBackendService } from './ConfirmationBackendService'
+import {
+  CardWritePackageSource,
+  CardWriteReceiptSink
+} from './CardProvisioningService'
 
 export class MobileApiError extends Error {
   readonly statusCode: number
@@ -90,7 +101,9 @@ export class MobileApiClient implements
   AuthorizationService,
   InvitationService,
   MobileBackendService,
-  ConfirmationBackendService {
+  ConfirmationBackendService,
+  CardWritePackageSource,
+  CardWriteReceiptSink {
   private readonly transport: MobileHttpTransport
   private readonly sessionStore: SessionStore
   private cachedCards: DigitalCard[] = []
@@ -320,6 +333,65 @@ export class MobileApiClient implements
     return response.result
   }
 
+  async obtainWritePackage(
+    digitalCardId: string,
+    physicalCardId: string
+  ): Promise<CardWritePackage> {
+    const response: CardWritePackageResponse =
+      await this.send<CardWritePackageResponse>(
+        'POST',
+        `/api/mobile/cards/${encodeURIComponent(digitalCardId)}/write-package`,
+        JSON.stringify({ physicalCardId: physicalCardId }),
+        true
+      )
+    const wire = response.writePackage
+    if (!wire || wire.digitalCardId !== digitalCardId ||
+      wire.physicalCardId !== physicalCardId) {
+      throw new MobileApiError(0, 'Write package target mismatch')
+    }
+    return {
+      requestId: wire.requestId,
+      digitalCardId: wire.digitalCardId,
+      target: {
+        physicalCardId: wire.physicalCardId,
+        cardAnonId: wire.cardAnonId
+      },
+      permissionId: wire.permissionId,
+      credentialVersion: wire.credentialVersion,
+      credentialPayload: this.decodeBase64(wire.credentialPayloadBase64),
+      credentialHash: wire.credentialHash,
+      expireAt: wire.expiresAt,
+      authorization: {
+        requestId: wire.requestId,
+        nonce: wire.nonce,
+        expiresAt: wire.expiresAt,
+        writeTicket: wire.writeTicket
+      }
+    }
+  }
+
+  async uploadWriteReceipt(
+    receipt: PendingWriteReceipt
+  ): Promise<WriteReceiptAcknowledgement> {
+    const response: CardWriteReceiptResponse =
+      await this.send<CardWriteReceiptResponse>(
+        'POST',
+        `/api/mobile/cards/${encodeURIComponent(receipt.digitalCardId)}/write-receipts`,
+        JSON.stringify({
+          requestId: receipt.requestId,
+          physicalCardId: receipt.physicalCardId,
+          credentialHash: receipt.credentialHash,
+          generation: Number(receipt.generation)
+        }),
+        true
+      )
+    if (!response.acknowledgement ||
+      response.acknowledgement.receiptId.length === 0) {
+      throw new MobileApiError(0, 'Write receipt acknowledgement is invalid')
+    }
+    return response.acknowledgement
+  }
+
   latestSyncState(): SyncState {
     return this.syncState
   }
@@ -353,6 +425,29 @@ export class MobileApiClient implements
     if (!replaced) {
       this.cachedCards.push(card)
     }
+  }
+
+  private decodeBase64(value: string): Uint8Array {
+    const alphabet: string =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+    const clean: string = value.split('=').join('')
+    const output: Uint8Array = new Uint8Array(Math.floor(clean.length * 6 / 8))
+    let buffer: number = 0
+    let bits: number = 0
+    let offset: number = 0
+    for (let index: number = 0; index < clean.length; index++) {
+      const digit: number = alphabet.indexOf(clean.charAt(index))
+      if (digit < 0) {
+        throw new MobileApiError(0, 'Write package payload is not valid Base64')
+      }
+      buffer = (buffer << 6) | digit
+      bits += 6
+      if (bits >= 8) {
+        bits -= 8
+        output[offset++] = (buffer >> bits) & 0xFF
+      }
+    }
+    return output
   }
 
   private async send<T>(
