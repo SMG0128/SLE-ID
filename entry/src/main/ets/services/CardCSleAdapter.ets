@@ -1,5 +1,5 @@
 import { abilityAccessCtrl, common, PermissionRequestResult, Permissions } from '@kit.AbilityKit'
-import { constant, manager, scan, ssap } from '@kit.NearLinkKit'
+import { constant, manager, remoteDevice, scan, ssap } from '@kit.NearLinkKit'
 import { CardSleClient } from './CardSleClient'
 import {
   CardCInfo,
@@ -45,7 +45,17 @@ import { OperationAuthority, OperationState } from '../models/Operation'
 
 const ACCESS_NEARLINK_PERMISSION: Permissions = 'ohos.permission.ACCESS_NEARLINK'
 const SCAN_TIMEOUT_MS: number = 10000
+// Native NearLink pairing requires an explicit user confirmation. Leave enough
+// time for the system dialog to be read and accepted on a real tablet.
+const PAIRING_TIMEOUT_MS: number = 30000
+const CONNECTION_TIMEOUT_MS: number = 5000
 const RESPONSE_TIMEOUT_MS: number = 5000
+
+interface PendingConnection {
+  resolve: () => void
+  reject: (error: Error) => void
+  timer: number
+}
 
 interface PendingResponse {
   requestId: number
@@ -69,6 +79,7 @@ export class CardCSleAdapter implements
   private discoveredAddress: string = ''
   private connected: boolean = false
   private scanListenerRegistered: boolean = false
+  private pendingConnection: PendingConnection | null = null
   private pending: PendingResponse | null = null
   private sourceId: number = 0x4D4F4249
   private bootId: number = (Date.now() >>> 0) || 1
@@ -88,8 +99,20 @@ export class CardCSleAdapter implements
   }
 
   private readonly connectionChanged = (change: ssap.ConnectionChangeState): void => {
+    console.info(`[SLEKEY][CARD-C] connection state=${change.state}`)
+    if (change.state === constant.ConnectionState.STATE_CONNECTED) {
+      this.connected = true
+      if (this.pendingConnection) {
+        const pending: PendingConnection = this.pendingConnection
+        clearTimeout(pending.timer)
+        this.pendingConnection = null
+        pending.resolve()
+      }
+      return
+    }
     if (change.state === constant.ConnectionState.STATE_DISCONNECTED) {
       this.connected = false
+      this.failPendingConnection(new Error('Card C disconnected before service discovery'))
       this.failPending(new Error('Card C disconnected'))
       if (this.primaryCard) {
         this.primaryCard.connectionState = PhysicalCardConnectionState.DISCONNECTED
@@ -109,6 +132,12 @@ export class CardCSleAdapter implements
     }
     if (!await this.ensurePermission() || manager.getState() !== manager.NearlinkState.STATE_ON) {
       throw new Error('NearLink is unavailable')
+    }
+    const pairedAddress: string = this.findPairedCardAddress()
+    if (pairedAddress.length > 0) {
+      this.discoveredAddress = pairedAddress
+      console.info('[SLEKEY][CARD-C] using paired Card C')
+      return pairedAddress
     }
     if (this.discoveredAddress.length > 0) return this.discoveredAddress
     return await new Promise<string>((resolve, reject) => {
@@ -143,11 +172,33 @@ export class CardCSleAdapter implements
   async connect(deviceHandle: string): Promise<void> {
     if (this.connected && this.address === deviceHandle) return
     await this.disconnect()
+    console.info('[SLEKEY][CARD-C] pairing check started')
+    await this.ensurePaired(deviceHandle)
+    console.info('[SLEKEY][CARD-C] pairing check passed')
     this.client = ssap.createClient(deviceHandle)
     this.client.on('connectionStateChange', this.connectionChanged)
     this.client.on('propertyChange', this.propertyChanged)
-    await this.client.connect()
+    const connected: Promise<void> = new Promise<void>((resolve, reject) => {
+      const timer: number = setTimeout(() => {
+        this.failPendingConnection(new Error('Card C connection timeout'))
+      }, CONNECTION_TIMEOUT_MS)
+      this.pendingConnection = { resolve, reject, timer }
+    })
+    try {
+      await this.client.connect()
+      await connected
+      /* The system connect() call only starts the asynchronous SLE link. Service
+       * discovery is valid after STATE_CONNECTED, not when connect() resolves. */
+      await new Promise<void>((resolve) => setTimeout(resolve, 100))
+      console.info('[SLEKEY][CARD-C] SSAP link connected')
+    } catch (error) {
+      const connectionError: Error = error instanceof Error ? error : new Error(`${error}`)
+      this.failPendingConnection(connectionError)
+      await this.disconnect()
+      throw connectionError
+    }
     const services: Array<ssap.Service> = await this.client.getServices()
+    console.info(`[SLEKEY][CARD-C] services discovered=${services.length}`)
     let service: ssap.Service | null = null
     services.forEach((candidate: ssap.Service) => {
       if (this.matchesUuid(candidate.serviceUuid, CARD_C_SERVICE_UUID)) service = candidate
@@ -163,6 +214,7 @@ export class CardCSleAdapter implements
       throw new Error('Card C is missing INFO, COMMAND, or RESPONSE')
     }
     await this.client.setPropertyNotification(this.responseProperty, true)
+    console.info('[SLEKEY][CARD-C] response notification enabled')
     this.address = deviceHandle
     this.connected = true
   }
@@ -182,6 +234,7 @@ export class CardCSleAdapter implements
       maxCredentialChunkBytes: CARD_C_MAX_CHUNK_BYTES
     }
     this.primaryCard = this.toPhysicalCard(result, frame.payload)
+    console.info(`[SLEKEY][CARD-C] INFO verified card=${physicalCardId}`)
     return result
   }
 
@@ -253,6 +306,7 @@ export class CardCSleAdapter implements
   }
 
   async disconnect(): Promise<void> {
+    this.failPendingConnection(new Error('Card C connection was interrupted'))
     this.failPending(new Error('Card C operation was interrupted'))
     if (this.client) {
       try { if (this.responseProperty) await this.client.setPropertyNotification(this.responseProperty, false) } catch (_) {}
@@ -295,7 +349,10 @@ export class CardCSleAdapter implements
       if (this.discoveryListener && this.primaryCard) {
         this.discoveryListener({ state: PhysicalCardDiscoveryState.DISCOVERED, cards: [this.primaryCard] })
       }
-    }).catch(() => {
+    }).catch(async (error: Error) => {
+      console.error(`[SLEKEY][CARD-C] discovery failed: ${error.message}`)
+      await this.disconnect()
+      this.discoveredAddress = ''
       if (this.discoveryListener) {
         this.discoveryListener({ state: PhysicalCardDiscoveryState.DISCOVERY_FAILED, cards: [] })
       }
@@ -407,12 +464,56 @@ export class CardCSleAdapter implements
     pending.reject(error)
   }
 
+  private failPendingConnection(error: Error): void {
+    if (!this.pendingConnection) return
+    const pending: PendingConnection = this.pendingConnection
+    clearTimeout(pending.timer)
+    this.pendingConnection = null
+    pending.reject(error)
+  }
+
   private async ensurePermission(): Promise<boolean> {
     const atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager()
     const result: PermissionRequestResult = await atManager.requestPermissionsFromUser(
       this.context, [ACCESS_NEARLINK_PERMISSION])
     return result.authResults.length > 0 &&
       result.authResults[0] === abilityAccessCtrl.GrantStatus.PERMISSION_GRANTED
+  }
+
+  private async ensurePaired(address: string): Promise<void> {
+    const device: remoteDevice.RemoteDevice = remoteDevice.createRemoteDevice(address)
+    const initialState: constant.PairingState = device.getPairingState()
+    console.info(`[SLEKEY][CARD-C] initial pairing state=${initialState}`)
+    if (initialState === constant.PairingState.PAIRING_STATE_PAIRED) return
+    await device.startPairing()
+    const expiresAt: number = Date.now() + PAIRING_TIMEOUT_MS
+    while (Date.now() < expiresAt) {
+      if (device.getPairingState() === constant.PairingState.PAIRING_STATE_PAIRED) {
+        console.info('[SLEKEY][CARD-C] pairing completed')
+        return
+      }
+      await new Promise<void>((resolve) => setTimeout(resolve, 100))
+    }
+    throw new Error('Card C pairing timeout')
+  }
+
+  private findPairedCardAddress(): string {
+    try {
+      const addresses: string[] = manager.getPairedDevices()
+      for (let index: number = 0; index < addresses.length; index++) {
+        const address: string = addresses[index]
+        const device: remoteDevice.RemoteDevice = remoteDevice.createRemoteDevice(address)
+        const name: string = device.getDeviceName().split('\u0000').join('').trim()
+        if (name === CARD_C_DEVICE_NAME &&
+          device.getPairingState() === constant.PairingState.PAIRING_STATE_PAIRED) {
+          return address
+        }
+      }
+    } catch (error) {
+      const message: string = error instanceof Error ? error.message : `${error}`
+      console.info(`[SLEKEY][CARD-C] paired-device lookup unavailable: ${message}`)
+    }
+    return ''
   }
 
   private async stopRawScan(): Promise<void> {
