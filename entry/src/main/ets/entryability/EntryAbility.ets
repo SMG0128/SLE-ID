@@ -53,8 +53,9 @@ export default class EntryAbility extends UIAbility {
       return this.pairIfRequested()
     }).then(() => {
       this.loadApplicationContent(windowStage)
-    }).catch(() => {
-      hilog.error(0x0000, 'SleKey', 'Failed to initialize mobile runtime.')
+    }).catch((error: Error) => {
+      hilog.error(0x0000, 'SleKey',
+        `Failed to initialize mobile runtime: ${String(error)}`)
       this.loadApplicationContent(windowStage)
     })
   }
