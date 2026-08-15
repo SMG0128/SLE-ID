@@ -71,8 +71,9 @@ export default class EntryAbility extends UIAbility {
   onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     this.applyVerificationWant(want)
     this.applyMobileBootstrapWant(want)
-    this.applyUpdatedMobileBootstrap().catch(() => {
-      hilog.warn(0x0000, 'SleKey', 'Updated mobile bootstrap failed.')
+    this.applyUpdatedMobileBootstrap().catch((error: Error) => {
+      hilog.warn(0x0000, 'SleKey',
+        `Updated mobile bootstrap failed: ${String(error)}`)
     })
   }
 

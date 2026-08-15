@@ -16,6 +16,10 @@ export enum MobileWebSocketState {
 
 export type MobileWebSocketConnectedHandler = () => void
 
+interface MobileWebSocketHeaders {
+  Authorization: string
+}
+
 export class MobileWebSocketClient {
   state: MobileWebSocketState = MobileWebSocketState.DISCONNECTED
 
@@ -120,11 +124,12 @@ export class MobileWebSocketClient {
         this.scheduleReconnect()
       }
     })
-    const header: Map<string, string> = new Map<string, string>()
-    header.set('Authorization', `Bearer ${this.sessionStore.accessToken()}`)
+    const header: MobileWebSocketHeaders = {
+      Authorization: `Bearer ${this.sessionStore.accessToken()}`
+    }
     try {
       await socket.connect(mobileWebSocketUrl(this.baseUrl), {
-        header: header as Object
+        header: header
       })
     } catch (error) {
       this.state = MobileWebSocketState.DISCONNECTED

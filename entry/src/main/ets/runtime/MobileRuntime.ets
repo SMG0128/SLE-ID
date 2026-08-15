@@ -6,7 +6,7 @@ import {
   emptyWalletPersistenceState,
   WalletPersistenceState
 } from '../models/WalletPersistence'
-import { AssetTokenStore } from '../security/TokenStore'
+import { AssetTokenStore, InMemoryTokenStore } from '../security/TokenStore'
 import {
   BackendConfigService,
   DEFAULT_BACKEND_BASE_URL
@@ -30,11 +30,13 @@ export class MobileRuntime {
   private static webSocketRouter: MobileWebSocketRouter | null = null
   private static context: common.UIAbilityContext | null = null
   private static backendBaseUrl: string = DEFAULT_BACKEND_BASE_URL
+  private static initialized: boolean = false
 
   static async initialize(
     context: common.UIAbilityContext,
     backendAddressOverride: string = ''
   ): Promise<void> {
+    MobileRuntime.initialized = false
     MobileRuntime.context = context
     if (DEFAULT_RUNTIME_MODE === RuntimeMode.MOCK) {
       CardStore.getInstance()
@@ -63,11 +65,17 @@ export class MobileRuntime {
     } catch (error) {
       hilog.warn(0x0000, 'SleKey', 'Wallet cache is unavailable; starting empty.')
     }
-    const sessionStore: SessionStore = new SessionStore(new AssetTokenStore())
+    let sessionStore: SessionStore = new SessionStore(new AssetTokenStore())
     try {
       await sessionStore.initialize()
     } catch (error) {
-      hilog.warn(0x0000, 'SleKey', 'Secure mobile session is unavailable.')
+      // Some development devices expose AssetStoreKit but reject access for
+      // debug-signed applications. Keep the token process-local in that case:
+      // pairing remains functional without persisting secrets in Preferences.
+      sessionStore = new SessionStore(new InMemoryTokenStore())
+      await sessionStore.initialize()
+      hilog.warn(0x0000, 'SleKey',
+        'Secure session storage is unavailable; using volatile in-memory session.')
     }
     const apiClient: MobileApiClient = new MobileApiClient(
       new HarmonyHttpTransport(MobileRuntime.backendBaseUrl),
@@ -128,6 +136,7 @@ export class MobileRuntime {
         })
       }
     )
+    MobileRuntime.initialized = true
     if (sessionStore.hasUsableSession()) {
       MobileRuntime.webSocketClient.start()
     }
@@ -138,9 +147,12 @@ export class MobileRuntime {
       throw new Error('Production mobile runtime is not initialized')
     }
     const session: MobileSession = await MobileRuntime.apiClient.pair(request)
+    hilog.info(0x0000, 'SleKey', 'Mobile pairing session accepted.')
     MobileRuntime.webSocketRouter?.setSubjectId(session.subjectId || '')
     await CardStore.getInstance().refresh()
+    hilog.info(0x0000, 'SleKey', 'Mobile wallet refresh completed after pairing.')
     await ConfirmationStore.getInstance().recoverPending()
+    hilog.info(0x0000, 'SleKey', 'Mobile confirmation recovery completed after pairing.')
     MobileRuntime.webSocketClient?.start()
     return session
   }
@@ -157,7 +169,8 @@ export class MobileRuntime {
   }
 
   static onForeground(): void {
-    if (DEFAULT_RUNTIME_MODE === RuntimeMode.MOCK || !MobileRuntime.apiClient) {
+    if (DEFAULT_RUNTIME_MODE === RuntimeMode.MOCK ||
+      !MobileRuntime.initialized || !MobileRuntime.apiClient) {
       return
     }
     CardStore.getInstance().refresh().catch(() => {
@@ -179,6 +192,7 @@ export class MobileRuntime {
   }
 
   static async dispose(): Promise<void> {
+    MobileRuntime.initialized = false
     if (MobileRuntime.webSocketClient) {
       await MobileRuntime.webSocketClient.stop()
     }

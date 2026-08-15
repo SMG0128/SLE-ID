@@ -5,6 +5,11 @@ import {
   MobileHttpTransport
 } from './MobileApiContracts'
 
+interface MobileRequestHeaders {
+  Accept: string
+  Authorization?: string
+}
+
 export class HarmonyHttpTransport implements MobileHttpTransport {
   private readonly baseUrl: string
 
@@ -16,17 +21,17 @@ export class HarmonyHttpTransport implements MobileHttpTransport {
   async send(request: MobileHttpRequest): Promise<MobileHttpResponse> {
     const client: http.HttpRequest = http.createHttp()
     try {
-      const header: Map<string, string> = new Map<string, string>()
-      header.set('Content-Type', 'application/json')
-      header.set('Accept', 'application/json')
+      const header: MobileRequestHeaders = {
+        Accept: 'application/json'
+      }
       if (request.accessToken.length > 0) {
-        header.set('Authorization', `Bearer ${request.accessToken}`)
+        header.Authorization = `Bearer ${request.accessToken}`
       }
       const response: http.HttpResponse = await client.request(
         `${this.baseUrl}${request.path}`,
         {
           method: request.method as http.RequestMethod,
-          header: header as Object,
+          header: header,
           extraData: request.body,
           expectDataType: http.HttpDataType.STRING,
           connectTimeout: 10000,

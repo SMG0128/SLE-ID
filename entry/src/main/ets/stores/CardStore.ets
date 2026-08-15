@@ -1,4 +1,5 @@
 import { DigitalCard, DigitalCardStatus } from '../models/DigitalCard'
+import { hilog } from '@kit.PerformanceAnalysisKit'
 import { Authorization } from '../models/Authorization'
 import {
   Credential,
@@ -202,10 +203,13 @@ export class CardStore {
   async refresh(): Promise<void> {
     this.isLoading = true
     this.errorMessage = ''
+    let refreshStage: string = 'cards'
     try {
       const refreshedCards: DigitalCard[] = await this.cardService.listDigitalCards()
+      refreshStage = 'authorizations'
       const refreshedAuthorizations: Authorization[] =
         await this.authorizationService.listAllAuthorizations()
+      refreshStage = 'physical-card'
       const refreshedPrimaryPhysicalCard: PhysicalCard | null =
         await this.physicalCardService.getPrimaryPhysicalCard()
       const refreshedCredentials: Credential[] = []
@@ -231,11 +235,15 @@ export class CardStore {
       }
       this.isOffline = false
       this.refreshPendingOperationContract()
+      refreshStage = 'wallet-persistence'
       await this.persistWalletState()
+      refreshStage = 'pending-mutations'
       await this.recoverPendingMutations()
     } catch (error) {
       this.errorMessage = 'Unable to load cards'
       this.isOffline = true
+      hilog.error(0x0000, 'SleKey',
+        `Wallet refresh failed at ${refreshStage}: ${String(error)}`)
     } finally {
       this.isLoading = false
     }
