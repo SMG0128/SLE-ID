@@ -82,15 +82,15 @@ try {
                 }
             }
             if ($endpoint.Label -eq 'B' -and
-                $line -match '\[B\] EVENT .* auth=1 action=2 confirm=0 exec=2 reason=0\b') {
+                $line -match '\[B\] EVENT .* auth=1\b.* action=2 confirm=0 exec=2 reason=0\b') {
                 $bExecuted = $true
             }
         }
         # A signed AUTH_RESULT followed by B executing an auth=1 event is the
-        # end-to-end success condition. bVerified is diagnostic only because its
-        # text line can be lost when binary gateway traffic shares the UART.
-        if ($challengeForwarded -and $responseForwarded -and
-            $aAuthorized -and $bExecuted) {
+        # end-to-end success condition. Current dual-SLE firmware relays the
+        # challenge and response directly, so the legacy serial-forward flags
+        # and bVerified text line are diagnostic only.
+        if ($aAuthorized -and $bExecuted) {
             Write-Host 'PASS: HMAC authentication was bound to one passage and B executed it.'
             exit 0
         }
