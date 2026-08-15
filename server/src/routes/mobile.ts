@@ -55,6 +55,7 @@ function mobileGrant(row: any) {
     category: 'access',
   }
   const digitalCardId = String(row.digital_card_id ?? '')
+  const cardWritten = row.sync_status === 'synced'
   return {
     preview,
     authorization: {
@@ -94,9 +95,9 @@ function mobileGrant(row: any) {
       status: 'active',
       visualStyle: 'access',
       permissionId,
-      credentialId: '',
-      physicalCardId: '',
-      credentialBindingStatus: 'notWritten',
+      credentialId: cardWritten ? `credential-${permissionId}` : '',
+      physicalCardId: cardWritten ? cardAnonId : '',
+      credentialBindingStatus: cardWritten ? 'active' : 'notWritten',
       credentialCondition: 'active',
       adminConfirmRequired: preview.adminConfirmRequired,
       userConfirmationEnabled: preview.adminConfirmRequired,
@@ -195,6 +196,38 @@ export function createMobileRouter(
         digitalCard: grant.digitalCard,
       },
     })
+  })
+
+  router.post('/cards/:id/write-package', (req, res) => {
+    const cardId = requiredText(req.params.id, 'cardId')
+    const writePackage = db.issueCardWritePackage(
+      cardId,
+      String(res.locals.mobileSubjectId),
+    )
+    if (!writePackage) {
+      throw new ApiError(409, 2701, 'Card is not eligible for physical provisioning')
+    }
+    res.json({ writePackage })
+  })
+
+  router.post('/cards/:id/write-receipts', (req, res) => {
+    const cardId = requiredText(req.params.id, 'cardId')
+    const requestId = requiredText(req.body?.requestId, 'requestId')
+    const physicalCardId = requiredText(req.body?.physicalCardId, 'physicalCardId')
+    const credentialHash = requiredText(req.body?.credentialHash, 'credentialHash')
+    const generation = Number(req.body?.generation)
+    const acknowledgement = db.acknowledgeCardWrite(
+      cardId,
+      String(res.locals.mobileSubjectId),
+      requestId,
+      physicalCardId,
+      credentialHash,
+      generation,
+    )
+    if (!acknowledgement) {
+      throw new ApiError(409, 2702, 'Card write receipt is invalid, expired, or mismatched')
+    }
+    res.json({ acknowledgement })
   })
 
   router.get('/confirmations/pending', (_req, res) => {

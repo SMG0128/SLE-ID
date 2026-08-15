@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { randomBytes, randomUUID } from 'node:crypto'
+import { createHash, randomBytes, randomUUID } from 'node:crypto'
 import BetterSqlite3 from 'better-sqlite3'
 import type {
   AlarmLevel,
@@ -222,6 +222,7 @@ export class StarFollowDatabase {
     this.migrateCommandHistoryV2()
     this.migrateInviteBindingsV3()
     this.migrateMobileGrantV4()
+    this.migrateCardProvisioningV5()
     this.raw.exec(`
       CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs(created_at DESC);
       CREATE INDEX IF NOT EXISTS idx_commands_created_at ON device_commands(created_at DESC);
@@ -303,6 +304,34 @@ export class StarFollowDatabase {
       }
       this.raw.exec('CREATE INDEX IF NOT EXISTS idx_cards_owner ON cards(owner)')
       this.raw.prepare("INSERT INTO schema_migrations(version, applied_at) VALUES (4, datetime('now'))").run()
+    })()
+  }
+
+  private migrateCardProvisioningV5(): void {
+    const applied = this.raw.prepare('SELECT 1 FROM schema_migrations WHERE version=5').get()
+    if (applied) return
+    this.raw.transaction(() => {
+      const licenseColumns = this.raw.prepare('PRAGMA table_info(licenses)').all() as Array<{ name: string }>
+      if (!licenseColumns.some(column => column.name === 'credential_key')) {
+        this.raw.exec('ALTER TABLE licenses ADD COLUMN credential_key BLOB')
+      }
+      this.raw.exec(`
+        CREATE TABLE IF NOT EXISTS card_write_requests (
+          request_id TEXT PRIMARY KEY,
+          card_id TEXT NOT NULL,
+          subject TEXT NOT NULL,
+          credential_hash TEXT NOT NULL,
+          ticket_hash TEXT NOT NULL,
+          expires_at TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          receipt_at TEXT,
+          generation INTEGER,
+          FOREIGN KEY (card_id) REFERENCES cards(id)
+        );
+        CREATE INDEX IF NOT EXISTS idx_card_write_requests_card
+          ON card_write_requests(card_id, created_at DESC);
+      `)
+      this.raw.prepare("INSERT INTO schema_migrations(version, applied_at) VALUES (5, datetime('now'))").run()
     })()
   }
 
@@ -874,6 +903,120 @@ export class StarFollowDatabase {
       LEFT JOIN invites i ON i.id=b.invite_id
       WHERE c.owner=? ORDER BY c.created_at
     `).all(subject).map((row: any) => ({ ...row, policies: JSON.parse(row.policies_json) }))
+  }
+
+  issueCardWritePackage(cardId: string, subject: string): Record<string, unknown> | null {
+    return this.raw.transaction(() => {
+      const row = this.raw.prepare(`
+        SELECT c.id AS card_id, c.card_anon_id, c.owner, c.status AS card_status,
+          l.id AS license_id, l.hardware_permission_id, l.policies_json,
+          l.key_version, l.policy_version, l.create_time, l.expire_time,
+          l.credential_key, i.organization_id
+        FROM cards c JOIN licenses l ON l.id=c.license_id
+        LEFT JOIN invite_bindings b ON b.card_id=c.id
+        LEFT JOIN invites i ON i.id=b.invite_id
+        WHERE c.id=? AND c.owner=?
+      `).get(cardId, subject) as any
+      if (!row || row.card_status !== 'active' || row.organization_id === null ||
+        row.policy_version <= 0) return null
+
+      let credentialKey: Buffer = row.credential_key as Buffer
+      if (!credentialKey || credentialKey.length !== 32) {
+        credentialKey = randomBytes(32)
+        this.raw.prepare('UPDATE licenses SET credential_key=? WHERE id=?')
+          .run(credentialKey, row.license_id)
+      }
+      const policies = JSON.parse(row.policies_json || '{}') as any
+      let flags = 0
+      if (policies.allowExecute) flags |= 0x0001
+      if (policies.forceConfirm) flags |= 0x0002
+      if (policies.userConfirm) flags |= 0x0004
+      if (policies.offlineAllowed) flags |= 0x0008
+      if (policies.unauthorizedAction === 'alarm') flags |= 0x0010
+      const validFrom = Math.floor(Date.parse(`${row.create_time}T00:00:00Z`) / 1000)
+      const validTo = Math.floor(Date.parse(`${row.expire_time}T23:59:59Z`) / 1000)
+      const payload = Buffer.alloc(78)
+      payload.writeUInt32LE(Number(row.hardware_permission_id) >>> 0, 0)
+      payload.writeUInt32LE(Number(row.organization_id) >>> 0, 4)
+      payload[8] = 0 // Global scope; B still enforces the deployed organization/policy.
+      payload.writeUInt32LE(0, 9)
+      payload.writeUInt32LE(validFrom >>> 0, 13)
+      payload.writeUInt32LE(validTo >>> 0, 17)
+      payload.writeUInt32LE(flags >>> 0, 21)
+      const usageLimit = Number(policies.usageLimit?.count || 0)
+      payload.writeUInt32LE((usageLimit > 0 ? usageLimit : 0xffffffff) >>> 0, 25)
+      payload.writeUInt32LE(0, 29)
+      payload.writeUInt32LE(Number(row.policy_version) >>> 0, 33)
+      payload.writeUInt32LE(Number(row.key_version) >>> 0, 37)
+      credentialKey.copy(payload, 41)
+      payload[73] = 0 // ACTIVE; bytes 74..77 remain reserved zeroes.
+
+      const credentialHash = createHash('sha256').update(payload).digest('hex')
+      const requestId = String(this.nextRequestId())
+      const nonce = randomBytes(16).toString('hex')
+      const writeTicket = randomBytes(32).toString('hex')
+      const now = new Date()
+      const expiresAt = new Date(now.getTime() + 5 * 60_000).toISOString()
+      this.raw.prepare(`
+        INSERT INTO card_write_requests(request_id, card_id, subject, credential_hash,
+          ticket_hash, expires_at, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).run(requestId, cardId, subject, credentialHash,
+        createHash('sha256').update(writeTicket).digest('hex'), expiresAt, now.toISOString())
+      this.recordAudit('card.write.issued', 'card', cardId, subject, {
+        requestId, permissionId: row.hardware_permission_id, policyVersion: row.policy_version,
+      })
+      return {
+        requestId,
+        digitalCardId: cardId,
+        physicalCardId: formatCardId(Number(row.card_anon_id)),
+        cardAnonId: formatCardId(Number(row.card_anon_id)),
+        permissionId: String(row.hardware_permission_id),
+        credentialVersion: Number(row.policy_version),
+        credentialPayloadBase64: payload.toString('base64'),
+        credentialHash,
+        expiresAt,
+        nonce,
+        writeTicket,
+      }
+    })()
+  }
+
+  acknowledgeCardWrite(
+    cardId: string,
+    subject: string,
+    requestId: string,
+    physicalCardId: string,
+    credentialHash: string,
+    generation: number,
+  ): Record<string, unknown> | null {
+    return this.raw.transaction(() => {
+      const row = this.raw.prepare(`
+        SELECT w.*, c.card_anon_id FROM card_write_requests w
+        JOIN cards c ON c.id=w.card_id
+        WHERE w.request_id=? AND w.card_id=? AND w.subject=?
+      `).get(requestId, cardId, subject) as any
+      if (!row || formatCardId(Number(row.card_anon_id)) !== physicalCardId ||
+        row.credential_hash !== credentialHash || !Number.isInteger(generation) || generation <= 0) {
+        return null
+      }
+      if (row.receipt_at) {
+        if (Number(row.generation) !== generation) return null
+        return { receiptId: `CWR-${requestId}`, acknowledgedAt: row.receipt_at }
+      }
+      if (row.expires_at <= new Date().toISOString()) return null
+      const acknowledgedAt = new Date().toISOString()
+      this.raw.prepare(`
+        UPDATE card_write_requests SET receipt_at=?, generation=? WHERE request_id=?
+      `).run(acknowledgedAt, generation, requestId)
+      this.raw.prepare(`
+        UPDATE cards SET sync_status='synced', last_sync=? WHERE id=?
+      `).run(acknowledgedAt, cardId)
+      this.recordAudit('card.write.verified', 'card', cardId, subject, {
+        requestId, physicalCardId, generation,
+      })
+      return { receiptId: `CWR-${requestId}`, acknowledgedAt }
+    })()
   }
 
   recordCommand(requestId: number, commandType: number, payloadHash: string, targetSourceId: number | null): number {

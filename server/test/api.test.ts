@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 import type { AddressInfo } from 'node:net'
+import { createHash } from 'node:crypto'
 import { createRuntime } from '../src/runtime.js'
 import { WebSocket } from 'ws'
 
@@ -187,6 +188,34 @@ test('mobile bootstrap pairs a device and protects wallet routes', async () => {
     assert.equal(walletAfter.cards.length, 1)
     assert.equal(walletAfter.authorizations.length, 1)
     assert.equal(runtime.db.getCards().total, 1)
+    const cardId = redeem.result.digitalCard.id
+    const packageResponse = await fetch(`${base}/api/mobile/cards/${cardId}/write-package`, {
+      method: 'POST', headers: { ...headers, 'content-type': 'application/json' },
+      body: JSON.stringify({ physicalCardId: 'CARD-C0000001' }),
+    })
+    assert.equal(packageResponse.status, 200)
+    const issued = (await packageResponse.json() as any).writePackage
+    const credential = Buffer.from(issued.credentialPayloadBase64, 'base64')
+    assert.equal(credential.length, 78)
+    assert.equal(credential.readUInt32LE(0), license.hardwarePermissionId)
+    assert.equal(credential.readUInt32LE(4), 100)
+    assert.equal(credential.readUInt32LE(33), 7)
+    assert.equal(createHash('sha256').update(credential).digest('hex'), issued.credentialHash)
+    const badReceipt = await fetch(`${base}/api/mobile/cards/${cardId}/write-receipts`, {
+      method: 'POST', headers: { ...headers, 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: issued.requestId, physicalCardId: 'CARD-C0000001',
+        credentialHash: 'bad', generation: 1 }),
+    })
+    assert.equal(badReceipt.status, 409)
+    const receiptResponse = await fetch(`${base}/api/mobile/cards/${cardId}/write-receipts`, {
+      method: 'POST', headers: { ...headers, 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: issued.requestId, physicalCardId: 'CARD-C0000001',
+        credentialHash: issued.credentialHash, generation: 1 }),
+    })
+    assert.equal(receiptResponse.status, 200)
+    const walletWritten = await fetch(`${base}/api/mobile/cards`, { headers }).then(response => response.json()) as any
+    assert.equal(walletWritten.cards[0].credentialBindingStatus, 'active')
+    assert.equal(walletWritten.cards[0].physicalCardId, 'CARD-C0000001')
     const duplicateRedeem = await fetch(`${base}/api/mobile/invites/redeem`, {
       method: 'POST', headers: { ...headers, 'content-type': 'application/json' },
       body: JSON.stringify({ code: invite.code }),
