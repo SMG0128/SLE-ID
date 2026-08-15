@@ -103,3 +103,45 @@ test('non-loopback binding requires an access token', () => {
     hostSourceId: 1, hostBootId: 2,
   }), /STARFOLLOW_API_TOKEN/)
 })
+
+test('mobile bootstrap pairs a device and protects wallet routes', async () => {
+  const directory = mkdtempSync(path.join(tmpdir(), 'starfollow-mobile-test-'))
+  const runtime = createRuntime({
+    host: '127.0.0.1', port: 0, dataDir: directory,
+    databasePath: path.join(directory, 'test.db'), frontendDist: path.join(directory, 'missing-dist'),
+    hostSourceId: 0x48000003, hostBootId: 0x1234567a,
+    mobilePairingCode: 'PAIR-TEST-2026',
+  })
+  try {
+    await runtime.start()
+    const address = runtime.server.address() as AddressInfo
+    const base = `http://127.0.0.1:${address.port}`
+    const deniedPair = await fetch(`${base}/api/mobile/pair`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ pairingCode: 'wrong', deviceId: 'tablet-1', deviceName: 'test' }),
+    })
+    assert.equal(deniedPair.status, 401)
+
+    const pairResponse = await fetch(`${base}/api/mobile/pair`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ pairingCode: 'PAIR-TEST-2026', deviceId: 'tablet-1', deviceName: 'test' }),
+    })
+    assert.equal(pairResponse.status, 200)
+    const pair = await pairResponse.json() as any
+    assert.equal(pair.session.subjectId, 'mobile:tablet-1')
+    assert.ok(pair.session.accessToken.length >= 32)
+    assert.equal((runtime.db.listAuditLogs({ page: 1, pageSize: 10 }) as any).list[0].action, 'mobile.pair')
+
+    const deniedWallet = await fetch(`${base}/api/mobile/cards`)
+    assert.equal(deniedWallet.status, 401)
+    const headers = { authorization: `Bearer ${pair.session.accessToken}` }
+    const wallet = await fetch(`${base}/api/mobile/cards`, { headers }).then(response => response.json()) as any
+    assert.deepEqual(wallet.cards, [])
+    assert.deepEqual(wallet.authorizations, [])
+    const pending = await fetch(`${base}/api/mobile/confirmations/pending`, { headers }).then(response => response.json()) as any
+    assert.deepEqual(pending.confirmations, [])
+  } finally {
+    await runtime.stop()
+    rmSync(directory, { recursive: true, force: true })
+  }
+})

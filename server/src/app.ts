@@ -5,6 +5,7 @@ import type { AppConfig } from './config.js'
 import type { StarFollowDatabase } from './db.js'
 import { errorHandler, notFound } from './http.js'
 import { createApiRouter } from './routes/api.js'
+import { createMobileRouter } from './routes/mobile.js'
 import type { HardwareService } from './services/hardware.js'
 import { apiAuthentication } from './auth.js'
 
@@ -12,6 +13,7 @@ export function createApp(config: AppConfig, db: StarFollowDatabase, hardware: H
   const app = express()
   app.disable('x-powered-by')
   app.use(express.json({ limit: '256kb' }))
+  app.use('/api/mobile', createMobileRouter(config, db, hardware))
   app.use('/api', apiAuthentication(config), createApiRouter(db, hardware))
 
   if (fs.existsSync(config.frontendDist)) {

@@ -14,6 +14,8 @@ export interface AppConfig {
   apiToken?: string
   /** Audit identity used when token authentication is enabled. */
   adminOperator?: string
+  /** Local bootstrap secret used to pair a HarmonyOS mobile client. */
+  mobilePairingCode?: string
 }
 
 function nonZeroRandomU32(): number {
@@ -43,6 +45,8 @@ export function loadConfig(cwd = process.cwd()): AppConfig {
     adminOperator: process.env.STARFOLLOW_ADMIN_OPERATOR?.trim() || 'admin',
   }
   if (apiToken) config.apiToken = apiToken
+  const mobilePairingCode = process.env.STARFOLLOW_MOBILE_PAIRING_CODE?.trim()
+  if (mobilePairingCode) config.mobilePairingCode = mobilePairingCode
   assertSafeNetworkConfig(config)
   return config
 }
