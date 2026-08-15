@@ -1,6 +1,7 @@
 import type { Server as HttpServer } from 'node:http'
 import { WebSocket, WebSocketServer } from 'ws'
 import { isAuthorized } from '../auth.js'
+import type { MobileSessionStore } from '../services/mobileSessions.js'
 
 export interface WsEnvelope<T = unknown> {
   version: 1
@@ -14,17 +15,22 @@ export class WsHub {
   private readonly server: WebSocketServer
   private sequence = 0
 
-  constructor(httpServer: HttpServer, apiToken?: string) {
+  constructor(httpServer: HttpServer, apiToken: string | undefined, mobileSessions: MobileSessionStore) {
     this.server = new WebSocketServer({
       server: httpServer,
-      path: '/ws/events',
       verifyClient: ({ req }, done) => {
-        if (isAuthorized(req, apiToken)) done(true)
+        const path = new URL(req.url || '/', 'http://localhost').pathname
+        if (path === '/ws/events' && isAuthorized(req, apiToken)) done(true)
+        else if (path === '/ws/mobile' && mobileSessions.resolveRequest(req)) done(true)
+        else if (path !== '/ws/events' && path !== '/ws/mobile') done(false, 404, 'Not Found')
         else done(false, 401, 'Unauthorized')
       },
     })
-    this.server.on('connection', socket => {
-      socket.send(JSON.stringify(this.envelope('server.ready', { connected: true })))
+    this.server.on('connection', (socket, request) => {
+      const path = new URL(request.url || '/', 'http://localhost').pathname
+      if (path === '/ws/events') {
+        socket.send(JSON.stringify(this.envelope('server.ready', { connected: true })))
+      }
     })
   }
 

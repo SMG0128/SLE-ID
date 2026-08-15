@@ -7,9 +7,9 @@ import type { AddressInfo } from 'node:net'
 import { createRuntime } from '../src/runtime.js'
 import { WebSocket } from 'ws'
 
-function connectWebSocket(url: string): Promise<{ opened: boolean; status?: number }> {
+function connectWebSocket(url: string, bearer?: string): Promise<{ opened: boolean; status?: number }> {
   return new Promise(resolve => {
-    const socket = new WebSocket(url)
+    const socket = new WebSocket(url, bearer ? { headers: { authorization: `Bearer ${bearer}` } } : undefined)
     socket.once('open', () => {
       socket.terminate()
       resolve({ opened: true })
@@ -131,6 +131,14 @@ test('mobile bootstrap pairs a device and protects wallet routes', async () => {
     assert.equal(pair.session.subjectId, 'mobile:tablet-1')
     assert.ok(pair.session.accessToken.length >= 32)
     assert.equal((runtime.db.listAuditLogs({ page: 1, pageSize: 10 }) as any).list[0].action, 'mobile.pair')
+
+    const deniedMobileWs = await connectWebSocket(`ws://127.0.0.1:${address.port}/ws/mobile`)
+    assert.deepEqual(deniedMobileWs, { opened: false, status: 401 })
+    const allowedMobileWs = await connectWebSocket(
+      `ws://127.0.0.1:${address.port}/ws/mobile`,
+      pair.session.accessToken,
+    )
+    assert.equal(allowedMobileWs.opened, true)
 
     const deniedWallet = await fetch(`${base}/api/mobile/cards`)
     assert.equal(deniedWallet.status, 401)

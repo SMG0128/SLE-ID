@@ -4,6 +4,7 @@ import type { AppConfig } from './config.js'
 import { StarFollowDatabase } from './db.js'
 import { HardwareService } from './services/hardware.js'
 import { WsHub } from './ws/hub.js'
+import { MobileSessionStore } from './services/mobileSessions.js'
 import { GatewaySerial } from './ws63/gateway.js'
 import { assertSafeNetworkConfig } from './config.js'
 
@@ -26,9 +27,10 @@ export function createRuntime(config: AppConfig): Runtime {
   if (storedSourceId !== hostSourceId) db.setSetting('hostSourceId', hostSourceId)
   const gateway = new GatewaySerial(hostSourceId, config.hostBootId)
   const hardware = new HardwareService(gateway, db)
-  const app = createApp(config, db, hardware)
+  const mobileSessions = new MobileSessionStore()
+  const app = createApp(config, db, hardware, mobileSessions)
   const server = createServer(app)
-  const hub = new WsHub(server, config.apiToken)
+  const hub = new WsHub(server, config.apiToken, mobileSessions)
   hardware.attachHub(hub)
   let maintenanceTimer: NodeJS.Timeout | null = null
   let maintenanceTask: Promise<void> = Promise.resolve()

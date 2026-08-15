@@ -6,14 +6,20 @@ import type { StarFollowDatabase } from './db.js'
 import { errorHandler, notFound } from './http.js'
 import { createApiRouter } from './routes/api.js'
 import { createMobileRouter } from './routes/mobile.js'
+import type { MobileSessionStore } from './services/mobileSessions.js'
 import type { HardwareService } from './services/hardware.js'
 import { apiAuthentication } from './auth.js'
 
-export function createApp(config: AppConfig, db: StarFollowDatabase, hardware: HardwareService): Express {
+export function createApp(
+  config: AppConfig,
+  db: StarFollowDatabase,
+  hardware: HardwareService,
+  mobileSessions: MobileSessionStore,
+): Express {
   const app = express()
   app.disable('x-powered-by')
   app.use(express.json({ limit: '256kb' }))
-  app.use('/api/mobile', createMobileRouter(config, db, hardware))
+  app.use('/api/mobile', createMobileRouter(config, db, hardware, mobileSessions))
   app.use('/api', apiAuthentication(config), createApiRouter(db, hardware))
 
   if (fs.existsSync(config.frontendDist)) {

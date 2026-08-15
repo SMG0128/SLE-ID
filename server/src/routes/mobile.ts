@@ -1,14 +1,9 @@
-import { randomBytes } from 'node:crypto'
 import { Router, type NextFunction, type Request, type Response } from 'express'
 import type { AppConfig } from '../config.js'
 import type { StarFollowDatabase } from '../db.js'
 import { ApiError } from '../http.js'
 import type { HardwareService } from '../services/hardware.js'
-
-interface MobileSessionRecord {
-  subjectId: string
-  expiresAt: string
-}
+import type { MobileSessionStore } from '../services/mobileSessions.js'
 
 function requiredText(value: unknown, name: string): string {
   if (typeof value !== 'string' || !value.trim()) {
@@ -26,9 +21,9 @@ export function createMobileRouter(
   config: AppConfig,
   db: StarFollowDatabase,
   hardware: HardwareService,
+  sessions: MobileSessionStore,
 ): Router {
   const router = Router()
-  const sessions = new Map<string, MobileSessionRecord>()
 
   router.get('/health', (_req, res) => {
     res.json({ status: 'ok', time: new Date().toISOString(), serial: hardware.gateway.snapshot() })
@@ -43,20 +38,15 @@ export function createMobileRouter(
     const deviceName = requiredText(req.body?.deviceName, 'deviceName')
     if (pairingCode !== expectedCode) throw new ApiError(401, 2502, 'Invalid mobile pairing code')
 
-    const accessToken = randomBytes(32).toString('base64url')
-    const refreshToken = randomBytes(32).toString('base64url')
-    const expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString()
     const subjectId = `mobile:${deviceId}`
-    sessions.set(accessToken, { subjectId, expiresAt })
+    const session = sessions.create(subjectId)
     db.recordAudit('mobile.pair', 'mobile', subjectId, deviceName, { deviceId })
-    res.json({ session: { accessToken, refreshToken, expiresAt, subjectId } })
+    res.json({ session })
   })
 
   router.use((req: Request, _res: Response, next: NextFunction) => {
     const token = bearerToken(req)
-    const session = token ? sessions.get(token) : undefined
-    if (!token || !session || session.expiresAt <= new Date().toISOString()) {
-      if (token) sessions.delete(token)
+    if (!sessions.resolveToken(token)) {
       throw new ApiError(401, 2503, 'Mobile session is invalid or expired')
     }
     next()
