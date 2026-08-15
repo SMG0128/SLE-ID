@@ -221,6 +221,7 @@ export class StarFollowDatabase {
     `)
     this.migrateCommandHistoryV2()
     this.migrateInviteBindingsV3()
+    this.migrateMobileGrantV4()
     this.raw.exec(`
       CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs(created_at DESC);
       CREATE INDEX IF NOT EXISTS idx_commands_created_at ON device_commands(created_at DESC);
@@ -279,6 +280,29 @@ export class StarFollowDatabase {
         UPDATE invites SET one_time=CASE WHEN max_uses<=1 THEN 1 ELSE 0 END;
       `)
       this.raw.prepare("INSERT INTO schema_migrations(version, applied_at) VALUES (3, datetime('now'))").run()
+    })()
+  }
+
+  private migrateMobileGrantV4(): void {
+    const applied = this.raw.prepare('SELECT 1 FROM schema_migrations WHERE version=4').get()
+    if (applied) return
+    this.raw.transaction(() => {
+      const inviteColumns = this.raw.prepare('PRAGMA table_info(invites)').all() as Array<{ name: string }>
+      if (!inviteColumns.some(column => column.name === 'license_id')) {
+        this.raw.exec('ALTER TABLE invites ADD COLUMN license_id TEXT REFERENCES licenses(id)')
+      }
+      if (!inviteColumns.some(column => column.name === 'organization_id')) {
+        this.raw.exec('ALTER TABLE invites ADD COLUMN organization_id INTEGER NOT NULL DEFAULT 100')
+      }
+      if (!inviteColumns.some(column => column.name === 'target_card_anon_id')) {
+        this.raw.exec('ALTER TABLE invites ADD COLUMN target_card_anon_id INTEGER')
+      }
+      const bindingColumns = this.raw.prepare('PRAGMA table_info(invite_bindings)').all() as Array<{ name: string }>
+      if (!bindingColumns.some(column => column.name === 'card_id')) {
+        this.raw.exec('ALTER TABLE invite_bindings ADD COLUMN card_id TEXT')
+      }
+      this.raw.exec('CREATE INDEX IF NOT EXISTS idx_cards_owner ON cards(owner)')
+      this.raw.prepare("INSERT INTO schema_migrations(version, applied_at) VALUES (4, datetime('now'))").run()
     })()
   }
 
@@ -721,6 +745,9 @@ export class StarFollowDatabase {
       maxUses: row.max_uses,
       usedCount: row.used_count,
       remainingUses: Math.max(0, row.max_uses - row.used_count),
+      licenseId: row.license_id,
+      organizationId: row.organization_id,
+      targetCardAnonId: row.target_card_anon_id === null ? null : formatCardId(Number(row.target_card_anon_id)),
     }))
     return { total: list.length, list }
   }
@@ -728,17 +755,32 @@ export class StarFollowDatabase {
   createInvite(form: any, operator = 'system'): Record<string, unknown> {
     const now = new Date()
     const id = `IV-${randomUUID().slice(0, 8).toUpperCase()}`
-    const code = randomBytes(6).toString('base64url').toUpperCase()
+    const rawCode = randomBytes(4).toString('hex').toUpperCase()
+    const code = `SLE-${rawCode.slice(0, 4)}-${rawCode.slice(4, 8)}`
     const expireAt = new Date(now.getTime() + Math.max(1, Number(form.expireDays) || 1) * 86400000).toISOString()
     const maxUses = Math.max(1, Number(form.maxUses) || 1)
+    const licenseId = typeof form.licenseId === 'string' && form.licenseId.trim() ? form.licenseId.trim() : null
+    if (licenseId && !this.getLicense(licenseId)) throw new Error('Invite license does not exist')
+    const organizationId = Number(form.organizationId ?? 100)
+    if (!Number.isInteger(organizationId) || organizationId < 0 || organizationId > 0xffffffff) {
+      throw new Error('Invite organizationId must be uint32')
+    }
+    const cardMatch = /^CARD-([0-9A-Fa-f]{8})$/.exec(String(form.targetCardAnonId || ''))
+    const targetCardAnonId = cardMatch ? Number.parseInt(cardMatch[1]!, 16) >>> 0 : null
     this.raw.prepare(`
       INSERT INTO invites(id, code, role, status, expire_at, created_at, one_time, max_uses)
       VALUES (?, ?, ?, '未使用', ?, ?, ?, ?)
     `).run(id, code, String(form.role || '访客'), expireAt, now.toISOString(), maxUses <= 1 ? 1 : 0, maxUses)
+    this.raw.prepare(`
+      UPDATE invites SET license_id=?, organization_id=?, target_card_anon_id=? WHERE id=?
+    `).run(licenseId, organizationId, targetCardAnonId, id)
     this.recordAudit('invite.create', 'invite', id, operator, {
       role: form.role,
       expireAt,
       maxUses,
+      licenseId,
+      organizationId,
+      targetCardAnonId: targetCardAnonId === null ? null : formatCardId(targetCardAnonId),
     })
     return this.getInvites().list.find(item => item.id === id)!
   }
@@ -771,6 +813,67 @@ export class StarFollowDatabase {
       this.recordAudit('invite.redeem', 'invite', row.id, operator, { subject, usedCount, maxUses: row.max_uses })
       return { inviteId: row.id, bindingId, role: row.role, subject, usedAt: now, usedCount, maxUses: row.max_uses, exhausted }
     })()
+  }
+
+  getMobileInvite(code: string): Record<string, unknown> | null {
+    const row = this.raw.prepare(`
+      SELECT i.*, l.hardware_permission_id, l.name AS license_name, l.zone, l.policies_json,
+        l.key_version, l.policy_version, l.create_time, l.expire_time, l.sync_status
+      FROM invites i LEFT JOIN licenses l ON l.id=i.license_id WHERE i.code=?
+    `).get(code) as any
+    if (!row || !row.license_id || row.target_card_anon_id === null) return null
+    return { ...row, policies: JSON.parse(row.policies_json) }
+  }
+
+  redeemMobileInvite(code: string, subject: string): Record<string, unknown> | null {
+    return this.raw.transaction(() => {
+      const now = new Date().toISOString()
+      const invite = this.getMobileInvite(code) as any
+      if (!invite || invite.expire_at <= now || invite.used_count >= invite.max_uses ||
+        String(invite.revoke_reason || '').length > 0 ||
+        invite.sync_status !== 'synced') return null
+      const existingBinding = this.raw.prepare(
+        'SELECT 1 FROM invite_bindings WHERE invite_id=? AND subject=?',
+      ).get(invite.id, subject)
+      if (existingBinding) return null
+      const existingCard = this.raw.prepare('SELECT * FROM cards WHERE card_anon_id=?').get(invite.target_card_anon_id) as any
+      if (existingCard && (existingCard.owner !== subject || existingCard.license_id !== invite.license_id)) return null
+
+      const cardId = existingCard?.id ?? `DC-${randomUUID().slice(0, 8).toUpperCase()}`
+      if (!existingCard) {
+        this.raw.prepare(`
+          INSERT INTO cards(id, card_anon_id, owner, license_id, status, key_version, sync_status, created_at)
+          VALUES (?, ?, ?, ?, 'active', ?, 'pending_card_write', ?)
+        `).run(cardId, invite.target_card_anon_id, subject, invite.license_id, invite.key_version, now)
+        this.raw.prepare('UPDATE licenses SET card_count=card_count+1 WHERE id=?').run(invite.license_id)
+      }
+      const bindingId = `IB-${randomUUID().slice(0, 8).toUpperCase()}`
+      this.raw.prepare(`
+        INSERT INTO invite_bindings(id, invite_id, subject, bound_at, card_id) VALUES (?, ?, ?, ?, ?)
+      `).run(bindingId, invite.id, subject, now, cardId)
+      const usedCount = Number(invite.used_count) + 1
+      const exhausted = usedCount >= Number(invite.max_uses)
+      this.raw.prepare(`
+        UPDATE invites SET used_count=?, status=?, used_by=?, used_at=? WHERE id=?
+      `).run(usedCount, exhausted ? 'bound' : 'available', subject, now, invite.id)
+      this.recordAudit('invite.redeem', 'invite', invite.id, subject, {
+        subject, cardId, licenseId: invite.license_id, usedCount, maxUses: invite.max_uses,
+      })
+      return { inviteId: invite.id, bindingId, cardId, subject, usedAt: now }
+    })()
+  }
+
+  getMobileWallet(subject: string): Array<Record<string, unknown>> {
+    return this.raw.prepare(`
+      SELECT c.id AS digital_card_id, c.card_anon_id, c.status AS card_status, c.sync_status,
+        c.created_at, l.id AS license_id, l.hardware_permission_id, l.name AS license_name,
+        l.zone, l.policies_json, l.key_version, l.policy_version, l.create_time, l.expire_time,
+        i.organization_id
+      FROM cards c JOIN licenses l ON l.id=c.license_id
+      LEFT JOIN invite_bindings b ON b.card_id=c.id
+      LEFT JOIN invites i ON i.id=b.invite_id
+      WHERE c.owner=? ORDER BY c.created_at
+    `).all(subject).map((row: any) => ({ ...row, policies: JSON.parse(row.policies_json) }))
   }
 
   recordCommand(requestId: number, commandType: number, payloadHash: string, targetSourceId: number | null): number {

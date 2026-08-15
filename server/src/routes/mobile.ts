@@ -17,6 +17,97 @@ function bearerToken(request: Request): string | null {
   return match?.[1]?.trim() || null
 }
 
+function mobileGrant(row: any) {
+  const policies = row.policies ?? {}
+  const usage = policies.usageLimit ?? {}
+  const unlimited = usage.type === 'unlimited'
+  const permissionId = String(row.hardware_permission_id)
+  const organizationId = String(row.organization_id ?? 100)
+  const policyVersion = String(row.policy_version)
+  const cardAnonId = `CARD-${(Number(row.card_anon_id) >>> 0).toString(16).toUpperCase().padStart(8, '0')}`
+  const syncState = {
+    serverRevision: `${row.license_id}:${policyVersion}`,
+    lastSyncAt: new Date().toISOString(),
+    pendingOperations: [],
+  }
+  const preview = {
+    permissionId,
+    organizationId,
+    issuerName: 'StarFollow',
+    cardName: String(row.license_name),
+    cardDescription: `${String(row.zone)} access permission`,
+    permissionScope: Array.isArray(policies.scope) ? policies.scope : [String(row.zone)],
+    validFrom: String(row.create_time),
+    validUntil: String(row.expire_time),
+    usageMode: unlimited ? 'unlimited' : 'limited',
+    usageLimit: unlimited ? 0 : Number(usage.count ?? 0),
+    adminConfirmRequired: policies.forceConfirm === true,
+    policyVersion,
+    phoneSubstituteAllowed: policies.huaweiFallback === true,
+    alertPolicy: policies.unauthorizedAction === 'alarm' ? 'high_attention' : 'default',
+    recordEvent: policies.recordEvent !== false,
+    allowExecution: policies.allowExecute === true,
+    alertOnUnauthorized: policies.unauthorizedAction === 'alarm',
+    alertLevel: policies.unauthorizedAction === 'alarm' ? 'critical' : 'info',
+    offlineAllowed: policies.offlineAllowed === true,
+    directionDetection: policies.direction !== 'both',
+    cardAppearance: 'access',
+    category: 'access',
+  }
+  const digitalCardId = String(row.digital_card_id ?? '')
+  return {
+    preview,
+    authorization: {
+      permissionId,
+      digitalCardId,
+      organizationId,
+      name: String(row.license_name),
+      issuer: 'StarFollow',
+      status: 'active',
+      scopes: preview.permissionScope,
+      validFrom: preview.validFrom,
+      validUntil: preview.validUntil,
+      usageMode: preview.usageMode,
+      usageLimit: preview.usageLimit,
+      remainingUses: preview.usageLimit,
+      adminConfirmRequired: preview.adminConfirmRequired,
+      phoneSubstituteAllowed: preview.phoneSubstituteAllowed,
+      alertPolicy: preview.alertPolicy,
+      recordEvent: preview.recordEvent,
+      allowExecution: preview.allowExecution,
+      alertOnUnauthorized: preview.alertOnUnauthorized,
+      alertLevel: preview.alertLevel,
+      offlineAllowed: preview.offlineAllowed,
+      directionDetection: preview.directionDetection,
+      policyVersion,
+      syncState,
+    },
+    digitalCard: digitalCardId ? {
+      id: digitalCardId,
+      name: String(row.license_name),
+      issuer: 'StarFollow',
+      cardAnonId,
+      anonymousNumber: cardAnonId,
+      nickname: '',
+      detail: `${String(row.zone)} access permission`,
+      category: 'access',
+      status: 'active',
+      visualStyle: 'access',
+      permissionId,
+      credentialId: '',
+      physicalCardId: '',
+      credentialBindingStatus: 'notWritten',
+      credentialCondition: 'active',
+      adminConfirmRequired: preview.adminConfirmRequired,
+      userConfirmationEnabled: preview.adminConfirmRequired,
+      allowTemporaryPass: preview.phoneSubstituteAllowed,
+      validFrom: preview.validFrom,
+      validUntil: preview.validUntil,
+      syncState,
+    } : null,
+  }
+}
+
 export function createMobileRouter(
   config: AppConfig,
   db: StarFollowDatabase,
@@ -44,16 +135,66 @@ export function createMobileRouter(
     res.json({ session })
   })
 
-  router.use((req: Request, _res: Response, next: NextFunction) => {
+  router.use((req: Request, res: Response, next: NextFunction) => {
     const token = bearerToken(req)
-    if (!sessions.resolveToken(token)) {
+    const session = sessions.resolveToken(token)
+    if (!session) {
       throw new ApiError(401, 2503, 'Mobile session is invalid or expired')
     }
+    res.locals.mobileSubjectId = session.subjectId
     next()
   })
 
   router.get('/cards', (_req, res) => {
-    res.json({ cards: [], authorizations: [], serverRevision: new Date().toISOString() })
+    const grants = db.getMobileWallet(String(res.locals.mobileSubjectId)).map(row => mobileGrant(row))
+    res.json({
+      cards: grants.map(grant => grant.digitalCard).filter(Boolean),
+      authorizations: grants.map(grant => grant.authorization),
+      serverRevision: new Date().toISOString(),
+    })
+  })
+
+  router.post('/invites/preview', (req, res) => {
+    const code = requiredText(req.body?.code, 'code').toUpperCase()
+    const invite = db.getMobileInvite(code) as any
+    if (!invite || invite.expire_at <= new Date().toISOString() ||
+      String(invite.revoke_reason || '').length > 0 ||
+      invite.used_count >= invite.max_uses || invite.sync_status !== 'synced') {
+      throw new ApiError(404, 2601, 'Invitation is invalid, expired, exhausted, or not deployed')
+    }
+    const grant = mobileGrant({ ...invite, card_anon_id: invite.target_card_anon_id })
+    res.json({ preview: grant.preview })
+  })
+
+  router.post('/invites/redeem', (req, res) => {
+    const code = requiredText(req.body?.code, 'code').toUpperCase()
+    const invite = db.getMobileInvite(code) as any
+    if (!invite) throw new ApiError(404, 2601, 'Invitation is not linked to a deployable permission')
+    const binding = db.redeemMobileInvite(code, String(res.locals.mobileSubjectId)) as any
+    if (!binding) throw new ApiError(409, 2602, 'Invitation cannot be redeemed')
+    const row = db.getMobileWallet(String(res.locals.mobileSubjectId))
+      .find(item => String(item.digital_card_id) === String(binding.cardId))
+    if (!row) throw new ApiError(500, 5001, 'Redeemed card was not persisted')
+    const grant = mobileGrant(row)
+    const now = new Date().toISOString()
+    res.json({
+      result: {
+        state: 'success',
+        reason: 'none',
+        operation: {
+          operationId: `invite-redeem:${binding.inviteId}`,
+          state: 'acknowledged',
+          authority: 'backend',
+          verificationRequired: false,
+          receiptId: String(binding.bindingId),
+          errorCode: '',
+          updatedAt: now,
+        },
+        preview: grant.preview,
+        authorization: grant.authorization,
+        digitalCard: grant.digitalCard,
+      },
+    })
   })
 
   router.get('/confirmations/pending', (_req, res) => {

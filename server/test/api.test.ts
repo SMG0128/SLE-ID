@@ -112,6 +112,20 @@ test('mobile bootstrap pairs a device and protects wallet routes', async () => {
     hostSourceId: 0x48000003, hostBootId: 0x1234567a,
     mobilePairingCode: 'PAIR-TEST-2026',
   })
+  const license = runtime.db.createLicense({
+    name: 'Mobile real grant', zone: 'Test Zone', dateRange: ['2026-08-01', '2026-12-31'],
+    policies: {
+      recordEvent: true, allowExecute: true, forceConfirm: false,
+      unauthorizedAction: 'alarm', scope: ['Detector A'],
+      usageLimit: { type: 'unlimited', count: 0 }, offlineAllowed: true,
+      huaweiFallback: false, direction: 'both',
+    },
+  }, 'test-admin') as any
+  runtime.db.markLicenseDeployment(license.id, 7, 'synced')
+  const invite = runtime.db.createInvite({
+    role: 'holder', expireDays: 1, maxUses: 1, licenseId: license.id,
+    organizationId: 100, targetCardAnonId: 'CARD-C0000001',
+  }, 'test-admin') as any
   try {
     await runtime.start()
     const address = runtime.server.address() as AddressInfo
@@ -148,6 +162,36 @@ test('mobile bootstrap pairs a device and protects wallet routes', async () => {
     assert.deepEqual(wallet.authorizations, [])
     const pending = await fetch(`${base}/api/mobile/confirmations/pending`, { headers }).then(response => response.json()) as any
     assert.deepEqual(pending.confirmations, [])
+
+    assert.match(invite.code, /^SLE-[0-9A-F]{4}-[0-9A-F]{4}$/)
+    const previewResponse = await fetch(`${base}/api/mobile/invites/preview`, {
+      method: 'POST', headers: { ...headers, 'content-type': 'application/json' },
+      body: JSON.stringify({ code: invite.code }),
+    })
+    assert.equal(previewResponse.status, 200)
+    const preview = await previewResponse.json() as any
+    assert.equal(preview.preview.permissionId, String(license.hardwarePermissionId))
+    assert.equal(preview.preview.organizationId, '100')
+    assert.equal(preview.preview.policyVersion, '7')
+
+    const redeemResponse = await fetch(`${base}/api/mobile/invites/redeem`, {
+      method: 'POST', headers: { ...headers, 'content-type': 'application/json' },
+      body: JSON.stringify({ code: invite.code }),
+    })
+    assert.equal(redeemResponse.status, 200)
+    const redeem = await redeemResponse.json() as any
+    assert.equal(redeem.result.state, 'success')
+    assert.equal(redeem.result.operation.authority, 'backend')
+    assert.equal(redeem.result.digitalCard.cardAnonId, 'CARD-C0000001')
+    const walletAfter = await fetch(`${base}/api/mobile/cards`, { headers }).then(response => response.json()) as any
+    assert.equal(walletAfter.cards.length, 1)
+    assert.equal(walletAfter.authorizations.length, 1)
+    assert.equal(runtime.db.getCards().total, 1)
+    const duplicateRedeem = await fetch(`${base}/api/mobile/invites/redeem`, {
+      method: 'POST', headers: { ...headers, 'content-type': 'application/json' },
+      body: JSON.stringify({ code: invite.code }),
+    })
+    assert.equal(duplicateRedeem.status, 409)
   } finally {
     await runtime.stop()
     rmSync(directory, { recursive: true, force: true })
