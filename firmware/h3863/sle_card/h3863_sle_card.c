@@ -24,6 +24,7 @@
 #define CARD_TASK_PRIORITY 27U
 #define CARD_COMMAND_QUEUE_DEPTH 8U
 #define CARD_COMMAND_QUEUE_ITEM_SIZE 96U
+#define CARD_REMOTE_WRITE_WINDOW_MS 60000U
 #define CARD_STATUS_INTERVAL_MS 5000U
 #define CARD_UART_BAUDRATE 115200U
 #define CARD_UART_RX_BUFFER_SIZE 256U
@@ -46,6 +47,7 @@ static volatile uint16_t g_console_head;
 static volatile uint16_t g_console_tail;
 static uint8_t g_console_ring[CARD_CONSOLE_RING_SIZE];
 static bool g_console_response_mode;
+static uint32_t g_remote_write_until_ms;
 
 static uint8_t card_capabilities(void)
 {
@@ -89,6 +91,12 @@ static bool ram_write(uint8_t slot, const uint8_t *data, size_t length, void *us
 static uint32_t now_ms(void)
 {
     return (uint32_t)uapi_tcxo_get_ms();
+}
+
+static bool remote_write_armed(void)
+{
+    return g_remote_write_until_ms != 0U &&
+           (int32_t)(g_remote_write_until_ms - now_ms()) > 0;
 }
 
 static uint32_t new_boot_id(void)
@@ -261,6 +269,12 @@ static void console_command(const char *line)
         return;
     }
 #if defined(CONFIG_SLE_CARD_SERIAL_PROVISIONING)
+    if (strcmp(line, "write unlock") == 0) {
+        g_remote_write_until_ms = now_ms() + CARD_REMOTE_WRITE_WINDOW_MS;
+        osal_printk("[C] remote write armed for %u ms; disconnect or commit closes window\r\n",
+                    CARD_REMOTE_WRITE_WINDOW_MS);
+        return;
+    }
     if (strncmp(line, "proto ", 6U) == 0) {
         uint8_t frame[AB_MAX_FRAME];
         size_t length = hex_decode(line + 6U, frame, sizeof(frame));
@@ -281,7 +295,7 @@ static void console_command(const char *line)
 #endif
     osal_printk("[C] commands: status"
 #if defined(CONFIG_SLE_CARD_SERIAL_PROVISIONING)
-                ", proto <Protocol-V2-frame-hex>"
+                ", write unlock, proto <Protocol-V2-frame-hex>"
 #endif
                 "\r\n");
 }
@@ -340,7 +354,10 @@ static bool queue_command(const uint8_t *data, uint16_t length, void *user)
 static void connection_changed(bool connected, void *user)
 {
     unused(user);
-    if (!connected) card_service_abort_transaction(&g_service);
+    if (!connected) {
+        card_service_abort_transaction(&g_service);
+        g_remote_write_until_ms = 0U;
+    }
 }
 
 static void frame_received(const ab_frame_t *frame, void *user)
@@ -359,9 +376,13 @@ static void frame_received(const ab_frame_t *frame, void *user)
             &g_auth, frame->payload, frame->payload_length);
         if (auth_result == CARD_AUTH_INTERNAL || auth_result == CARD_AUTH_BAD_CHALLENGE)
             osal_printk("[C] auth transport_result=%u\r\n", auth_result);
-    } else if (g_console_response_mode && frame->header.source_role == AB_ROLE_HOST) {
+    } else if (frame->header.source_role == AB_ROLE_HOST &&
+               (g_console_response_mode ||
+                (ws63_card_sle_is_connected() && remote_write_armed()))) {
         card_service_status_t result = card_service_handle_command(
             &g_service, frame->header.type, frame->payload, frame->payload_length);
+        if (!g_console_response_mode && frame->header.type == AB_MSG_CREDENTIAL_COMMIT)
+            g_remote_write_until_ms = 0U;
         if (result != CARD_SERVICE_OK)
             osal_printk("[C] command type=%u transport_result=%u\r\n",
                         frame->header.type, result);
