@@ -37,13 +37,13 @@ export class CardCProtocol {
     frame[3] = type
     frame[4] = 0x01
     frame[5] = 4 // AB_ROLE_HOST
-    this.writeU32(frame, 6, sourceId)
-    this.writeU32(frame, 10, bootId)
-    this.writeU32(frame, 14, messageId)
-    this.writeU16(frame, 18, payload.byteLength)
+    CardCProtocol.writeU32(frame, 6, sourceId)
+    CardCProtocol.writeU32(frame, 10, bootId)
+    CardCProtocol.writeU32(frame, 14, messageId)
+    CardCProtocol.writeU16(frame, 18, payload.byteLength)
     frame.set(payload, 20)
-    this.writeU16(frame, 20 + payload.byteLength,
-      this.crc16(frame.subarray(2, 20 + payload.byteLength)))
+    CardCProtocol.writeU16(frame, 20 + payload.byteLength,
+      CardCProtocol.crc16(frame.subarray(2, 20 + payload.byteLength)))
     return frame.buffer
   }
 
@@ -53,12 +53,12 @@ export class CardCProtocol {
       frame[2] !== 2) {
       throw new Error('Card C returned an invalid Protocol V2 frame')
     }
-    const payloadLength: number = this.readU16(frame, 18)
+    const payloadLength: number = CardCProtocol.readU16(frame, 18)
     if (payloadLength > 64 || frame.byteLength !== payloadLength + 22) {
       throw new Error('Card C frame length mismatch')
     }
-    const expected: number = this.readU16(frame, 20 + payloadLength)
-    const actual: number = this.crc16(frame.subarray(2, 20 + payloadLength))
+    const expected: number = CardCProtocol.readU16(frame, 20 + payloadLength)
+    const actual: number = CardCProtocol.crc16(frame.subarray(2, 20 + payloadLength))
     if (expected !== actual) {
       throw new Error('Card C frame CRC mismatch')
     }
@@ -67,9 +67,9 @@ export class CardCProtocol {
     return {
       type: frame[3],
       sourceRole: frame[5],
-      sourceId: this.readU32(frame, 6),
-      bootId: this.readU32(frame, 10),
-      messageId: this.readU32(frame, 14),
+      sourceId: CardCProtocol.readU32(frame, 6),
+      bootId: CardCProtocol.readU32(frame, 10),
+      messageId: CardCProtocol.readU32(frame, 14),
       payload: payload
     }
   }

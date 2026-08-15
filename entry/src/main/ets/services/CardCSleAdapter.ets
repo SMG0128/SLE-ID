@@ -153,7 +153,8 @@ export class CardCSleAdapter implements
       if (this.matchesUuid(candidate.serviceUuid, CARD_C_SERVICE_UUID)) service = candidate
     })
     if (!service) throw new Error('Card C service UUID was not discovered')
-    service.properties.forEach((property: ssap.Property) => {
+    const targetService: ssap.Service = service as ssap.Service
+    targetService.properties.forEach((property: ssap.Property) => {
       if (this.matchesUuid(property.propertyUuid, CARD_C_INFO_UUID)) this.infoProperty = property
       if (this.matchesUuid(property.propertyUuid, CARD_C_COMMAND_UUID)) this.commandProperty = property
       if (this.matchesUuid(property.propertyUuid, CARD_C_RESPONSE_UUID)) this.responseProperty = property
@@ -229,7 +230,7 @@ export class CardCSleAdapter implements
     return { accepted: generation > 0, generation: this.lastGeneration }
   }
 
-  async listCredentials(): Promise<CardCredentialReadback[]> {
+  async listCredentialReadback(): Promise<CardCredentialReadback[]> {
     const requestId: number = this.nextRequestId()
     const payload: Uint8Array = new Uint8Array(4)
     CardCProtocol.writeU32(payload, 0, requestId)

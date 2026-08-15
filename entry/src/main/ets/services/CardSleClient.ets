@@ -24,6 +24,6 @@ export interface CardSleClient {
   commitCredential(
     transactionHandle: string
   ): Promise<CardCommitAcknowledgement>
-  listCredentials(): Promise<CardCredentialReadback[]>
+  listCredentialReadback(): Promise<CardCredentialReadback[]>
   disconnect(): Promise<void>
 }

@@ -17,7 +17,9 @@ import { MobileWebSocketClient } from '../services/MobileWebSocketClient'
 import { MobileWebSocketRouter } from '../services/MobileWebSocketRouter'
 import { PreferencesConfirmationPersistence } from '../services/PreferencesConfirmationPersistence'
 import { PreferencesWalletPersistence } from '../services/PreferencesWalletPersistence'
-import { UnavailableCardCService } from '../services/UnavailableCardCService'
+import { CardCSleAdapter } from '../services/CardCSleAdapter'
+import { CardProvisioningCoordinator } from '../services/CardProvisioningService'
+import { PreferencesCardProvisioningPersistence } from '../services/PreferencesCardProvisioningPersistence'
 import { CardStore } from '../stores/CardStore'
 import { ConfirmationStore } from '../stores/ConfirmationStore'
 import { SessionStore } from '../stores/SessionStore'
@@ -81,18 +83,26 @@ export class MobileRuntime {
       new HarmonyHttpTransport(MobileRuntime.backendBaseUrl),
       sessionStore
     )
-    const unavailableCardCService: UnavailableCardCService =
-      new UnavailableCardCService()
+    const cardCAdapter: CardCSleAdapter = new CardCSleAdapter(context)
+    const provisioningCoordinator: CardProvisioningCoordinator =
+      new CardProvisioningCoordinator(
+        apiClient,
+        cardCAdapter,
+        apiClient,
+        new PreferencesCardProvisioningPersistence(context)
+      )
+    await provisioningCoordinator.initialize()
     MobileRuntime.apiClient = apiClient
     MobileRuntime.sessionStore = sessionStore
     CardStore.configure({
       cardService: apiClient,
       authorizationService: apiClient,
       invitationService: apiClient,
-      physicalCardService: unavailableCardCService,
-      credentialService: unavailableCardCService,
+      physicalCardService: cardCAdapter,
+      credentialService: cardCAdapter,
       backendService: apiClient,
       persistenceService: persistence,
+      provisioningService: provisioningCoordinator,
       cachedState: cachedState,
       initialPhysicalCards: [],
       initialCredentials: []

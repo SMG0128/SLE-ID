@@ -239,7 +239,7 @@ export class CardProvisioningCoordinator implements
       let readback: CardCredentialReadback | null = null
       try {
         readback = this.findReadback(
-          await this.cardClient.listCredentials(),
+          await this.cardClient.listCredentialReadback(),
           writePackage,
           commit.generation
         )
