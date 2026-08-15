@@ -259,21 +259,21 @@ static uint16_t build_announce_data(uint8_t *data)
     const char name[] = CARD_SLE_NAME;
     uint16_t name_length = (uint16_t)(sizeof(name) - 1U);
     uint16_t index = 0U;
-    data[index++] = 2U;
     data[index++] = CARD_ADV_TYPE_DISCOVERY_LEVEL;
+    data[index++] = 1U;
     data[index++] = SLE_ANNOUNCE_LEVEL_NORMAL;
-    data[index++] = 2U;
     data[index++] = CARD_ADV_TYPE_ACCESS_MODE;
+    data[index++] = 1U;
     data[index++] = 0U;
-    data[index++] = 3U;
     data[index++] = CARD_ADV_TYPE_COMPLETE_UUID16;
+    data[index++] = 2U;
     encode_u16(&data[index], WS63_CARD_SERVICE_UUID);
     index += 2U;
     /* HarmonyOS name filters are evaluated against the primary announcement,
      * not only the active-seek response. Keep the response copy for existing
      * A-side discovery, and advertise the same identity here for the tablet. */
-    data[index++] = (uint8_t)(name_length + 1U);
     data[index++] = CARD_ADV_TYPE_COMPLETE_NAME;
+    data[index++] = (uint8_t)name_length;
     if (memcpy_s(&data[index], CARD_SLE_ADV_DATA_MAX - index,
                  name, name_length) != EOK) return 0U;
     index += name_length;
@@ -284,8 +284,8 @@ static uint16_t build_seek_response(uint8_t *data)
 {
     const char name[] = CARD_SLE_NAME;
     uint16_t name_length = (uint16_t)(sizeof(name) - 1U);
-    data[0] = (uint8_t)(name_length + 1U);
-    data[1] = CARD_ADV_TYPE_COMPLETE_NAME;
+    data[0] = CARD_ADV_TYPE_COMPLETE_NAME;
+    data[1] = (uint8_t)name_length;
     if (memcpy_s(&data[2], CARD_SLE_ADV_DATA_MAX - 2U, name, name_length) != EOK) return 0U;
     return (uint16_t)(name_length + 2U);
 }
