@@ -32,6 +32,7 @@ import {
 } from '../models/Invitation'
 import { CardStore } from '../stores/CardStore'
 import { OperationAuthority } from '../models/Operation'
+import { deviceInfo } from '@kit.BasicServicesKit'
 import * as Theme from '../common/Theme'
 
 @Entry
@@ -86,7 +87,7 @@ struct Index {
 
   build() {
     Column() {
-      if (this.windowWidth >= Theme.BREAKPOINT_TABLET) {
+      if (this.isTabletLayout()) {
         // Tablet layout: side nav + content
         this.TabletLayout()
       } else {
@@ -242,7 +243,7 @@ struct Index {
         language: $language,
         showCardDetailPage: $showCardDetailPage,
         selectedCardId: $selectedCardId,
-        isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET,
+        isTablet: this.isTabletLayout(),
         windowWidth: this.windowWidth
       })
         .transition(
@@ -279,7 +280,7 @@ struct Index {
             .combine(TransitionEffect.translate({ y: 40 }))
             .animation({ duration: Theme.ANIMATION_DURATION, curve: Curve.EaseInOut })
         )
-    } else if (this.showScanPage && this.windowWidth < Theme.BREAKPOINT_TABLET) {
+    } else if (this.showScanPage && !this.isTabletLayout()) {
       ScanPage({
         language: $language,
         showScanPage: $showScanPage
@@ -298,16 +299,21 @@ struct Index {
         selectedCardId: $selectedCardId,
         showMockSettingsPage: $showMockSettingsPage,
         showPhysicalCardManagerPage: $showPhysicalCardManagerPage,
-        isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET
+        isTablet: this.isTabletLayout()
       })
     } else {
       ProfilePage({
         language: $language,
         showLanguagePage: $showLanguagePage,
-        isTablet: this.windowWidth >= Theme.BREAKPOINT_TABLET,
+        isTablet: this.isTabletLayout(),
         windowWidth: this.windowWidth
       })
     }
+  }
+
+  private isTabletLayout(): boolean {
+    return deviceInfo.deviceType === 'tablet' ||
+      this.windowWidth >= Theme.BREAKPOINT_TABLET
   }
 
   @Builder

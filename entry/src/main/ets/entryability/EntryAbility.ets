@@ -2,6 +2,7 @@ import { UIAbility, AbilityConstant, Want } from '@kit.AbilityKit'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 import { window } from '@kit.ArkUI'
 import { notificationManager } from '@kit.NotificationKit'
+import { deviceInfo } from '@kit.BasicServicesKit'
 import { ImmersiveLightEffect } from '../common/ImmersiveEffect'
 import { VerificationRequestService } from '../services/VerificationRequestService'
 import { NearLinkConnectionService } from '../services/NearLinkConnectionService'
@@ -35,6 +36,8 @@ export default class EntryAbility extends UIAbility {
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
     hilog.info(0x0000, 'SleKey', 'Ability onWindowStageCreate')
+
+    this.configureDeviceOrientation(windowStage)
 
     notificationManager.requestEnableNotification(this.context).catch(() => {
       hilog.warn(0x0000, 'SleKey', 'Notification permission is not enabled.')
@@ -103,6 +106,16 @@ export default class EntryAbility extends UIAbility {
         return
       }
       hilog.info(0x0000, 'SleKey', 'Succeeded in loading content.')
+    })
+  }
+
+  private configureDeviceOrientation(windowStage: window.WindowStage): void {
+    windowStage.getMainWindow().then((mainWindow: window.Window) => {
+      const orientation: window.Orientation = deviceInfo.deviceType === 'tablet' ?
+        window.Orientation.AUTO_ROTATION : window.Orientation.PORTRAIT
+      return mainWindow.setPreferredOrientation(orientation)
+    }).catch(() => {
+      hilog.warn(0x0000, 'SleKey', 'Unable to configure device orientation.')
     })
   }
 

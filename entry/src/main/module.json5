@@ -31,7 +31,7 @@
             ]
           }
         ],
-        "orientation": "portrait"
+        "orientation": "auto_rotation"
       }
     ],
     "requestPermissions": [
