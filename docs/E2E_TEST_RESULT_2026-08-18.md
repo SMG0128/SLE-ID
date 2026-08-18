@@ -139,6 +139,29 @@ C: [C] auth rx=4 ok=1 commits=1 generation=2
 
 → **平板端二次确认 UI 显示成功**，16 秒闭环。至此平板端二次确认链路（推送→弹窗→滑动→后端→B 板→落库→UI 反馈）全部实机验证通过。
 
+### 5.5 拒绝路径实机验证（补测：23:30 本地时间，✅ 平板滑动拒绝 → B 板 deny）
+
+在批准路径打通后补充验证**拒绝路径**（真平板滑动拒绝，op=`mobile:5TVUN25B20G01816`）：
+
+| 环节 | 时间 (UTC) | 结果 |
+|---|---|---|
+| 事件 ev=461 上报 | 15:30:48.704 | `auth=1 confirm=1`（认证通过、待确认，counter=24） |
+| CONFIRM_REQUEST 入库 | 15:30:48.732 | `CF-B0000001-A4D79613-11` pending，60s 窗口 |
+| 平板滑动拒绝 reject | 15:31:02.882 | audit `confirmation.decision.requested` op=mobile |
+| ConfirmResult 命令 | 15:31:02.913 | `device_commands` status=success result_code=0 |
+| B 板 deny 上报 | 15:31:02+ | ev=461 更新 `action=3(拒绝) confirm=3(已拒绝) execution=0 reason=14(CONFIRM_REJECTED)` |
+| 确认请求结案 | 15:31:02.914 | `state=resolved decision=reject` |
+
+验证点：`reason=14 = AB_REASON_CONFIRM_REJECTED`（拒绝语义正确）、`execution=0`（拒绝不触发 GPIO，符合预期）。
+
+**二次确认三种结局全部实机验证**：
+
+| 结局 | 实测 | 关键数据 |
+|---|---|---|
+| approve（批准） | -8、-9 ✅ | `confirm=2 已批准, execution=2 执行成功`（GPIO 执行） |
+| reject（拒绝） | -11 ✅ | `confirm=3 已拒绝, reason=14, execution=0`（GPIO 不执行） |
+| timeout（超时） | -1~-7、-10 | `confirm=4 确认超时, reason=15`（60s 精确窗口） |
+
 ## 6. 结论
 
-项目已达到参赛演示级别：**真实写卡（NV 持久化）+ 真实认证放行 + 二次确认决策 + GPIO 执行 + 后端事件落库**，三端全链路真机验证通过。演示视频可直接按 `COMPETITION_DEMO_HANDOFF_2026-08-18.md` 与本节结果拍摄。
+项目已达到参赛演示级别：**真实写卡（NV 持久化）+ 真实认证放行 + 二次确认决策（批准/拒绝/超时）+ GPIO 执行 + 后端事件落库**，三端全链路真机验证通过。演示视频可直接按 `COMPETITION_DEMO_HANDOFF_2026-08-18.md` 与本节结果拍摄。
