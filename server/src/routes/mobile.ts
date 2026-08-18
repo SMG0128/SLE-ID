@@ -299,7 +299,7 @@ export function createMobileRouter(
       res.json({
         result: {
           request: {
-            requestId: String(resolved.requestId ?? ''),
+            requestId: confirmationId,
             eventId: String(resolved.resultValue ?? ''),
             status: status,
             resolvedAt: now,
