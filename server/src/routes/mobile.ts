@@ -97,7 +97,7 @@ function mobileGrant(row: any) {
       permissionId,
       credentialId: cardWritten ? `credential-${permissionId}` : '',
       physicalCardId: cardWritten ? cardAnonId : '',
-      credentialBindingStatus: cardWritten ? 'active' : 'notWritten',
+      credentialBindingStatus: cardWritten ? 'written' : 'notWritten',
       credentialCondition: 'active',
       adminConfirmRequired: preview.adminConfirmRequired,
       userConfirmationEnabled: preview.adminConfirmRequired,
