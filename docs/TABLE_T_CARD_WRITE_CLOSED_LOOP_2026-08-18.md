@@ -111,9 +111,7 @@ Card C 断电重启后 `status` 结果：
 - 烧录只动 COM14；写卡仍走 `write unlock` 60 秒本地授权窗口，未放开 Card 写鉴权。
 - 断电重启验证是最终判据：必须看到 `count` 保持而非 RAM 清零。
 
-## 7. 三端认证放行回归（2026-08-18 完成 ✅）
-
-在写卡闭环完成后，为让 B 与 Card C（permission=1 真实凭证）配对认证，给 Detector B 固件新增两条命令（ws63 提交 `e2b01e5`）：
+## 7. 三端认证放行回归（2026-08-18 完成 ✅）在写卡闭环完成后，为让 B 与 Card C（permission=1 真实凭证）配对认证，给 Detector B 固件新增两条命令（ws63 提交 `e2b01e5`）：
 
 - `auth key <64位hex>`：从本地串口安装与 Card C 写卡载荷完全一致的凭据（permission=1, org=100, card=c0000001, credential_version=2, key_version=1, 真实密钥），密钥不写入代码/Git；
 - `auth start [<unix-seconds>]`：认证挑战携带真实 Unix 时间（Card C 凭证有 2026-08-15..2026-12-31 有效窗口；B 无 RTC，由调用方传入）。
@@ -133,3 +131,11 @@ B: 后端事件 EV-A0000001-EED49484-0000000004  card=CARD-C0000001  成功  执
 - 拒绝路径同样真实验证（测试密钥 vs 真实凭证 → `auth=2 deny=3`；模拟卡 a9000001 → reason=1），与 8/17 文档一致；
 - Card C `generation 1→2` 为使用计数提交（auth commits=1），凭证本体未变；
 - 唯一事件键 `EV-A0000001-EED49484-0000000004`（sourceId+bootId+eventId），符合唯一性要求。
+
+## 8. 平板绑定状态显示修复（2026-08-18 ✅）
+
+端到端测试发现平板主页卡片显示"未写卡"，但后端 `sync_status=synced`、Card C 已真实写入。
+
+- 根因：后端 mobile API 返回 `credentialBindingStatus: 'active'`，而 App 的 `CredentialBindingStatus` 枚举仅含 `'notWritten' | 'writing' | 'verifying' | 'written' | 'writeFailed'`——`'active'` 不匹配任何枚举，UI 判定失败走"未写卡"分支。
+- 修复：Admin `7bd0a00`，后端 `mobile.ts` 改为 `cardWritten ? 'written' : 'notWritten'`，与 App 枚举对齐。
+- 验证：API 返回 `written`；平板 UI 主页卡片显示 **"已写入"**。
