@@ -62,6 +62,18 @@ static bool make_uuid(uint16_t value, sle_uuid_t *uuid)
     return true;
 }
 
+/* HarmonyOS readProperty() addresses characteristics by 16-bit short UUID, not
+ * by handle, so the stack dispatches a read-by-uuid request. Match the short
+ * value against the base-UUID tail to serve the same dynamic value. Accept both
+ * the 16-bit form (len == 2) and the expanded 128-bit form (len == 16). */
+static bool short_uuid_matches(const sle_uuid_t *uuid, uint16_t value)
+{
+    if (uuid == NULL) return false;
+    if (uuid->len != CARD_SLE_UUID_LEN && uuid->len != SLE_UUID_LEN) return false;
+    return uuid->uuid[CARD_SLE_UUID_INDEX] == (uint8_t)value &&
+           uuid->uuid[CARD_SLE_UUID_INDEX + 1U] == (uint8_t)(value >> 8);
+}
+
 static errcode_t add_cccd(uint16_t property_handle)
 {
     uint8_t initial_value[] = { 0x01U, 0x00U };
@@ -80,39 +92,100 @@ static errcode_t add_cccd(uint16_t property_handle)
 static errcode_t add_property(uint16_t uuid_value, uint16_t permissions,
                               uint32_t operations, bool with_cccd, uint16_t *handle)
 {
+    uint8_t info_value[CARD_SLE_READ_BUFFER_SIZE];
     uint8_t initial_value = 0U;
     ssaps_property_info_t property = { 0 };
+    uint16_t value_length = 0U;
     errcode_t result;
     if (!make_uuid(uuid_value, &property.uuid)) return ERRCODE_SLE_FAIL;
     property.permissions = permissions;
     property.operate_indication = operations;
-    property.value = &initial_value;
-    property.value_len = sizeof(initial_value);
+    /* HarmonyOS readProperty() serves the value registered at add time and does
+     * not dispatch an SSAP read request for INFO/STATUS, so pre-seed those two
+     * characteristics with the full Protocol V2 frame instead of a 1-byte 0.
+     * The value is copied by the stack at registration time. */
+    if (g_callbacks.read != NULL &&
+        (uuid_value == WS63_CARD_INFO_UUID || uuid_value == WS63_CARD_STATUS_UUID)) {
+        value_length = g_callbacks.read(uuid_value, info_value,
+                                        sizeof(info_value), g_callbacks.user);
+    }
+    if (value_length != 0U && value_length <= sizeof(info_value)) {
+        property.value = info_value;
+        property.value_len = value_length;
+    } else {
+        property.value = &initial_value;
+        property.value_len = sizeof(initial_value);
+    }
     result = ssaps_add_property_sync(g_server_id, g_service_handle, &property, handle);
     if (result != ERRCODE_SLE_SUCCESS) return result;
     return with_cccd ? add_cccd(*handle) : ERRCODE_SLE_SUCCESS;
 }
 
-static void read_request_callback(uint8_t server_id, uint16_t conn_id,
-                                  ssaps_req_read_cb_t *request, errcode_t status)
+/* Serves a dynamic INFO/STATUS value for a read request whose target handle is
+ * already validated as g_info_handle or g_status_handle. Returns true when a
+ * non-empty value was produced and queued for response. */
+static bool serve_dynamic_read(uint16_t server_id, uint16_t conn_id, uint16_t handle,
+                               uint16_t request_id)
 {
     uint8_t value[CARD_SLE_READ_BUFFER_SIZE];
     ssaps_send_rsp_t response = { 0 };
-    uint16_t value_length = 0U;
-    if (request == NULL || !request->need_rsp) return;
-    response.request_id = request->request_id;
-    response.status = CARD_SLE_RSP_FAILED;
-    if (status == ERRCODE_SLE_SUCCESS && g_connected && g_paired &&
-        conn_id == g_conn_id && g_callbacks.read != NULL &&
-        (request->handle == g_info_handle || request->handle == g_status_handle)) {
-        value_length = g_callbacks.read(request->handle, value, sizeof(value), g_callbacks.user);
-        if (value_length != 0U && value_length <= sizeof(value)) {
-            response.status = ERRCODE_SLE_SUCCESS;
-            response.value = value;
-            response.value_len = value_length;
-        }
+    uint16_t value_length;
+    if (g_callbacks.read == NULL) return false;
+    value_length = g_callbacks.read(handle, value, sizeof(value), g_callbacks.user);
+    response.request_id = request_id;
+    if (value_length != 0U && value_length <= sizeof(value)) {
+        response.status = ERRCODE_SLE_SUCCESS;
+        response.value = value;
+        response.value_len = value_length;
+    } else {
+        response.status = CARD_SLE_RSP_FAILED;
     }
     (void)ssaps_send_response(server_id, conn_id, &response);
+    return response.status == ERRCODE_SLE_SUCCESS;
+}
+
+static void read_request_callback(uint8_t server_id, uint16_t conn_id,
+                                  ssaps_req_read_cb_t *request, errcode_t status)
+{
+    if (request == NULL || !request->need_rsp) return;
+    osal_printk("%s read-by-handle handle=%u type=%u need_rsp=%u status=%d\r\n",
+                CARD_SLE_LOG, request->handle, request->type,
+                request->need_rsp ? 1U : 0U, status);
+    if (status == ERRCODE_SLE_SUCCESS && g_connected && g_paired &&
+        conn_id == g_conn_id &&
+        (request->handle == g_info_handle || request->handle == g_status_handle)) {
+        (void)serve_dynamic_read(server_id, conn_id, request->handle, request->request_id);
+        return;
+    }
+    {
+        ssaps_send_rsp_t response = { 0 };
+        response.request_id = request->request_id;
+        response.status = CARD_SLE_RSP_FAILED;
+        (void)ssaps_send_response(server_id, conn_id, &response);
+    }
+}
+
+static void read_by_uuid_request_callback(uint8_t server_id, uint16_t conn_id,
+                                          ssaps_req_read_by_uuid_cb_t *request, errcode_t status)
+{
+    uint16_t handle = 0U;
+    if (request == NULL || !request->need_rsp) return;
+    if (short_uuid_matches(&request->uuid, WS63_CARD_INFO_UUID)) handle = g_info_handle;
+    else if (short_uuid_matches(&request->uuid, WS63_CARD_STATUS_UUID)) handle = g_status_handle;
+    osal_printk("%s read-by-uuid len=%u tail=%02x%02x handle=%u status=%d\r\n",
+                CARD_SLE_LOG, request->uuid.len, request->uuid.uuid[CARD_SLE_UUID_INDEX],
+                request->uuid.uuid[CARD_SLE_UUID_INDEX + 1U], handle, status);
+    if (status == ERRCODE_SLE_SUCCESS && g_connected && g_paired &&
+        conn_id == g_conn_id && handle != 0U) {
+        (void)serve_dynamic_read(server_id, conn_id, handle, request->request_id);
+        return;
+    }
+    {
+        ssaps_send_rsp_t response = { 0 };
+        response.request_id = request->request_id;
+        response.status = CARD_SLE_RSP_FAILED;
+        (void)ssaps_send_response(server_id, conn_id, &response);
+    }
 }
 
 static void write_request_callback(uint8_t server_id, uint16_t conn_id,
@@ -199,6 +272,7 @@ static errcode_t register_callbacks(void)
     sle_connection_callbacks_t connection = { 0 };
     errcode_t result;
     ssaps.read_request_cb = read_request_callback;
+    ssaps.read_by_uuid_request_cb = read_by_uuid_request_callback;
     ssaps.write_request_cb = write_request_callback;
     result = ssaps_register_callbacks(&ssaps);
     if (result != ERRCODE_SLE_SUCCESS) return result;

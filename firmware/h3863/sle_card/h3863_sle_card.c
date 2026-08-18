@@ -337,9 +337,13 @@ static uint16_t read_property(uint16_t property_handle, uint8_t *output,
                               uint16_t capacity, void *user)
 {
     unused(user);
-    if (property_handle == ws63_card_sle_info_handle())
+    /* Accept both the assigned attribute handle (SSAP read path) and the short
+     * UUID value (registration-time initial value seeding). */
+    if (property_handle == ws63_card_sle_info_handle() ||
+        property_handle == WS63_CARD_INFO_UUID)
         return build_info_value(output, capacity);
-    if (property_handle == ws63_card_sle_status_handle())
+    if (property_handle == ws63_card_sle_status_handle() ||
+        property_handle == WS63_CARD_STATUS_UUID)
         return build_status_value(output, capacity);
     return 0U;
 }
