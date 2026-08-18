@@ -79,10 +79,23 @@
 
   即完整链路：**后端签发 → 平板 SLE 事务写卡 → Card C 提交 NV → 平板 readback 校验 → 后端回执落库** 已真实闭环。
 
-### 待办（仅剩两项验证）
+### 待办（仅剩一项验证）
 
-1. **断电重启 NV 持久化**：对 Card C 断电重启后 `status` 确认 `count=1 generation=1` 保持（当前 `commands=5` 未归零，尚未执行）。
-2. **三端认证回归**：接回 A（COM8）后执行 A-B-C 认证链路（`auth verify=1 → auth=1 → consume=1`），确认新固件未破坏既有认证。
+1. **三端认证回归**：接回 A（COM8）后执行 A-B-C 认证链路（`auth verify=1 → auth=1 → consume=1`），确认新固件未破坏既有认证。
+
+### 已确认：断电重启 NV 持久化 ✅
+
+Card C 断电重启后 `status` 结果：
+
+```text
+[C] card=c0000001 count=1 generation=1 commands=0 bad=0 crc=0 format=0
+```
+
+- `count=1 generation=1` **保持**（NV 持久化成功，重启未丢失凭证）；
+- `commands` 归零（确认确实重启过）；
+- `bad/crc/format` 全 0。
+
+符合 8/17 交接文档阶段 D 完成标准："断电重启 C，再次 status，确认 NV 持久化后 count=1 仍存在"。
 
 ## 5. 环境快照（联调现场）
 
