@@ -390,6 +390,18 @@ static void frame_received(const ab_frame_t *frame, void *user)
         if (result != CARD_SERVICE_OK)
             osal_printk("[C] command type=%u transport_result=%u\r\n",
                         frame->header.type, result);
+    } else if (frame->header.source_role == AB_ROLE_HOST &&
+               ws63_card_sle_is_connected() &&
+               (frame->header.type == AB_MSG_CREDENTIAL_LIST ||
+                frame->header.type == AB_MSG_CARD_INFO)) {
+        /* Read-back verification after COMMIT runs outside the write window:
+         * LIST is read-only and must remain callable once the transaction has
+         * been committed and the window closed. */
+        card_service_status_t result = card_service_handle_command(
+            &g_service, frame->header.type, frame->payload, frame->payload_length);
+        if (result != CARD_SERVICE_OK)
+            osal_printk("[C] command type=%u transport_result=%u\r\n",
+                        frame->header.type, result);
     } else {
         g_service.malformed_commands++;
         osal_printk("[C] rejected remote management type=%u role=%u\r\n",
