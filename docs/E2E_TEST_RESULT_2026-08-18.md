@@ -63,6 +63,62 @@ C: [C] auth rx=4 ok=1 commits=1 generation=2
 | Admin | `7bd0a00` | 卡片绑定状态值与 App 枚举对齐（`written`） |
 | codexworkspace | `63132a4` `30c11f7` `aaf22eb` `96098be` | 联调/认证/修复文档 |
 
-## 5. 结论
+## 5. 二次确认闭环（补测：18:30-18:41 本地时间，✅ 全链路打通）
 
-项目已达到参赛演示级别：**真实写卡（NV 持久化）+ 真实认证放行 + GPIO 执行 + 后端事件落库**，三端全链路真机验证通过。演示视频可直接按 `COMPETITION_DEMO_HANDOFF_2026-08-18.md` 与本节结果拍摄。
+任务书演示链路 C（无感接近 → 认证 → 二次确认 → 管理端/平板决策 → B 执行）补充验证。
+
+### 5.1 关键修复验证：确认超时 60s（✅）
+
+此前 B 板上报确认超时（reason=15）与确认请求**同秒**——疑似 10s 超时固件问题。重烧 B 板为 60s 版（`detector_b_h3863_all.fwpkg` SHA `FE351770...`，`DETECTOR_B_CONFIRM_TIMEOUT_MS=60000`）后实测：
+
+| 事件 | 帧/时间 (UTC) | 说明 |
+|---|---|---|
+| 事件 ev=200 首次上报 | mid=250 type=98 @ 10:32:57.747 | auth=1 认证通过 |
+| CONFIRM_REQUEST 入库 | mid=251 type=100 @ 10:32:57.776 | 确认请求 `CF-B0000001-A4D79613-1` pending |
+| 窗口内新事件 | ev=201~205 @ 10:33:06~10:33:52 | B 回 `reason=20 BUSY`（确认 pending 期间的正常拒绝） |
+| **事件 ev=200 二次上报（超时）** | mid=316 type=98 @ **10:33:57.763** | `confirm=4 reason=15`，**恰好在确认请求后 60.0s** |
+
+→ **60s 版固件生效**：B 板精确等待 60s 才上报确认超时，不再同秒超时。旧问题已解决。
+
+### 5.2 完整二次确认闭环（✅ 决策→执行成功）
+
+实测链路（B 板 boot `2765592083`，A 板 boot `EEE3C188`）：
+
+| 环节 | 时间 (UTC) | 结果 |
+|---|---|---|
+| 事件 ev=247 上报 | 10:40:08.680 | `auth=1`（真实凭证 permission=1，counter=15） |
+| CONFIRM_REQUEST 入库 | 10:40:08.708 | `CF-B0000001-A4D79613-2` pending，exp 10:41:08.708（60s 窗口） |
+| 决策 approve | 10:40:34.483 | API `POST /api/confirmations/:id/decision`（窗口内 26s） |
+| 后端 sendCommand ConfirmResult | 10:40:34.507 | `device_commands`: type=101(ConfirmResult), **status=success, result_code=0** |
+| B 板执行成功上报 | 10:40:34.547 | ev=247 更新：`action=2 confirm=2(已批准) execution=2(执行成功) reason=0 result=成功` |
+| 确认请求 resolved | 10:40:34.543 | `state=resolved decision=approve` |
+
+审计：`confirmation.decision.requested` → `confirmation.decision.completed`（op=admin，10:40:34）。
+
+→ **决策命令 → B 板 GPIO 执行 → 后端事件更新** 整条链路打通。此次决策由自动监控脚本在 60s 窗口内发出（等效管理端/平板 approve 动作）；平板端 UI 决策路径此前已实现（滑动确认弹窗），可在演示时用平板实机操作复现同一链路。
+
+### 5.3 平板端真实决策闭环（补测：23:17 本地时间，✅ 实机操作成功）
+
+此前平板端确认推送一直不通，排查定位到两个后端缺陷并修复：
+
+| 缺陷 | 现象 | 修复 |
+|---|---|---|
+| **mobile session 不持久化** | 后端每次重启清空内存 session，平板 token 失效 → WS 401 拒绝 → 确认推送永远到不了平板 | `MobileSessionStore` 增加 SQLite 持久化（`mobile_sessions` 表，V6 迁移），重启后恢复 |
+| **double-claim bug** | 平板决策路由先 `claimConfirmation` 再调 `decideConfirmation`（内部又 claim 一次）→ 第二次失败 409 → 确认请求卡 `sending`、命令从未发送、平板"划到最右边没反应" | `mobile.ts` 去掉路由内重复 claim，直接调用 `hardware.decideConfirmation` |
+
+**实机操作完整闭环**（真平板滑动确认，op=`mobile:5TVUN25B20G01816`）：
+
+| 环节 | 时间 (UTC) | 结果 |
+|---|---|---|
+| 事件 ev=373 上报 | 15:17:15.746 | `auth=1` 认证通过（真实凭证 counter=21） |
+| CONFIRM_REQUEST 入库 | 15:17:15.775 | `CF-B0000001-A4D79613-8` pending，60s 窗口 |
+| **平板滑动确认 approve** | 15:17:34.173 | audit `confirmation.decision.requested` op=mobile |
+| ConfirmResult 命令 | 15:17:34.175→208 | `device_commands` status=success result_code=0 |
+| B 板执行成功上报 | 15:17:34.217 | ev=373 更新 `confirm=2(已批准) execution=2(执行成功) result=成功` |
+| 确认请求结案 | 15:17:34.213 | `state=resolved decision=approve` |
+
+→ **平板 App 推送 → 滑动确认 → 后端决策 → B 板 GPIO 执行 → 事件落库** 全链路实机打通，`confirmation.decision.completed` 审计由平板身份（op=mobile:5TVUN25B20G01816）产生。
+
+## 6. 结论
+
+项目已达到参赛演示级别：**真实写卡（NV 持久化）+ 真实认证放行 + 二次确认决策 + GPIO 执行 + 后端事件落库**，三端全链路真机验证通过。演示视频可直接按 `COMPETITION_DEMO_HANDOFF_2026-08-18.md` 与本节结果拍摄。
