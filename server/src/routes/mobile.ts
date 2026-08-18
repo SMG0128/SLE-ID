@@ -210,6 +210,35 @@ export function createMobileRouter(
     res.json({ writePackage })
   })
 
+  router.patch('/cards/:id/preferences', (req, res) => {
+    const cardId = requiredText(req.params.id, 'cardId')
+    const subject = String(res.locals.mobileSubjectId)
+    const row = db.getMobileWallet(subject)
+      .find((item: any) => String(item.digital_card_id) === cardId)
+    if (!row) {
+      throw new ApiError(404, 2703, 'Card is not in the mobile wallet')
+    }
+    const grant = mobileGrant(row)
+    const now = new Date().toISOString()
+    db.recordAudit('mobile.card.preference', 'card', cardId, subject, {
+      update: req.body ?? {},
+    })
+    res.json({
+      result: {
+        card: grant.digitalCard,
+        operation: {
+          operationId: `mobile-prefs:${cardId}:${now}`,
+          state: 'acknowledged',
+          authority: 'backend',
+          verificationRequired: false,
+          receiptId: `PREF-${cardId}`,
+          errorCode: '',
+          updatedAt: now,
+        },
+      },
+    })
+  })
+
   router.post('/cards/:id/write-receipts', (req, res) => {
     const cardId = requiredText(req.params.id, 'cardId')
     const requestId = requiredText(req.body?.requestId, 'requestId')
