@@ -27,7 +27,7 @@ export function createRuntime(config: AppConfig): Runtime {
   if (storedSourceId !== hostSourceId) db.setSetting('hostSourceId', hostSourceId)
   const gateway = new GatewaySerial(hostSourceId, config.hostBootId)
   const hardware = new HardwareService(gateway, db)
-  const mobileSessions = new MobileSessionStore()
+  const mobileSessions = new MobileSessionStore(db)
   const app = createApp(config, db, hardware, mobileSessions)
   const server = createServer(app)
   const hub = new WsHub(server, config.apiToken, mobileSessions)

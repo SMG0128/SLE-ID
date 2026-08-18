@@ -281,5 +281,44 @@ export function createMobileRouter(
     res.json({ confirmations })
   })
 
+  router.post('/confirmations/:id/decision', async (req, res, next) => {
+    const confirmationId = requiredText(req.params.id, 'confirmationId')
+    const status = requiredText(req.body?.status, 'status')
+    const decision = status === 'approved' ? 'approve' :
+      status === 'rejected' ? 'reject' : ''
+    if (!decision) {
+      throw new ApiError(400, 2504, 'Confirmation status must be approved or rejected')
+    }
+    try {
+      const resolved = await hardware.decideConfirmation(
+        confirmationId,
+        decision,
+        String(res.locals.mobileSubjectId),
+      )
+      const now = new Date().toISOString()
+      res.json({
+        result: {
+          request: {
+            requestId: String(resolved.requestId ?? ''),
+            eventId: String(resolved.resultValue ?? ''),
+            status: status,
+            resolvedAt: now,
+          },
+          operation: {
+            operationId: `confirmation-${confirmationId}`,
+            state: resolved.success ? 'acknowledged' : 'failed',
+            authority: 'backend',
+            verificationRequired: false,
+            receiptId: resolved.success ? `CFR-${confirmationId}` : '',
+            errorCode: resolved.success ? '' : `status=${resolved.status ?? 'unknown'}`,
+            updatedAt: now,
+          },
+        },
+      })
+    } catch (error) {
+      next(error)
+    }
+  })
+
   return router
 }

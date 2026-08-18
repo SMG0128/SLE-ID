@@ -223,6 +223,7 @@ export class StarFollowDatabase {
     this.migrateInviteBindingsV3()
     this.migrateMobileGrantV4()
     this.migrateCardProvisioningV5()
+    this.migrateMobileSessionsV6()
     this.raw.exec(`
       CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs(created_at DESC);
       CREATE INDEX IF NOT EXISTS idx_commands_created_at ON device_commands(created_at DESC);
@@ -332,6 +333,23 @@ export class StarFollowDatabase {
           ON card_write_requests(card_id, created_at DESC);
       `)
       this.raw.prepare("INSERT INTO schema_migrations(version, applied_at) VALUES (5, datetime('now'))").run()
+    })()
+  }
+
+  private migrateMobileSessionsV6(): void {
+    const applied = this.raw.prepare('SELECT 1 FROM schema_migrations WHERE version=6').get()
+    if (applied) return
+    this.raw.transaction(() => {
+      this.raw.exec(`
+        CREATE TABLE IF NOT EXISTS mobile_sessions (
+          access_token TEXT PRIMARY KEY,
+          refresh_token TEXT NOT NULL,
+          subject_id TEXT NOT NULL,
+          expires_at TEXT NOT NULL,
+          created_at TEXT NOT NULL
+        );
+      `)
+      this.raw.prepare("INSERT INTO schema_migrations(version, applied_at) VALUES (6, datetime('now'))").run()
     })()
   }
 
@@ -905,6 +923,14 @@ export class StarFollowDatabase {
     `).all(subject).map((row: any) => ({ ...row, policies: JSON.parse(row.policies_json) }))
   }
 
+  /** Resolve the mobile subject that owns a physical card by its anonymous id. */
+  ownerOfCardByAnonId(cardAnonId: number): string | null {
+    const row = this.raw.prepare(
+      'SELECT owner FROM cards WHERE card_anon_id=? LIMIT 1',
+    ).get(cardAnonId) as { owner: string } | undefined
+    return row ? row.owner : null
+  }
+
   issueCardWritePackage(cardId: string, subject: string): Record<string, unknown> | null {
     return this.raw.transaction(() => {
       const row = this.raw.prepare(`
@@ -1095,6 +1121,28 @@ export class StarFollowDatabase {
       INSERT INTO audit_logs(id, action, object_type, object_id, operator, detail_json, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(randomUUID(), action, objectType, objectId, operator, JSON.stringify(detail), new Date().toISOString())
+  }
+
+  saveMobileSession(session: { accessToken: string; refreshToken: string; subjectId: string; expiresAt: string }): void {
+    this.raw.prepare(`
+      INSERT INTO mobile_sessions(access_token, refresh_token, subject_id, expires_at, created_at)
+      VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(access_token) DO UPDATE SET refresh_token=excluded.refresh_token,
+        subject_id=excluded.subject_id, expires_at=excluded.expires_at
+    `).run(session.accessToken, session.refreshToken, session.subjectId, session.expiresAt, new Date().toISOString())
+  }
+
+  loadMobileSessions(): Array<{ accessToken: string; refreshToken: string; subjectId: string; expiresAt: string }> {
+    return (this.raw.prepare('SELECT * FROM mobile_sessions').all() as any[]).map(row => ({
+      accessToken: row.access_token,
+      refreshToken: row.refresh_token,
+      subjectId: row.subject_id,
+      expiresAt: row.expires_at,
+    }))
+  }
+
+  deleteMobileSession(accessToken: string): void {
+    this.raw.prepare('DELETE FROM mobile_sessions WHERE access_token=?').run(accessToken)
   }
 
   private audit(action: string, objectType: string, objectId: string, operator: string, detail: unknown): void {
