@@ -81,7 +81,7 @@
 
 ### 待办（仅剩一项验证）
 
-1. **三端认证回归**：接回 A（COM8）后执行 A-B-C 认证链路（`auth verify=1 → auth=1 → consume=1`），确认新固件未破坏既有认证。
+1. ~~**三端认证回归**~~ ✅ **已完成并通过**（见下节）
 
 ### 已确认：断电重启 NV 持久化 ✅
 
@@ -110,3 +110,26 @@ Card C 断电重启后 `status` 结果：
 - 不提交/输出签名材料与密钥；`build-profile.json5` 保持 skip-worktree 保护。
 - 烧录只动 COM14；写卡仍走 `write unlock` 60 秒本地授权窗口，未放开 Card 写鉴权。
 - 断电重启验证是最终判据：必须看到 `count` 保持而非 RAM 清零。
+
+## 7. 三端认证放行回归（2026-08-18 完成 ✅）
+
+在写卡闭环完成后，为让 B 与 Card C（permission=1 真实凭证）配对认证，给 Detector B 固件新增两条命令（ws63 提交 `e2b01e5`）：
+
+- `auth key <64位hex>`：从本地串口安装与 Card C 写卡载荷完全一致的凭据（permission=1, org=100, card=c0000001, credential_version=2, key_version=1, 真实密钥），密钥不写入代码/Git；
+- `auth start [<unix-seconds>]`：认证挑战携带真实 Unix 时间（Card C 凭证有 2026-08-15..2026-12-31 有效窗口；B 无 RTC，由调用方传入）。
+
+真机回归结果（与 8/18 文档演示脚本一致）：
+
+```text
+B: [B] auth verify=1 session=5b188ea4 card=c0000001 permission=1 auth=1 reason=0 counter=1
+B: [B] auth challenge=1 success=1 consumed=1
+A: [A] decision event=4 action=2 confirm=0 exec=2 reason=0
+C: [C] auth rx=4 ok=1 commits=1 generation=2
+B: 后端事件 EV-A0000001-EED49484-0000000004  card=CARD-C0000001  成功  执行/无需确认/执行成功 reason=0
+```
+
+要点：
+- 认证**放行**路径真实跑通：Card C 真实验证 → A 转发 → B 用真实密钥放行 → GPIO10 执行 → 事件落库；
+- 拒绝路径同样真实验证（测试密钥 vs 真实凭证 → `auth=2 deny=3`；模拟卡 a9000001 → reason=1），与 8/17 文档一致；
+- Card C `generation 1→2` 为使用计数提交（auth commits=1），凭证本体未变；
+- 唯一事件键 `EV-A0000001-EED49484-0000000004`（sourceId+bootId+eventId），符合唯一性要求。
