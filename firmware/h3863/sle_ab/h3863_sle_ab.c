@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "app_init.h"
@@ -639,6 +640,31 @@ static void b_write_callback(uint8_t server_id, uint16_t conn_id,
 }
 
 #if defined(CONFIG_SLE_AB_TEST_MODE)
+static int8_t b_hex_nibble(char value)
+{
+    if (value >= '0' && value <= '9') return (int8_t)(value - '0');
+    if (value >= 'a' && value <= 'f') return (int8_t)(value - 'a' + 10);
+    if (value >= 'A' && value <= 'F') return (int8_t)(value - 'A' + 10);
+    return -1;
+}
+
+static size_t b_hex_decode(const char *text, uint8_t *output, size_t capacity)
+{
+    size_t text_length;
+    size_t i;
+    if (text == NULL || output == NULL) return 0U;
+    text_length = strlen(text);
+    if (text_length == 0U || (text_length & 1U) != 0U || text_length / 2U > capacity)
+        return 0U;
+    for (i = 0U; i < text_length; i += 2U) {
+        int8_t high = b_hex_nibble(text[i]);
+        int8_t low = b_hex_nibble(text[i + 1U]);
+        if (high < 0 || low < 0) return 0U;
+        output[i / 2U] = (uint8_t)(((uint8_t)high << 4) | (uint8_t)low);
+    }
+    return text_length / 2U;
+}
+
 static void b_install_test_credential(void)
 {
     detector_b_auth_credential_t credential = { 0 };
@@ -656,14 +682,52 @@ static void b_install_test_credential(void)
     g_detector_b.permission.permission_id = credential.permission_id;
 }
 
-static void b_start_test_auth(void)
+/* Install the credential that was actually provisioned onto Card C by the
+ * backend write-package. The 32-byte key is passed over the local UART console
+ * as hex, matching permission/org/version fields of the provisioned payload, so
+ * Detector B can authenticate the real card without embedding any key in code. */
+static void b_install_provisioned_credential(const char *hex)
 {
-    detector_b_auth_request_t request = { 100U, 7U, 0U, 1U };
+    detector_b_auth_credential_t credential = { 0 };
+    uint8_t key[DETECTOR_B_AUTH_KEY_SIZE];
+    if (hex == NULL) return;
+    if (b_hex_decode(hex, key, sizeof(key)) != DETECTOR_B_AUTH_KEY_SIZE) {
+        osal_printk("[B] auth key: expected %u hex chars\r\n", DETECTOR_B_AUTH_KEY_SIZE * 2U);
+        return;
+    }
+    credential.permission_id = 1U;
+    credential.organization_id = 100U;
+    credential.expected_card_id = 0xC0000001U;
+    credential.usage_limit = 0xFFFFFFFFU;
+    credential.credential_version = 2U;
+    credential.key_version = 1U;
+    credential.state = DETECTOR_B_CREDENTIAL_ACTIVE;
+    (void)memcpy(credential.key, key, sizeof(credential.key));
+    osal_printk("[B] auth provisioned credential installed=%u permission=1 org=100 "
+                "card=c0000001 version=%u key_version=%u\r\n",
+                detector_b_auth_upsert(&g_b_auth, &credential),
+                credential.credential_version, credential.key_version);
+    g_detector_b.permission.permission_id = credential.permission_id;
+}
+
+/* Authenticate against the provisioned permission=1 credential rather than the
+ * demo permission=7 test key. Card C was provisioned with a real validity
+ * window (2026-08-15..2026-12-31), so the challenge must carry a Unix time in
+ * seconds inside that window. This board has no RTC; the caller supplies the
+ * time on the console (auth start <unix-seconds>). */
+static void b_start_provisioned_auth(const char *arg)
+{
+    detector_b_auth_request_t request = { 100U, 1U, 0U, 0U };
     uint8_t challenge[DETECTOR_B_AUTH_CHALLENGE_SIZE];
     ab_reason_t reason;
-    bool started = detector_b_auth_start(&g_b_auth, &request, now_ms(), challenge, &reason);
-    bool sent = started && b_send_auth_payload(AB_MSG_AUTH_CHALLENGE, challenge,
-                                               sizeof(challenge));
+    bool started;
+    bool sent;
+    if (arg != NULL && arg[0] != '\0') {
+        request.unix_time = (uint32_t)strtoul(arg, NULL, 10);
+    }
+    started = detector_b_auth_start(&g_b_auth, &request, now_ms(), challenge, &reason);
+    sent = started && b_send_auth_payload(AB_MSG_AUTH_CHALLENGE, challenge,
+                                          sizeof(challenge));
     if (started && !sent) {
         uint32_t session_id = (uint32_t)challenge[0] | ((uint32_t)challenge[1] << 8) |
                               ((uint32_t)challenge[2] << 16) |
@@ -671,7 +735,8 @@ static void b_start_test_auth(void)
         detector_b_auth_cancel(&g_b_auth, session_id);
         reason = AB_REASON_LINK_LOST;
     }
-    osal_printk("[B] auth start=%u sent=%u reason=%u\r\n", started, sent, reason);
+    osal_printk("[B] auth start=%u sent=%u reason=%u time=%u\r\n", started, sent, reason,
+                request.unix_time);
 }
 #endif
 
@@ -680,8 +745,11 @@ static void b_command(const char *line)
 #if defined(CONFIG_SLE_AB_TEST_MODE)
     if (strcmp(line, "auth testkey") == 0) {
         b_install_test_credential();
-    } else if (strcmp(line, "auth start") == 0) {
-        b_start_test_auth();
+    } else if (strncmp(line, "auth key ", 9U) == 0) {
+        b_install_provisioned_credential(line + 9U);
+    } else if (strncmp(line, "auth start", 10U) == 0) {
+        const char *arg = line[10U] == ' ' ? line + 11U : NULL;
+        b_start_provisioned_auth(arg);
     } else
 #endif
     if (strcmp(line, "policy record") == 0) {
@@ -735,7 +803,7 @@ static void b_command(const char *line)
             g_b_gateway.parser.crc_errors);
     }
     else osal_printk("[B] commands: policy record|execute|confirm, confirm yes|no, "
-                     "online on|off, auth testkey|start, status\r\n");
+                     "online on|off, auth testkey|key <hex64>|start [<unix-seconds>], status\r\n");
 }
 
 static void *ab_task(const char *arg)
