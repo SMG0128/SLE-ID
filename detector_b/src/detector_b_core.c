@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define DETECTOR_B_DEFAULT_SOURCE_ID 0xB0000001U
-#define DETECTOR_B_CONFIRM_TIMEOUT_MS 10000U
+#define DETECTOR_B_CONFIRM_TIMEOUT_MS 60000U
 
 static ab_frame_header_t make_header(detector_b_t *detector, uint8_t type, uint8_t flags)
 {

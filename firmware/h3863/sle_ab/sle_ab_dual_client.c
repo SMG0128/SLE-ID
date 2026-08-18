@@ -160,6 +160,13 @@ static void seek_disable_callback(errcode_t status)
     }
 }
 
+static void read_rssi_callback(uint16_t conn_id, int8_t rssi, errcode_t status)
+{
+    unused(conn_id);
+    if (status != ERRCODE_SLE_SUCCESS) return;
+    if (g_callbacks.card_rssi != NULL) g_callbacks.card_rssi(rssi);
+}
+
 static void exchange_and_discover(dual_endpoint_t *endpoint, dual_role_t role)
 {
     ssap_exchange_info_t info = { 0 };
@@ -381,6 +388,7 @@ errcode_t sle_ab_dual_client_init(const sle_ab_dual_client_callbacks_t *callback
     (void)memset(&g_connection_callbacks, 0, sizeof(g_connection_callbacks));
     g_connection_callbacks.connect_state_changed_cb = connection_state_callback;
     g_connection_callbacks.pair_complete_cb = pair_complete_callback;
+    g_connection_callbacks.read_rssi_cb = read_rssi_callback;
     result = sle_connection_register_callbacks(&g_connection_callbacks);
     if (result != ERRCODE_SLE_SUCCESS) return result;
     (void)memset(&g_ssap_callbacks, 0, sizeof(g_ssap_callbacks));
@@ -416,6 +424,12 @@ bool sle_ab_dual_client_b_ready(void)
 bool sle_ab_dual_client_card_ready(void)
 {
     return g_card.ready;
+}
+
+bool sle_ab_dual_client_sample_card_rssi(void)
+{
+    if (!g_card.connected || g_card.conn_id == 0U) return false;
+    return sle_read_remote_device_rssi(g_card.conn_id) == ERRCODE_SLE_SUCCESS;
 }
 
 void sle_ab_dual_client_status(void)

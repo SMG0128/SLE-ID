@@ -317,6 +317,89 @@ static void observe(bool seen, bool zone1, bool zone2, uint16_t distance, uint8_
         g_detector_a.passage.state, result, g_detector_a.sent_events, g_detector_a.send_failures);
 }
 
+/* RSSI-driven proximity mapping (real RF signal strength; no HADM/TOF in this
+ * SDK). Thresholds are calibrated for typical room distances on WS63 SLE:
+ *   > -60 dBm  : close   -> second zone (near)        ~50 cm
+ *   -72..-60   : mid     -> first zone                 ~150 cm
+ *   -80..-72   : far     -> target seen, no zone       ~300 cm
+ *   < -80      : lost    -> target not seen
+ * The passage FSM turns far->mid->close into APPROACHING/IN_ZONE/COMPLETED
+ * exactly like the demo sequence, but driven by a real measurement. */
+#define A_RSSI_ZONE2_DBM (-60)
+#define A_RSSI_ZONE1_DBM (-72)
+#define A_RSSI_SEEN_DBM (-80)
+#define A_RSSI_SAMPLE_INTERVAL_MS 200U
+
+/* Hysteresis state: only feed the passage FSM on an approaching transition
+ * (weak -> strong) or on a loss (strong -> weak). A card that stays in range
+ * keeps refreshing the in-zone observation without spawning a new event, so a
+ * person standing near the detector does not generate an event every cooldown. */
+static int8_t g_last_rssi_state = 0; /* 0=lost, 1=far, 2=mid, 3=close */
+static bool g_rssi_active;           /* currently inside an approaching sequence */
+
+static int8_t a_rssi_level(int8_t rssi)
+{
+    if (rssi > A_RSSI_ZONE2_DBM) return 3;
+    if (rssi > A_RSSI_ZONE1_DBM) return 2;
+    if (rssi > A_RSSI_SEEN_DBM) return 1;
+    return 0;
+}
+
+static void a_card_rssi(int8_t rssi)
+{
+    int8_t level = a_rssi_level(rssi);
+    bool seen;
+    bool zone1;
+    bool zone2;
+    uint16_t distance;
+    uint8_t confidence;
+    if (level == 0) {
+        /* Target lost: feed one not-seen observation to let the FSM cancel. */
+        if (g_rssi_active) {
+            g_rssi_active = false;
+            observe(false, false, false, 500U, 40U);
+        }
+        g_last_rssi_state = 0;
+        return;
+    }
+    if (level < g_last_rssi_state) {
+        /* Weakening while not yet lost: keep feeding a same-level observation so
+         * the FSM does not stall, but do not start a new approach. */
+        if (g_rssi_active) {
+            seen = level >= 1;
+            zone1 = level >= 2;
+            zone2 = level >= 3;
+            distance = level >= 3 ? 50U : (level >= 2 ? 150U : 300U);
+            confidence = level >= 3 ? 92U : (level >= 2 ? 85U : 75U);
+            observe(seen, zone1, zone2, distance, confidence);
+        }
+        g_last_rssi_state = level;
+        return;
+    }
+    if (level > g_last_rssi_state) {
+        /* Approaching transition: start/advance a real passage sequence. */
+        g_rssi_active = true;
+        seen = true;
+        zone1 = level >= 2;
+        zone2 = level >= 3;
+        distance = level >= 3 ? 50U : (level >= 2 ? 150U : 300U);
+        confidence = level >= 3 ? 92U : (level >= 2 ? 85U : 75U);
+        observe(seen, zone1, zone2, distance, confidence);
+        g_last_rssi_state = level;
+        return;
+    }
+    /* Same level as before: refresh the observation so IN_ZONE stays alive, but
+     * only while a sequence is active. */
+    if (g_rssi_active) {
+        seen = true;
+        zone1 = level >= 2;
+        zone2 = level >= 3;
+        distance = level >= 3 ? 50U : (level >= 2 ? 150U : 300U);
+        confidence = level >= 3 ? 92U : (level >= 2 ? 85U : 75U);
+        observe(seen, zone1, zone2, distance, confidence);
+    }
+}
+
 #if defined(CONFIG_SLE_AB_TEST_MODE)
 static void demo_enter(void)
 {
@@ -416,15 +499,27 @@ static void *ab_task(const char *arg)
         AB_PROTOCOL_VERSION);
     callbacks.b_receive = a_b_receive;
     callbacks.card_receive = a_card_receive;
+    callbacks.card_rssi = a_card_rssi;
     callbacks.user = NULL;
     osal_printk("[A] starting dual SLE client (core wait is 5 seconds)\r\n");
     client_result = sle_ab_dual_client_init(&callbacks);
     osal_printk("[A] dual SLE client init returned=%d\r\n", client_result);
-    while (1) {
-        if (console_read_line(line, sizeof(line))) a_command(line);
-        detector_a_tick(&g_detector_a, now_ms());
-        detector_a_auth_relay_tick(&g_auth_relay, now_ms());
-        osal_msleep(20);
+    {
+        uint32_t next_rssi_sample = now_ms() + A_RSSI_SAMPLE_INTERVAL_MS;
+        while (1) {
+            uint32_t current = now_ms();
+            if (console_read_line(line, sizeof(line))) a_command(line);
+            detector_a_tick(&g_detector_a, current);
+            detector_a_auth_relay_tick(&g_auth_relay, current);
+            if (sle_ab_dual_client_card_ready() &&
+                (int32_t)(current - next_rssi_sample) >= 0) {
+                if (!sle_ab_dual_client_sample_card_rssi()) {
+                    /* Link not ready for sampling yet; retry on the next tick. */
+                }
+                next_rssi_sample = current + A_RSSI_SAMPLE_INTERVAL_MS;
+            }
+            osal_msleep(20);
+        }
     }
     return NULL;
 }

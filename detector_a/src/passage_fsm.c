@@ -4,7 +4,11 @@
 
 void passage_fsm_init(passage_fsm_t *fsm, const passage_fsm_config_t *config)
 {
-    static const passage_fsm_config_t defaults = { 50U, 2000U, 2500U, 1500U };
+    /* The default cooldown keeps demo-driven sequences snappy. When a target
+     * stays in range continuously (e.g. RSSI-driven proximity), a longer
+     * cooldown prevents an event storm; the A firmware overrides this via
+     * detector_a_set_passage_config() for RSSI mode. */
+    static const passage_fsm_config_t defaults = { 50U, 2000U, 2500U, 8000U };
     if (fsm == NULL) return;
     (void)memset(fsm, 0, sizeof(*fsm));
     fsm->state = HW_EVENT_IDLE;
