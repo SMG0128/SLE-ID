@@ -139,3 +139,36 @@ B: 后端事件 EV-A0000001-EED49484-0000000004  card=CARD-C0000001  成功  执
 - 根因：后端 mobile API 返回 `credentialBindingStatus: 'active'`，而 App 的 `CredentialBindingStatus` 枚举仅含 `'notWritten' | 'writing' | 'verifying' | 'written' | 'writeFailed'`——`'active'` 不匹配任何枚举，UI 判定失败走"未写卡"分支。
 - 修复：Admin `7bd0a00`，后端 `mobile.ts` 改为 `cardWritten ? 'written' : 'notWritten'`，与 App 枚举对齐。
 - 验证：API 返回 `written`；平板 UI 主页卡片显示 **"已写入"**。
+
+## 9. RSSI 驱动的无感接近检测（2026-08-18 ✅ 替代 demo 输入）
+
+### 背景
+任务书第一版本要求真实 Channel Sounding（CS），但当前 SDK（`fbb_ws63` 及 gitcode 官方 master/最新 tag `1.10.106`）的 `libbth_gle.a` **均无 HADM 实现**（0 个 `sle_hadm*` 符号；仅有 SSAP CS 服务注册类符号，无 IQ/TOF 测距接口）。`sle_hadm_manager.h` 只有声明，实现是闭源商用组件未随公共 SDK 发布。已确认：本机无其他 SDK 版本、无 ROM 实现、无源码可重编。
+
+### RSSI 方案
+用 SLE 连接的**真实射频信号强度**（`sle_read_remote_device_rssi`，库内有实现）近似距离，驱动 A 板通行状态机，替代手动 `demo enter`。
+
+| RSSI | 含义 | 状态机输入 |
+|---|---|---|
+| > -60 dBm | 很近 | second zone（IN_ZONE） |
+| -72 ~ -60 | 中等 | first zone（APPROACHING） |
+| -80 ~ -72 | 较远 | target seen |
+| < -80 | 丢失 | target not seen |
+
+ws63 提交 `bb01336`：
+- `sle_ab_dual_client.c/.h`：注册 `read_rssi_cb`，新增 `sle_ab_dual_client_sample_card_rssi()`
+- `h3863_sle_ab.c`：RSSI 回调 + **防抖**（仅在"接近转换"或"丢失"时喂状态机，持续在场不刷事件）+ 200ms 采样
+- `passage_fsm.c`：默认冷却 1.5s→8s（防事件风暴）
+- `detector_b_core.c`：二次确认超时 10s→60s（配合后端 60s 窗口）
+
+### 真机验证（可重复）
+```
+B auth start → 持卡走近 A → RSSI 自动接近/进入 → 认证 → 放行 → GPIO → 事件落库
+EV-A0000001-EEE3C188-0000000030  17:56:48  CARD-C0000001  成功  执行成功 reason=0
+（counter=7/8 两次真实放行；窗口用完后 reason=1 安全拒绝）
+```
+
+### 局限
+- RSSI 受环境干扰，阈值需现场标定；只能分"近/中/远"档位，无精确米级距离
+- 不是任务书的真实 CS（TOF/IQ）；若需真实 CS 必须获取含 HADM 的商用 SDK
+- 演示时"认证放行"仍需 B 侧 `auth start` 开窗口（一次性授权，安全设计）
