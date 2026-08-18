@@ -262,7 +262,7 @@ export class HardwareService {
       deviceTimestampMs: readU32(frame.payload, 16),
       action: frame.payload[20] ?? 0,
       direction: frame.payload[21] ?? 0,
-      expiresAt: new Date(receivedAt.getTime() + 9000).toISOString(),
+      expiresAt: new Date(receivedAt.getTime() + 60000).toISOString(),
       receivedAt: receivedAt.toISOString(),
     }
     const identity = { sourceId: frame.sourceId, bootId: frame.bootId, messageId: frame.messageId, type: frame.type, receivedAt: confirmation.receivedAt }
@@ -270,7 +270,32 @@ export class HardwareService {
     if ((frame.flags & FrameFlag.AckRequired) !== 0) {
       this.gateway.sendAck(frame, result.duplicateFrame ? AckStatus.Duplicate : AckStatus.Accepted)
     }
-    if (!result.duplicateFrame && result.value) this.hub?.broadcast('confirmation.pending', result.value)
+    if (!result.duplicateFrame && result.value) {
+      this.hub?.broadcast('confirmation.pending', result.value)
+      const subject = this.db.ownerOfCardByAnonId(confirmation.cardAnonId)
+      if (subject) {
+        const snapshot = this.gateway.snapshot()
+        this.hub?.broadcastMobile('confirmation.request', subject, {
+          confirmation: {
+            requestId: String(result.value.id),
+            digitalCardId: String(result.value.cardId || ''),
+            permissionId: String(result.value.permissionId ?? ''),
+            detectorId: snapshot.gatewaySourceId === null ? '' :
+              `DEV-${Number(snapshot.gatewaySourceId).toString(16).padStart(8, '0').toUpperCase()}`,
+            checkpointName: 'Detector B',
+            eventId: String(result.value.eventKey || result.value.eventId || ''),
+            action: 'passage',
+            direction: 'unknown',
+            randomCode: String(result.value.requestId ?? '').slice(-6).padStart(6, '0'),
+            adminConfirmRequired: true,
+            status: 'pending',
+            createdAt: confirmation.receivedAt,
+            expiresAt: String(result.value.expiresAt || ''),
+            resolvedAt: '',
+          },
+        })
+      }
+    }
   }
 
   private handlePolicyResult(frame: ProtocolFrame): void {

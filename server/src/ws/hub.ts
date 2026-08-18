@@ -43,6 +43,25 @@ export class WsHub {
     return message
   }
 
+  /** Send a tablet-oriented envelope to /ws/mobile clients only. The tablet
+   * router expects {type, subjectId, ...} rather than the admin {topic, data}
+   * shape, so confirmation pushes must be translated before delivery. */
+  broadcastMobile<T extends Record<string, unknown>>(
+    type: string,
+    subjectId: string,
+    data: T,
+  ): void {
+    const message = { type, subjectId, ...data }
+    const encoded = JSON.stringify(message)
+    for (const client of this.server.clients) {
+      if (client.readyState !== WebSocket.OPEN) continue
+      const url = client.url || ''
+      const path = url.startsWith('ws://') || url.startsWith('wss://') ?
+        new URL(url).pathname : url
+      if (path === '/ws/mobile') client.send(encoded)
+    }
+  }
+
   close(): Promise<void> {
     // A browser embedded in Ark Web may not complete the close handshake while
     // the app is shutting down. Terminate here so the HTTP server cannot hang.
