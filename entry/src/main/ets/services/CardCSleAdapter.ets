@@ -1,4 +1,5 @@
 import { abilityAccessCtrl, common, PermissionRequestResult, Permissions } from '@kit.AbilityKit'
+import { BusinessError } from '@kit.BasicServicesKit'
 import { constant, manager, remoteDevice, scan, ssap } from '@kit.NearLinkKit'
 import { CardSleClient } from './CardSleClient'
 import {
@@ -133,13 +134,28 @@ export class CardCSleAdapter implements
     if (!await this.ensurePermission() || manager.getState() !== manager.NearlinkState.STATE_ON) {
       throw new Error('NearLink is unavailable')
     }
-    const pairedAddress: string = this.findPairedCardAddress()
-    if (pairedAddress.length > 0) {
-      this.discoveredAddress = pairedAddress
-      console.info('[SLEKEY][CARD-C] using paired Card C')
-      return pairedAddress
+    /* Card C rotates its local SLE address on boot. A system paired-device
+     * entry can therefore be valid cryptographically while still referring to
+     * the previous radio address. Always prefer a live connectable broadcast;
+     * use the paired entry only when scanning is unavailable. */
+    try {
+      const scannedAddress: string = await this.scanForCard()
+      console.info('[SLEKEY][CARD-C] using live Card C advertisement')
+      return scannedAddress
+    } catch (scanError) {
+      const liveScanError: Error = scanError instanceof Error ?
+        scanError : new Error(`${scanError}`)
+      const pairedAddress: string = this.findPairedCardAddress()
+      if (pairedAddress.length > 0) {
+        this.discoveredAddress = pairedAddress
+        console.info('[SLEKEY][CARD-C] scan unavailable; using paired Card C')
+        return pairedAddress
+      }
+      throw liveScanError
     }
-    if (this.discoveredAddress.length > 0) return this.discoveredAddress
+  }
+
+  private async scanForCard(): Promise<string> {
     return await new Promise<string>((resolve, reject) => {
       let completed: boolean = false
       const finish = (address: string, error: Error | null): void => {
@@ -206,6 +222,9 @@ export class CardCSleAdapter implements
     if (!service) throw new Error('Card C service UUID was not discovered')
     const targetService: ssap.Service = service as ssap.Service
     targetService.properties.forEach((property: ssap.Property) => {
+      const descriptorCount: number = property.descriptors ? property.descriptors.length : 0
+      console.info(`[SLEKEY][CARD-C] property=${property.propertyUuid} operation=${property.operation} ` +
+        `descriptors=${descriptorCount}`)
       if (this.matchesUuid(property.propertyUuid, CARD_C_INFO_UUID)) this.infoProperty = property
       if (this.matchesUuid(property.propertyUuid, CARD_C_COMMAND_UUID)) this.commandProperty = property
       if (this.matchesUuid(property.propertyUuid, CARD_C_RESPONSE_UUID)) this.responseProperty = property
@@ -213,8 +232,26 @@ export class CardCSleAdapter implements
     if (!this.infoProperty || !this.commandProperty || !this.responseProperty) {
       throw new Error('Card C is missing INFO, COMMAND, or RESPONSE')
     }
-    await this.client.setPropertyNotification(this.responseProperty, true)
-    console.info('[SLEKEY][CARD-C] response notification enabled')
+    let notificationEnabled: boolean = false
+    for (let attempt: number = 1; attempt <= 3 && !notificationEnabled; attempt++) {
+      try {
+        await this.client.setPropertyNotification(this.responseProperty, true)
+        notificationEnabled = true
+        console.info(`[SLEKEY][CARD-C] response notification enabled attempt=${attempt}`)
+      } catch (error) {
+        const businessError: BusinessError = error as BusinessError
+        console.warn(`[SLEKEY][CARD-C] response notification attempt=${attempt} failed ` +
+          `code=${businessError.code} message=${businessError.message}`)
+        if (attempt < 3) await new Promise<void>((resolve) => setTimeout(resolve, 250))
+      }
+    }
+    if (!notificationEnabled) {
+      /* Card C currently boots its client-configuration descriptor enabled. Some
+       * HarmonyOS builds still reject the redundant descriptor write immediately
+       * after pairing. Keep the link alive so INFO can verify the encrypted SSAP
+       * path; command responses remain observable through propertyChange. */
+      console.warn('[SLEKEY][CARD-C] continuing with server-default response notification')
+    }
     this.address = deviceHandle
     this.connected = true
   }
@@ -222,6 +259,12 @@ export class CardCSleAdapter implements
   async readCardInfo(): Promise<CardCInfo> {
     if (!this.client || !this.infoProperty) throw new Error('Card C is not connected')
     const value: ssap.Property = await this.client.readProperty(this.infoProperty)
+    const rawInfo: Uint8Array = new Uint8Array(value.value)
+    let rawHex: string = ''
+    for (let index: number = 0; index < rawInfo.byteLength; index++) {
+      rawHex += rawInfo[index].toString(16).toUpperCase().padStart(2, '0')
+    }
+    console.info(`[SLEKEY][CARD-C] INFO raw length=${rawInfo.byteLength} hex=${rawHex}`)
     const frame: CardCFrame = CardCProtocol.decode(value.value)
     if (frame.type !== CardCMessageType.CARD_INFO || frame.payload.byteLength !== 16 ||
       frame.sourceRole !== 1) throw new Error('Card C INFO response is invalid')
