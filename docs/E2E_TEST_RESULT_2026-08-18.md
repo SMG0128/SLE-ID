@@ -119,6 +119,26 @@ C: [C] auth rx=4 ok=1 commits=1 generation=2
 
 → **平板 App 推送 → 滑动确认 → 后端决策 → B 板 GPIO 执行 → 事件落库** 全链路实机打通，`confirmation.decision.completed` 审计由平板身份（op=mobile:5TVUN25B20G01816）产生。
 
+### 5.4 requestId 响应格式修复与平板端显示成功（补测：23:24 本地时间，✅ 平板 UI 显示成功）
+
+**遗留问题**：-8 后端执行成功但平板 App 显示失败。定位：`MobileApiClient.decideConfirmation` 校验
+`response.result.request.requestId === 传入的完整确认ID`，而后端返回的是命令数字 requestId（`8` vs `CF-...-8`）→ 校验失败 → App 抛 "Confirmation decision lacks backend acknowledgement" → 前端显示失败。
+
+**修复**：`mobile.ts` 决策响应 `request.requestId` 改为返回完整确认 ID（`confirmationId`）。
+
+**修复后实机复测（确认请求 -9，平板 UI 显示成功 ✅）**：
+
+| 环节 | 时间 (UTC) | 结果 |
+|---|---|---|
+| 事件 ev=423 上报 | 15:24:39.587 | `auth=1` 认证通过（counter=22） |
+| CONFIRM_REQUEST 入库 | 15:24:39.615 | `CF-B0000001-A4D79613-9` pending，60s 窗口 |
+| 平板滑动确认 approve | 15:24:55.162 | audit op=mobile:5TVUN25B20G01816 |
+| ConfirmResult 命令 | 15:24:55.198 | `device_commands` status=success result_code=0 |
+| B 板执行成功上报 | 15:24:55.200 | ev=423 更新 `confirm=2(已批准) execution=2(执行成功) result=成功` |
+| 确认请求结案 | 15:24:55.199 | `state=resolved decision=approve`，**平板 UI 显示"后端已确认本次决定"** |
+
+→ **平板端二次确认 UI 显示成功**，16 秒闭环。至此平板端二次确认链路（推送→弹窗→滑动→后端→B 板→落库→UI 反馈）全部实机验证通过。
+
 ## 6. 结论
 
 项目已达到参赛演示级别：**真实写卡（NV 持久化）+ 真实认证放行 + 二次确认决策 + GPIO 执行 + 后端事件落库**，三端全链路真机验证通过。演示视频可直接按 `COMPETITION_DEMO_HANDOFF_2026-08-18.md` 与本节结果拍摄。
